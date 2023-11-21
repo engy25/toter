@@ -1,0 +1,85 @@
+{
+  "menu": [
+    {
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard",
+      "badge": [
+        "primary",
+        "1"
+      ],
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Analytics",
+          "slug": "dashboard-analytics"
+        }
+      ]
+    },
+
+    {
+      "menuHeader": "Apps & Pages"
+    },
+    {
+
+      "name": "Email",
+      "icon": "menu-icon tf-icons ti ti-mail",
+      "slug": "app-email"
+    },
+
+
+    {
+      "menuHeader": "Countries"
+    },
+    {
+      "name":  "Countries",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "submenu": [
+        {
+          "url": "countries",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+
+
+
+    {
+      "menuHeader": "Cities"
+    },
+    {
+      "name":"Cities",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "submenu": [
+        {
+          "url": "cities",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+
+
+
+    {
+      "menuHeader": "Misc"
+    },
+    {
+
+      "icon": "menu-icon tf-icons ti ti-lifebuoy",
+      "name": "Support",
+      "slug": "support",
+      "target": "_blank"
+    },
+    {
+
+      "icon": "menu-icon tf-icons ti ti-file-description",
+      "name": "Documentation",
+      "slug": "documentation",
+      "target": "_blank"
+    }
+  ]
+}

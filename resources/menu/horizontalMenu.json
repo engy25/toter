@@ -1,0 +1,105 @@
+{
+  "menu": [
+    {
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard",
+      "badge": [
+        "primary",
+        "3"
+      ],
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Analytics",
+          "slug": "dashboard-analytics"
+        }
+      ]
+    },
+
+    {
+      "menuHeader": "Apps & Pages"
+    },
+    {
+      "url": "app/email",
+      "name": "Email",
+      "icon": "menu-icon tf-icons ti ti-mail",
+      "slug": "app-email"
+    },
+    {
+      "url": "app/chat",
+      "name": "Chat",
+      "icon": "menu-icon tf-icons ti ti-messages",
+      "slug": "app-chat"
+    },
+
+
+
+
+
+
+    {
+      "name": "Users",
+      "icon": "menu-icon tf-icons ti ti-users",
+      "slug": "app-user",
+      "submenu": [
+        {
+          "url": "/app/user/list",
+          "name": "List",
+          "slug": "app-user-list"
+        },
+        {
+          "name": "View",
+          "slug": "app-user-view",
+          "submenu": [
+            {
+              "url": "/app/user/view/account",
+              "name": "Account",
+              "slug": "app-user-view-account"
+            },
+            {
+              "url": "/app/user/view/security",
+              "name": "Security",
+              "slug": "app-user-view-security"
+            },
+            {
+              "url": "/app/user/view/billing",
+              "name": "Billing & Plans",
+              "slug": "app-user-view-billing"
+            },
+            {
+              "url": "/app/user/view/notifications",
+              "name": "Notifications",
+              "slug": "app-user-view-notifications"
+            },
+            {
+              "url": "/app/user/view/connections",
+              "name": "Connections",
+              "slug": "app-user-view-connections"
+            }
+          ]
+        }
+      ]
+    },
+
+
+
+    {
+      "menuHeader": "Misc"
+    },
+    {
+      "url": "https://pixinvent.ticksy.com/",
+      "icon": "menu-icon tf-icons ti ti-lifebuoy",
+      "name": "Support",
+      "slug": "support",
+      "target": "_blank"
+    },
+    {
+      "url": "https://pixinvent.com/demo/vuexy-html-bootstrap-admin-template/documentation/laravel-introduction.html",
+      "icon": "menu-icon tf-icons ti ti-file-description",
+      "name": "Documentation",
+      "slug": "documentation",
+      "target": "_blank"
+    }
+  ]
+}
