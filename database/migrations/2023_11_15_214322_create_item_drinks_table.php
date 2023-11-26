@@ -10,8 +10,8 @@ class CreateItemDrinksTable extends Migration {
 		Schema::create('item_drinks', function(Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->timestamps();
-			$table->bigInteger('item_id')->unique()->unsigned();
-			$table->bigInteger('drink_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
+			$table->bigInteger('drink_id')->unsigned();
 		});
 	}
 

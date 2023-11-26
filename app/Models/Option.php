@@ -33,6 +33,8 @@ class Option extends Model implements TranslatableContract
   {
     return asset('storage/images/options/' . $this->attributes['image']);
   }
+
+  
   public function setImageAttribute($value)
   {
     if ($value && $value->isValid()) {
@@ -47,8 +49,6 @@ class Option extends Model implements TranslatableContract
       $this->attributes['image'] = $image;
     }
   }
-
-
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {

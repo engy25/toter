@@ -23,6 +23,7 @@ class CreateCartsTable extends Migration {
 			$table->text('services')->nullable();
 			$table->text('notes')->nullable();
 			$table->bigInteger('gift_id')->unsigned()->nullable();
+      $table->text('choose_days')->nullable();
 		});
 	}
 

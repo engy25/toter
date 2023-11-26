@@ -11,7 +11,7 @@ class CreateStoreCategoriesTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('store_id')->unique()->unsigned();
+			$table->bigInteger('store_id')->unsigned();
 		});
 	}
 

@@ -11,8 +11,9 @@ class CreateStoreCategoryTranslationsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->string('name');
 			$table->string('description')->nullable();
-			$table->bigInteger('store_category_id')->unique()->unsigned();
-			$table->string('locale')->unique();
+			$table->bigInteger('store_category_id')->unsigned();
+			$table->string('locale');
+      $table->unique(['store_category_id', 'locale']);
 		});
 	}
 

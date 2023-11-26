@@ -11,7 +11,7 @@ class CreateOptionsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('item_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
 			$table->decimal('price', 10,2)->default('0');
 			$table->string('image')->nullable();
 		});

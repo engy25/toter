@@ -17,6 +17,7 @@ class CreateOrderItemsTable extends Migration {
 			$table->text('options')->nullable();
 			$table->text('drinks')->nullable();
 			$table->text('sides')->nullable();
+      $table->text('choose_days')->nullable();
 			$table->decimal('price', 10,2);
 			$table->integer('qty')->default('1');
 			$table->decimal('total_price', 10,2)->default('1');
@@ -25,6 +26,7 @@ class CreateOrderItemsTable extends Migration {
 			$table->bigInteger('preference_id')->unsigned()->nullable();
 			$table->text('notes')->nullable();
 			$table->longText('order')->nullable();
+
 		});
 	}
 

@@ -11,7 +11,7 @@ class CreateItemGiftsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('item_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
 			$table->string('name');
 			$table->string('image');
 		});

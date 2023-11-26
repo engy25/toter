@@ -11,8 +11,8 @@ class CreateItemAddonsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('item_id')->unique()->unsigned();
-			$table->bigInteger('addon_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
+			$table->bigInteger('addon_id')->unsigned();
 		});
 	}
 

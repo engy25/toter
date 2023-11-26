@@ -11,6 +11,7 @@ use App\Models\{
   Notification
 
 };
+
 use Illuminate\Support\Str;
 
 class Helpers
@@ -450,6 +451,17 @@ class Helpers
       ]
     );
   }
-
+  public static function stripText($text, int $limit = null, $stripSpace = false)
+  {
+      $description = strip_tags(html_entity_decode($text));
+      $description = preg_replace('/\s\s+/', ' ', $description);
+      if ($limit){
+          $description = \Illuminate\Support\Str::limit($description, $limit);
+      }
+      if ($stripSpace){
+          $description = str_replace(' ', '', $description);
+      }
+      return $description ?? '';
+  }
 
 }

@@ -27,7 +27,7 @@ class CreateOrdersTable extends Migration {
 			$table->decimal('expected_cost', 10,2)->nullable();
 			$table->text('from_driver_instructions')->nullable();
 			$table->text('to_driver_instructions')->nullable();
-			$table->time('delivery_time')->nullable();
+			$table->integer('delivery_time')->nullable();
 			$table->decimal('exchange_rate', 10,2);
 			$table->bigInteger('coupon_id')->unsigned();
 		});

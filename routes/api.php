@@ -9,6 +9,10 @@ use App\Http\Controllers\Api\{
   User\CountryController,
   User\ProfileController,
   User\AddressController,
+  User\TierController,
+  User\ButlerController,
+  User\HomeController,
+  User\SectionController
 
 
 };
@@ -28,8 +32,8 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 
-Route::
-    namespace('Api')->middleware('setLocale')->group(function () {
+Route::namespace('Api')->middleware('setLocale')->group(function () {
+
 
       /**
        * Authentication
@@ -83,7 +87,9 @@ Route::
 
       Route::get('get-country', [CountryController::class, 'index']);
 
-
+      Route::get('home', [HomeController::class, 'index']);
+      Route::get('sections', [SectionController::class, 'index']);
+      Route::get('sections/{id}', [SectionController::class, 'show']);
 
 
     });
@@ -91,8 +97,7 @@ Route::
 
 
 
-Route::
-    namespace('Api')->middleware(['setLocale'])->group(function () {
+Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
 
       Route::middleware('checkUser')->group(function () {
@@ -133,6 +138,12 @@ Route::
         Route::post('update-address/{id}', [AddressController::class, 'update']);
         Route::get('address/{address_id}', [AddressController::class, 'show']);
 
+        /**Tier */
+        Route::get('tier', [TierController::class, 'index']);
+
+
+        /**Butler */
+        Route::get('butler', [ButlerController::class, 'index']);
 
       });
 

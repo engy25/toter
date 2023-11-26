@@ -39,6 +39,21 @@ class User extends Authenticatable
     //'password' => 'hashed',
   ];
 
+  protected static function booted()
+  {
+    static::created(function ($user) {
+      // Check the number of orders for the user this month
+      $orderCount = Order::where("user_id", $user->id)
+        ->where('created_at', '>=', Carbon::now()->month)->count();
+      if ($orderCount >= 10) {
+        // Update the user to the golden tier
+        $user->update(['tier_id' => '2']);
+      }
+
+    });
+
+  }
+
   public function setImageAttribute($value)
   {
     if ($value && $value->isValid()) {
@@ -64,15 +79,15 @@ class User extends Authenticatable
 
   public function setPasswordAttribute($value)
   {
-      if ($value) {
-          $this->attributes['password'] = bcrypt($value);
-      }
+    if ($value) {
+      $this->attributes['password'] = bcrypt($value);
+    }
   }
 
 
   public function role()
   {
-      return $this->belongsTo(Role::class);
+    return $this->belongsTo(Role::class);
   }
 
   public function addresses()
@@ -128,7 +143,7 @@ class User extends Authenticatable
   public function devices()
   {
 
-      return $this->hasMany(Device::class);
+    return $this->hasMany(Device::class);
   }
 
   public function orders()
@@ -139,8 +154,8 @@ class User extends Authenticatable
   public function count_orders_created_this_month()
   {
 
-    return $this->orders()->where('created_at', '>=',Carbon::now()->month)
-    ->count();
+    return $this->orders()->where('created_at', '>=', Carbon::now()->month)
+      ->count();
 
 
   }

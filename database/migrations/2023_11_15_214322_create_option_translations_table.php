@@ -10,8 +10,9 @@ class CreateOptionTranslationsTable extends Migration {
 		Schema::create('option_translations', function(Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('name');
-			$table->bigInteger('option_id')->unique()->unsigned();
-			$table->string('locle')->unique();
+			$table->bigInteger('option_id')->unsigned();
+			$table->string('locale');
+      $table->unique(['option_id', 'locale']);
 		});
 	}
 

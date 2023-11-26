@@ -9,26 +9,28 @@ use Spatie\Translatable\HasTranslations;
 use App\Helpers\Helpers;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-class Section extends Model implements TranslatableContract{
 
-	protected $table = 'sections';
-	public $timestamps = true;
+class Section extends Model implements TranslatableContract
+{
+
+  protected $table = 'sections';
+  public $timestamps = false;
   protected $guarded = [];
-	use SoftDeletes,HasFactory,Translatable;
-  public $translatedAttributes = ['name','description'];
+  use SoftDeletes, HasFactory, Translatable;
+  public $translatedAttributes = ['name', 'description'];
 
-	protected $dates = ['deleted_at'];
+  protected $dates = ['deleted_at'];
 
 
-	public function subsections()
-	{
-		return $this->hasMany(Subsection::class);
-	}
+  public function subsections()
+  {
+    return $this->hasMany(Subsection::class);
+  }
 
   public $helper;
   public function __construct()
   {
-      $this->helper= new Helpers();
+    $this->helper = new Helpers();
   }
 
   public function getImageAttribute()
@@ -55,5 +57,30 @@ class Section extends Model implements TranslatableContract{
   {
     return $this->hasMany(SectionTranslation::class);
   }
+
+  public function stores()
+  {
+      return $this->hasMany(Store::class, 'section_id');
+  }
+
+  public function scopeSectionsWithSurroundedStores($query, $user_lat, $user_lng)
+  {
+      $user_lat = (float) $user_lat;
+      $user_lng = (float) $user_lng;
+      $stores = Store::Surrounded($user_lat, $user_lng)->get();
+      $additionalSectionIds=[16,15,6];
+      $storeIds =array_merge($stores->pluck('section_id')->toArray(),$additionalSectionIds);
+      return $query->whereIn('id', $storeIds);
+  }
+
+  public function scopeValid($query)
+  {
+      $query->whereNotIn('id',[15,6,16,4,7]);
+  }
+
+
+
+
+
 
 }

@@ -12,7 +12,7 @@ class CreatePreferencesTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 			$table->decimal('price', 10,2)->default('0');
-			$table->bigInteger('item_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
 		});
 	}
 

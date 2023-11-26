@@ -13,7 +13,7 @@ class CreateSidesTable extends Migration {
 			$table->softDeletes();
 			$table->decimal('price', 10,2)->default('0');
 			$table->string('image');
-			$table->bigInteger('item_id')->unique()->unsigned();
+			$table->bigInteger('item_id')->unsigned();
 		});
 	}
 

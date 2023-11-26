@@ -45,7 +45,6 @@ class Side extends Model implements TranslatableContract {
     }
   }
 
-
 	protected $dates = ['deleted_at'];
 
 	public function item()

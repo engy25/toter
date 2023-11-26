@@ -23,14 +23,14 @@ class RegisterRequest extends ApiMasterRequest
    */
   public function rules()
   {
-   
+
     //$phone='required|regex:/(1)[1-9]/|not_regex:/[a-z]/|min:9';
     $phoneRegex = '/^[1]{1}[0-9]{9}$/';
     $phone = 'regex:/^[^0]/';
     return [
       'phone' => 'required|regex:/^[^0]\d{8,19}$/|numeric|unique:users,phone',
       'country_code' => 'required|exists:countries,country_code',
-      'fullname' => 'required|string|between:3,40',
+      'fname' => 'required|string|between:3,40',
       'terms' => 'required|in:1',
       'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
       'confirm_password' => 'required|same:password',

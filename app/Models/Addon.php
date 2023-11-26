@@ -5,17 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
+use App\Helpers\Helpers;
 
-class Addon extends Model implements TranslatableContract
+class Addon extends Model
 {
 
   protected $table = 'addons';
   public $timestamps = true;
 
-  use SoftDeletes, HasFactory, Translatable;
+  use SoftDeletes, HasFactory;
   protected $guarded = [];
+  public $helper;
+  public function __construct()
+  {
+    $this->helper = new Helpers();
+  }
 
   protected $dates = ['deleted_at'];
 

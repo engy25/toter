@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use App\Helpers\Helpers;
+use Illuminate\Support\Carbon;
 
 class Tier extends Model implements TranslatableContract
 {
@@ -58,6 +59,22 @@ class Tier extends Model implements TranslatableContract
   {
     return $this->belongsTo(Currency::class);
   }
+
+  public function count_orders_created_this_month()
+  {
+
+    return \DB::table('orders')->where('user_id', auth('api')->user()->id)->where('created_at', '>=', Carbon::now()->month)->count();
+
+
+  }
+
+  public function userPoints()
+  {
+      $user_id = auth('api')->id();
+      $point_user = PointUser::where("user_id", $user_id)->sum('point_earned');
+      return (int)$point_user;
+  }
+
 
 
 }

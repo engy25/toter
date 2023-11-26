@@ -28,20 +28,20 @@ class Store extends Model implements TranslatableContract
   {
     return asset('storage/images/stores/' . $this->attributes['image']);
   }
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/stores/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/stores/' . $this->attributes['image']));
-        }
-      }
-      $image = $this->helper->upload_single_file($value, 'app/public/images/stores/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/stores/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/stores/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $image = $this->helper->upload_single_file($value, 'app/public/images/stores/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   protected $dates = ['deleted_at'];
 
@@ -79,5 +79,65 @@ class Store extends Model implements TranslatableContract
   {
     return $this->hasMany(StoreTranslation::class);
   }
+  public function weekHours()
+  {
+      return $this->hasMany(WeekHour::class);
+  }
 
+  public function scopeNearest($query, $lat, $lng)
+  {
+      $lat = (float)$lat;
+      $lng = (float)$lng;
+      $space_search_by_kilos = 10000;
+      $query->select(\DB::raw("*,
+              (6371 * ACOS(COS(RADIANS($lat))
+              * COS(RADIANS(lat))
+              * COS(RADIANS($lng) - RADIANS(lng))
+              + SIN(RADIANS($lat))
+              * SIN(RADIANS(lat)))) AS distance"))
+          ->having('distance', '<=', $space_search_by_kilos)
+          ->orderBy('distance', 'asc')->get();
+  }
+
+  public function scopeSurrounded($query, $lat, $lng)
+  {
+      $lat = (float)$lat;
+      $lng = (float)$lng;
+      $space_search_by_kilos = 100000;
+      $query->select(\DB::raw("*,
+              (6371 * ACOS(COS(RADIANS($lat))
+              * COS(RADIANS(lat))
+              * COS(RADIANS($lng) - RADIANS(lng))
+              + SIN(RADIANS($lat))
+              * SIN(RADIANS(lat)))) AS distance"))
+          ->having('distance', '<=', $space_search_by_kilos)
+          ->orderBy('distance', 'asc')->get();
+  }
+
+
+  public function section()
+  {
+    return $this->belongsto(Section::class);
+  }
+
+  public function items()
+  {
+    return $this->hasMany(Item::class);
+  }
+
+  public function favourites()
+  {
+     return $this->morphMany(Favourite::class,'favoriteable');
+  }
+
+
+  public function reviews()
+  {
+     return $this->morphMany(Review::class,'reviewable');
+  }
+
+  public function offers()
+  {
+    return $this->hasMany(Offer::class);
+  }
 }

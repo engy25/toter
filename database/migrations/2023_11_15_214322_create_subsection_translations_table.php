@@ -12,7 +12,7 @@ class CreateSubsectionTranslationsTable extends Migration {
 			$table->bigInteger('sub_section_id')->unsigned();
 			$table->string('locale');
 			$table->string('name');
-			$table->text('description');
+			$table->text('description')->nullable();
       $table->unique(['sub_section_id', 'locale']);
 		});
 	}

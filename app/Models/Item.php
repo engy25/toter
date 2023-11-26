@@ -31,20 +31,20 @@ class Item extends Model implements TranslatableContract {
   {
     return asset('storage/images/items/' . $this->attributes['image']);
   }
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/items/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/items/' . $this->attributes['image']));
-        }
-      }
-      $image = $this->helper->upload_single_file($value, 'app/public/images/items/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/items/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/items/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $image = $this->helper->upload_single_file($value, 'app/public/images/items/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
@@ -53,12 +53,10 @@ class Item extends Model implements TranslatableContract {
 
 
 
-
-
-
-
-
-
+	public function days()
+	{
+		return $this->belongsToMany(Day::class, 'item_days', 'item_id', 'day_id');
+	}
 
 
 	public function drinks()
@@ -68,7 +66,7 @@ class Item extends Model implements TranslatableContract {
 
 	public function store()
 	{
-		return $this->belongsTo(StoreCategory::class);
+		return $this->belongsTo(Store::class);
 	}
 
 	public function category()
@@ -80,5 +78,17 @@ class Item extends Model implements TranslatableContract {
 	{
 		return $this->hasMany(Side::class);
 	}
+
+  public function favourites()
+  {
+     return $this->morphMany(Favourite::class,'favoriteable');
+  }
+
+
+
+  public function reviews()
+  {
+     return $this->morphMany(Review::class,'reviewable');
+  }
 
 }

@@ -11,11 +11,11 @@ class CreateOffersTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('store_id')->unique()->unsigned();
+			$table->bigInteger('store_id')->unsigned();
 			$table->integer('discount_percentage')->nullable();
 			$table->integer('order_counts')->default('1');
 			$table->string('image');
-			$table->decimal('min_price', 10,2);
+			$table->decimal('min_price', 10,2)->default(0);
 			$table->integer('required_points');
 			$table->bigInteger('tier_id')->unsigned()->default('1');
 			$table->integer('earned_points')->default('0');

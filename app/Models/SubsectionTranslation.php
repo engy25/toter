@@ -9,4 +9,5 @@ class SubsectionTranslation extends Model {
 	protected $table = 'subsection_translations';
 	public $timestamps = false;
 
+
 }

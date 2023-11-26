@@ -11,7 +11,7 @@ class CreatePointUsersTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('user_id')->unique()->unsigned();
+			$table->bigInteger('user_id')->unsigned();
 			$table->bigInteger('pointeable_id')->unsigned();
 			$table->string('pointeable_type');
 			$table->integer('point_earned')->default('0');

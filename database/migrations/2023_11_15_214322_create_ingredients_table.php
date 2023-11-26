@@ -11,7 +11,7 @@ class CreateIngredientsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->string('image');
+			$table->string('image')->nullable();
 			$table->bigInteger('item_id')->unsigned();
 		});
 	}
