@@ -34,7 +34,7 @@ class SectionController extends Controller
 
     $response["stores"] = SimpleStoreResource::collection(Store::Surrounded($request->lat, $request->lng)->where("section_id", $id)->get());
 
-    $response["sub_ssections"] = SubSectionResource::collection($subsections);
+    $response["sub_sections"] = SubSectionResource::collection($subsections);
 
     return $this->helper->responseJson(
       'success',

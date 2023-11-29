@@ -4,8 +4,8 @@ namespace App\Http\Resources\Api\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\{Review, Favourite};
-
-class SimpleStoreResource extends JsonResource
+use App\Http\Resources\Api\User\{CategoryResource,ReviewResource};
+class StoreResource extends JsonResource
 {
   /**
    * Transform the resource into an array.
@@ -15,8 +15,13 @@ class SimpleStoreResource extends JsonResource
    */
   public function toArray($request)
   {
-    $reviews_count = Review::where("reviewable_type", "App\Models\Store")
-      ->where("reviewable_id", $this->id)->count();
+    $reviews = Review::where("reviewable_type", "App\Models\Store")
+      ->where("reviewable_id", $this->id);
+
+    $reviews_count=$reviews->count();
+    $highest_rating=$reviews->whereNotNull("comment")->orderBy('rating','desc')->take(5)->get();
+
+
 
     $fav = false;
 
@@ -29,34 +34,33 @@ class SimpleStoreResource extends JsonResource
 
     }
     $offer_name = "";
-    $offer_discount_percentage=0;
+    $offer_discount_percentage = 0;
 
 
     if ($this->is_offered == 1 && $this->offers()) {
 
       $offer_name = $this->offers()->first()->name;
-      $offer_discount_percentage=$this->offers()->first()->discount_percentage;
+      $offer_discount_percentage = $this->offers()->first()->discount_percentage;
     }
-
-
-
-
     return [
       "id" => $this->id,
       "name" => $this->name,
       "image" => $this->image,
       "price" => (double) $this->price,
       "currency" => $this->defaultCurrency->name,
+      "exchange_rate"=>(double)$this->exchange_rate,
+      "to_currency"=>$this->toCurrency->name,
+      'offer_name' => $offer_name,
+      'offer_discount' => (int) $offer_discount_percentage . '' . '%',
       "delivery_time" => $this->delivery_time . " " . trans("api.unit"),
+      'status' => $this->statusvalue,
+      'working_hours' => $this->TodayWorkingHours,
+      "reviews"=>ReviewResource::collection($highest_rating),
       "reviews_count" => $reviews_count,
       'rating' => $this->reviews->isEmpty() ? 0 : (double) round($this->reviews->pluck('rating')->sum() / $this->reviews->pluck('rating')->count(), 1),
       'favourite' => ($fav) ? 1 : 0,
-      'offer_name' => $offer_name,
-      'offer_discount'=>(int)$offer_discount_percentage.''.'%',
-      'status'=>$this->statusvalue,
-      'working_hours'=>$this->TodayWorkingHours
+      "tags" => CategoryResource::Collection($this->tags),
 
     ];
-
   }
 }

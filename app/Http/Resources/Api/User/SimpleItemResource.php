@@ -29,6 +29,8 @@ class SimpleItemResource extends JsonResource
 
     }
 
+
+
     return [
       "id" => $this->id,
       "name" => $this->name,
@@ -39,6 +41,7 @@ class SimpleItemResource extends JsonResource
       "reviews_count" => $reviews_count,
       'rating' => $this->reviews->isEmpty() ? 0 : (double) round($this->reviews->pluck('rating')->sum() / $this->reviews->pluck('rating')->count(), 1),
       'favourite' => ($fav) ? 1 : 0,
+      'popuar'=>$this->status
     ];
   }
 }

@@ -91,4 +91,17 @@ class Item extends Model implements TranslatableContract {
      return $this->morphMany(Review::class,'reviewable');
   }
 
+  public function orderItems()
+  {
+    return $this->hasMany(OrderItem::class);
+  }
+/**this items popular or not */
+public function getStatusAttribute()
+{
+    $orderItemsCount = $this->orderItems()->count();
+
+    return ($orderItemsCount > 1) ? trans('api.popular') : null;
+}
+
+
 }

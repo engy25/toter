@@ -88,11 +88,12 @@ return [
   "order_not_found" => "You Donot Have This Order",
   "text_of_tier" => 'There are :count additional orders remaining to upgrade to the golden tier until :duration',
   "text_of_goldeen_tier" =>"Your Are In Goden Tier And You Enjoy alot of rewards and offers",
-  "unit" => 'm'
-
-
-
-
-
+  "unit" => 'm',
+  "open"=>'open',
+  "close"=>'close',
+  "popular"=>'popualr',
+  "store_not_found"=>"المتجر غير موجود",
+  "not_found" => "غير موجود",
+  "reviews_not_allowed"=>"غير مسموح بعمل مراجعه"
 
 ];

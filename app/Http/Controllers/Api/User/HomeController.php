@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\{User, Tier, Offer, Section, Store};
 use App\Http\Resources\Api\User\{HomeResource, TierResource, OfferResource, SectionResource, MainOfferResource, SimpleStoreResource};
 use App\Helpers\Helpers;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -84,5 +85,31 @@ class HomeController extends Controller
       return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, (object) ["home" => (object) $response]);
     }
   }
+
+
+  /***section 50 %percent */
+  /***section  New the stores that created fro the last 3 months ago */
+
+  public function indexStores(Request $request, $type)
+  {
+    if ($type == "new") {
+      $offer_store_ids = Offer::valid()->where("discount_percentage", 50)->pluck("store_id")->toArray();
+      $stores = Store::whereIn("id", $offer_store_ids)->paginate(10);
+
+      return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, ['up_to_50' => SimpleStoreResource::collection($stores)->response()->getData(true)]);
+
+    } elseif ($type == "up_to_50") {
+      $stores = Store::Surrounded($request->lat, $request->lng)->where("created_at", '>=', Carbon::now()->subMonths(3))->paginate(10);
+
+      return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, ['new' => SimpleStoreResource::collection($stores)->response()->getData(true)]);
+
+    }
+
+  }
+
+
+
+
+
 
 }

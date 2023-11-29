@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
 use App\Helpers\Helpers;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+
 class Store extends Model implements TranslatableContract
 {
 
@@ -70,7 +72,7 @@ class Store extends Model implements TranslatableContract
     return $this->belongsTo(Currency::class);
   }
 
-  public function storeCategories()
+  public function tags()
   {
     return $this->hasMany(StoreCategory::class);
   }
@@ -81,37 +83,37 @@ class Store extends Model implements TranslatableContract
   }
   public function weekHours()
   {
-      return $this->hasMany(WeekHour::class);
+    return $this->hasMany(WeekHour::class);
   }
 
   public function scopeNearest($query, $lat, $lng)
   {
-      $lat = (float)$lat;
-      $lng = (float)$lng;
-      $space_search_by_kilos = 10000;
-      $query->select(\DB::raw("*,
+    $lat = (float) $lat;
+    $lng = (float) $lng;
+    $space_search_by_kilos = 10000;
+    $query->select(\DB::raw("*,
               (6371 * ACOS(COS(RADIANS($lat))
               * COS(RADIANS(lat))
               * COS(RADIANS($lng) - RADIANS(lng))
               + SIN(RADIANS($lat))
               * SIN(RADIANS(lat)))) AS distance"))
-          ->having('distance', '<=', $space_search_by_kilos)
-          ->orderBy('distance', 'asc')->get();
+      ->having('distance', '<=', $space_search_by_kilos)
+      ->orderBy('distance', 'asc')->get();
   }
 
   public function scopeSurrounded($query, $lat, $lng)
   {
-      $lat = (float)$lat;
-      $lng = (float)$lng;
-      $space_search_by_kilos = 100000;
-      $query->select(\DB::raw("*,
+    $lat = (float) $lat;
+    $lng = (float) $lng;
+    $space_search_by_kilos = 100000;
+    $query->select(\DB::raw("*,
               (6371 * ACOS(COS(RADIANS($lat))
               * COS(RADIANS(lat))
               * COS(RADIANS($lng) - RADIANS(lng))
               + SIN(RADIANS($lat))
               * SIN(RADIANS(lat)))) AS distance"))
-          ->having('distance', '<=', $space_search_by_kilos)
-          ->orderBy('distance', 'asc')->get();
+      ->having('distance', '<=', $space_search_by_kilos)
+      ->orderBy('distance', 'asc')->get();
   }
 
 
@@ -127,17 +129,55 @@ class Store extends Model implements TranslatableContract
 
   public function favourites()
   {
-     return $this->morphMany(Favourite::class,'favoriteable');
+    return $this->morphMany(Favourite::class, 'favoriteable');
   }
 
 
   public function reviews()
   {
-     return $this->morphMany(Review::class,'reviewable');
+    return $this->morphMany(Review::class, 'reviewable');
   }
 
   public function offers()
   {
     return $this->hasMany(Offer::class);
+  }
+
+
+  public function getStatusValueAttribute()
+  {
+    $todayName = Carbon::parse(now())->dayName;
+    $lang=app()->getLocale();
+
+
+    $weekHourRestaurantToday = WeekHour::where(['weekhours.store_id' => $this->id])
+      ->join('days', 'days.id', 'weekhours.day_id')
+      ->join('day_translations as dTrans', 'dTrans.day_id', 'days.id')
+            ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])
+      ->where(['name' => $todayName])
+      ->select([
+        'weekhours.from',
+        'weekhours.to',
+      ])->first();
+
+   return now()->format('H:i:s') < ($weekHourRestaurantToday->to ?? null) && now()->format('H:i:s') > ($weekHourRestaurantToday->from ?? null) ? trans('api.open') : trans('api.close');
+  }
+
+  public function getTodayWorkingHoursAttribute()
+  {
+    $todayName = Carbon::parse(now())->dayName;
+    $lang = app()->getLocale();
+
+    $weekHourRestaurantToday = WeekHour::where(['weekhours.store_id' => $this->id])
+      ->join('days', 'days.id', 'weekhours.day_id')
+      ->join('day_translations as dTrans', 'dTrans.day_id', 'days.id')
+      ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])
+      ->select([
+        'weekhours.from',
+        'weekhours.to',
+      ])->first();
+
+    $weekHourRestaurantToday = Carbon::parse($weekHourRestaurantToday->from)->format('g:i A') . ' - ' . Carbon::parse($weekHourRestaurantToday->to)->format('g:i A');
+    return $weekHourRestaurantToday;
   }
 }

@@ -85,6 +85,12 @@ return [
   "order_not_found" => "انت لا تمتلك ذلك الطلب",
   "text_of_tier" => " يوجد :count طلبات متبقيه للترقيه للمستوي الاخضر حتي :duration",
   "text_of_goldeen_tier" => "انت الان في الفئه الذهبيه وتستمتع بالكثير من الجائز والعروض",
-  "unit" => 'د'
+  "unit" => 'د',
+  "open" => 'مفتوح',
+  "close" => 'مغلق',
+  "popular" => 'شائع',
+  "store_not_found" => "store Not Found",
+  "not_found" => "Not Found",
+  "reviews_not_allowed"=>"Reviews Not Allowed"
 ];
 

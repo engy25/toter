@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
     // $this->call(sectionSeeder::class);
     // $this->call(subsectionSeeder::class);
     // $this->call(storeSeeder::class);
-$this->call(offerSeeder::class);
+// $this->call(offerSeeder::class);
 //  $this->call(StoreCategorySeeder::class);
 //  $this->call(pointStoreSeeder::class);
     // $this->call(itemSeeder::class);
@@ -40,5 +40,6 @@ $this->call(offerSeeder::class);
 //  $this->call(daySeeder::class);
 // $this->call(serviceSeeder::class);
 //  $this->call(butlerSeeder::class);
+// $this->call(StatusSeeder::class);
   }
 }

@@ -20,8 +20,6 @@ class SizeSeeder extends Seeder
         'price' =>2,
         'item_id'=>1,
 
-
-
       ]);
 
       SizeTranslation::create([

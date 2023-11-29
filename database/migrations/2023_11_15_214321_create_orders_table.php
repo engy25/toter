@@ -29,7 +29,7 @@ class CreateOrdersTable extends Migration {
 			$table->text('to_driver_instructions')->nullable();
 			$table->integer('delivery_time')->nullable();
 			$table->decimal('exchange_rate', 10,2);
-			$table->bigInteger('coupon_id')->unsigned();
+			$table->bigInteger('coupon_id')->unsigned()->nullable();
 		});
 	}
 

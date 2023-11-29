@@ -12,7 +12,11 @@ use App\Http\Controllers\Api\{
   User\TierController,
   User\ButlerController,
   User\HomeController,
-  User\SectionController
+  User\SectionController,
+  User\OfferController,
+  User\SubSectionController,
+  User\StoreController,
+  User\ReviewController,
 
 
 };
@@ -33,6 +37,7 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 Route::namespace('Api')->middleware('setLocale')->group(function () {
+
 
 
       /**
@@ -88,8 +93,32 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       Route::get('get-country', [CountryController::class, 'index']);
 
       Route::get('home', [HomeController::class, 'index']);
+      /***new  */
+      Route::get('indexStores/{type}', [HomeController::class, 'indexStores']);
+
+      /**offers */
+      // Route::get('indexOffers/{id}/{tag_id?}', [OfferController::class, 'indexOffers']);
+      Route::get('indexOffers/{name}', [OfferController::class, 'indexOffers']);
+      /** */
+
       Route::get('sections', [SectionController::class, 'index']);
       Route::get('sections/{id}', [SectionController::class, 'show']);
+
+      /***subsection */
+
+      /**1 displat store when put id of subsection */
+
+      Route::get('subsection-store/{id}', [SubSectionController::class, 'showStore']);
+
+      /**store */
+      Route::get('store/{id}/{tag_id?}', [StoreController::class, 'show']);
+
+      /**review */
+      Route::get('review',[ReviewController::class,"show"]);
+
+
+
+
 
 
     });
@@ -144,6 +173,11 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
         /**Butler */
         Route::get('butler', [ButlerController::class, 'index']);
+
+              /**review */
+        Route::post('add-review',[ReviewController::class,"add"]);
+
+
 
       });
 
