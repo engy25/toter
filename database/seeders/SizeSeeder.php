@@ -19,7 +19,7 @@ class SizeSeeder extends Seeder
         'id' => 1,
         'price' =>2,
         'item_id'=>1,
-
+        'store_id'=>1
       ]);
 
       SizeTranslation::create([
@@ -40,7 +40,7 @@ class SizeSeeder extends Seeder
         'id' => 2,
         'price' =>4,
         'item_id'=>1,
-
+        'store_id'=>1
 
 
       ]);

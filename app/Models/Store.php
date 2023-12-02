@@ -138,9 +138,9 @@ class Store extends Model implements TranslatableContract
     return $this->morphMany(Review::class, 'reviewable');
   }
 
-  public function offers()
+  public function offer()
   {
-    return $this->hasMany(Offer::class);
+    return $this->hasOne(Offer::class);
   }
 
 

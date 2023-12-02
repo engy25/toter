@@ -20,8 +20,7 @@ class serviceSeeder extends Seeder
         'id' => 1,
         'item_id' => 2,
         'price' => 2,
-
-
+        'store_id'=>2
       ]);
 
       ServiceTranslation::create([
@@ -40,6 +39,8 @@ class serviceSeeder extends Seeder
         'id' => 2,
         'item_id' => 2,
         'price' => 5,
+        'store_id'=>2
+
 
       ]);
 

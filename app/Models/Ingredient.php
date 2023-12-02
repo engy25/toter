@@ -54,4 +54,13 @@ class Ingredient extends Model implements TranslatableContract {
     return $this->morphMany(CartItemOption::class, 'optionable');
   }
 
+  public function item()
+  {
+    return $this->belongsTo(Item::class);
+  }
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
+
 }

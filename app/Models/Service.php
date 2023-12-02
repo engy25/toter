@@ -29,6 +29,9 @@ class Service extends Model implements TranslatableContract
   {
     return $this->hasMany(ServiceTranslation::class);
   }
-
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 
 }

@@ -18,8 +18,8 @@ class optionSeeder extends Seeder
         'id' => 1,
         'price' =>0,
         'item_id'=>1,
-        'image'=>'download2.jpg'
-
+        'image'=>'download2.jpg',
+        'store_id'=>1
 
       ]);
 
@@ -41,8 +41,8 @@ class optionSeeder extends Seeder
         'id'=> 2,
         'price' => 2,
         'item_id'=>1,
-        'image'=>'download.jpg'
-
+        'image'=>'download.jpg',
+        'store_id'=>1
 
       ]);
 
@@ -64,8 +64,8 @@ class optionSeeder extends Seeder
         'id' => 3,
         'price' => 2,
         'item_id'=>1,
-        'image'=>'download1.jpg'
-
+        'image'=>'download1.jpg',
+        'store_id'=>1
 
       ]);
 

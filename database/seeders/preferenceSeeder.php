@@ -20,7 +20,7 @@ class preferenceSeeder extends Seeder
         'item_id' => '1',
         'price' => 0,
 
-
+        'store_id'=>1
       ]);
 
       PreferenceTranslation::create([
@@ -41,7 +41,7 @@ class preferenceSeeder extends Seeder
         'id' => 2,
         'item_id' => '1',
         'price' => 0,
-
+        'store_id'=>1
 
       ]);
 

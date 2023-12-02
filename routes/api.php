@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\{
   User\SubSectionController,
   User\StoreController,
   User\ReviewController,
+  User\ItemController
 
 
 };
@@ -37,6 +38,7 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 Route::namespace('Api')->middleware('setLocale')->group(function () {
+
 
 
 
@@ -116,6 +118,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**review */
       Route::get('review',[ReviewController::class,"show"]);
 
+
+      /**itm details */
+      Route::get('item',[ItemController::class,"show"]);
 
 
 

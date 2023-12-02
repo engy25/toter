@@ -59,6 +59,11 @@ class Drink extends Model implements TranslatableContract
     return $this->hasMany(DrinkTranslation::class);
   }
 
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
+
 
 
 }

@@ -53,16 +53,57 @@ class Item extends Model implements TranslatableContract {
 
 
 
-	public function days()
-	{
-		return $this->belongsToMany(Day::class, 'item_days', 'item_id', 'day_id');
-	}
 
 
 	public function drinks()
 	{
 		return $this->belongsToMany(Drink::class, 'item_drinks', 'item_id', 'drink_id');
 	}
+
+  public function addons()
+	{
+		return $this->belongsToMany(Addon::class, 'item_addons', 'item_id', 'addon_id');
+	}
+
+  public function gifts()
+  {
+    return $this->hasMany(ItemGift::class);
+  }
+
+  public function sizes()
+  {
+    return $this->hasMany(Size::class);
+  }
+
+  public function Addingredients()
+  {
+    return $this->hasMany(Ingredient::class)->where("add",1);
+  }
+
+  public function Removeingredients()
+  {
+    return $this->hasMany(Ingredient::class)->where("add",0);
+  }
+
+  public function days()
+  {
+    return $this->hasMany(Day::class);
+  }
+
+  public function services()
+  {
+    return $this->hasMany(Service::class);
+  }
+
+  public function preferences()
+  {
+    return $this->hasMany(Preference::class);
+  }
+
+  public function options()
+  {
+    return $this->hasMany(Option::class);
+  }
 
 	public function store()
 	{
@@ -101,6 +142,16 @@ public function getStatusAttribute()
     $orderItemsCount = $this->orderItems()->count();
 
     return ($orderItemsCount > 1) ? trans('api.popular') : null;
+}
+
+public function section()
+{
+  return $this->belongsto(Section::class);
+}
+
+public function subsection()
+{
+  return $this->belongsto(SubSection::class);
 }
 
 

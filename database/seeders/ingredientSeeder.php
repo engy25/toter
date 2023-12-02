@@ -20,15 +20,15 @@ class ingredientSeeder extends Seeder
       'id' => 1,
       'image' => 'images.jpg',
       'price' => 4,
-      'item_id'=>1
-
+      'item_id'=>1,
+      'store_id'=>1
     ]);
 
     IngredientTranslation::create([
       'ingredient_id' => 1,
       'locale' => "en",
       'name' => 'Mushroom',
-      
+
 
     ]);
     IngredientTranslation::create([
@@ -43,8 +43,8 @@ class ingredientSeeder extends Seeder
       'image' => 'download.jpg',
       'price' => 0,
       'item_id'=>1,
-      'add'=>0
-
+      'add'=>0,
+      'store_id'=>1
     ]);
 
     IngredientTranslation::create([
@@ -65,7 +65,8 @@ class ingredientSeeder extends Seeder
       'id' => 3,
       'price' => 0,
       'item_id'=>1,
-      'add'=>0
+      'add'=>0,
+      'store_id'=>1
 
     ]);
 
@@ -84,15 +85,11 @@ class ingredientSeeder extends Seeder
     ]);
 
 
-
-
-
-
-
     Ingredient::create([
       'id' => 4,
       'price' => 2,
       'item_id'=>1,
+      'store_id'=>1
 
     ]);
 

@@ -19,7 +19,7 @@ class drinkSeeder extends Seeder
       'id' => 1,
       'image' => '518b7GAV9FS.jpg',
       'price' => 4,
-
+      'store_id'=>1
 
     ]);
 
@@ -42,7 +42,7 @@ class drinkSeeder extends Seeder
       'id' => 2,
       'image' => 'download.jpg',
       'price' => 3,
-
+      'store_id'=>1
 
     ]);
 
@@ -65,7 +65,7 @@ class drinkSeeder extends Seeder
       'id' => 3,
       'image' => 'images.jpg',
       'price' => 4,
-
+        'store_id'=>1
 
     ]);
 
@@ -83,7 +83,7 @@ class drinkSeeder extends Seeder
 
     ]);
 
-   
+
 
   }
 }

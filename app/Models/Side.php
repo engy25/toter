@@ -56,7 +56,10 @@ class Side extends Model implements TranslatableContract {
   {
     return $this->hasMany(SideTranslation::class);
   }
-
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 
 
 }

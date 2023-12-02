@@ -33,4 +33,9 @@ class Preference extends Model implements TranslatableContract {
   {
     return $this->morphMany(CartItemOption::class, 'optionable');
   }
+
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 }

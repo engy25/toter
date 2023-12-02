@@ -34,7 +34,7 @@ class Option extends Model implements TranslatableContract
     return asset('storage/images/options/' . $this->attributes['image']);
   }
 
-  
+
   public function setImageAttribute($value)
   {
     if ($value && $value->isValid()) {
@@ -60,7 +60,10 @@ class Option extends Model implements TranslatableContract
     return $this->morphMany(CartItemOption::class, 'optionable');
   }
 
-
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 
   public function item()
   {

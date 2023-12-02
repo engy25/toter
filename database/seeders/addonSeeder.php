@@ -18,7 +18,8 @@ class addonSeeder extends Seeder
         'id' => 1,
         'image' => 'images.jpg',
         'price' => 4,
-        'name'=>"Mushroom"
+        'name'=>"Mushroom",
+        'store_id'=>1
 
       ]);
 
@@ -28,15 +29,16 @@ class addonSeeder extends Seeder
         'id' => 2,
         'image' => 'downlgoad.jpg',
         'price' => 5,
-        'name'=>"Tomatoes"
-
+        'name'=>"Tomatoes",
+        'store_id'=>1
       ]);
 
       Addon::create([
         'id' => 3,
         'image' => 'imag.jpg',
         'price' => 6,
-        'name'=>"Olives"
+        'name'=>"Olives",
+        'store_id'=>1
 
       ]);
 
@@ -44,7 +46,8 @@ class addonSeeder extends Seeder
         'id' => 4,
         'image' => 'downl.jpg',
         'price' => 7,
-        'name'=>"Cheese"
+        'name'=>"Cheese",
+        'store_id'=>1
 
       ]);
 

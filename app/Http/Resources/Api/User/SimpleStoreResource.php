@@ -32,10 +32,10 @@ class SimpleStoreResource extends JsonResource
     $offer_discount_percentage=0;
 
 
-    if ($this->is_offered == 1 && $this->offers()) {
+    if ($this->is_offered == 1 && $this->offer()) {
 
-      $offer_name = $this->offers()->first()->name;
-      $offer_discount_percentage=$this->offers()->first()->discount_percentage;
+      $offer_name = $this->offer()->first()->name;
+      $offer_discount_percentage=$this->offer()->first()->discount_percentage;
     }
 
 

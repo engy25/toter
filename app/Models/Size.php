@@ -54,4 +54,8 @@ class Size extends Model implements TranslatableContract
   {
     return $this->hasMany(SizeTranslation::class);
   }
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 }

@@ -48,4 +48,10 @@ class Addon extends Model
   }
 
 
+  public function items()
+	{
+		return $this->belongsToMany(Item::class, 'item_addons', 'addon_id',"item_id");
+	}
+
+
 }

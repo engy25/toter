@@ -28,6 +28,14 @@ class SimpleItemResource extends JsonResource
       ($fav) ? $fav = true : $fav = false;
 
     }
+    $to_currency='';
+    if($this->store->exchange_rate!=0)
+    {
+      $to_currency=$this->store->toCurrency->name;
+    }else{
+      $to_currency='';
+    }
+
 
 
 
@@ -36,7 +44,9 @@ class SimpleItemResource extends JsonResource
       "name" => $this->name,
       "image"=>$this->image,
       "price"=>(double)$this->price,
-      "currency"=>$this->store->defaultCurrency->name,
+      "default_currency"=>$this->store->defaultCurrency->name,
+      "to_currency"=>$to_currency,
+      'exchange_rate'=>(double)$this->exchange_rate,
       "delivery_time" => $this->store->delivery_time." ".trans("api.unit"),
       "reviews_count" => $reviews_count,
       'rating' => $this->reviews->isEmpty() ? 0 : (double) round($this->reviews->pluck('rating')->sum() / $this->reviews->pluck('rating')->count(), 1),
