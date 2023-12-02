@@ -91,6 +91,7 @@ return [
   "popular" => 'شائع',
   "store_not_found" => "store Not Found",
   "not_found" => "Not Found",
-  "reviews_not_allowed"=>"Reviews Not Allowed"
+  "reviews_not_allowed"=>"Reviews Not Allowed",
+  "not_found"=>"Not Found"
 ];
 

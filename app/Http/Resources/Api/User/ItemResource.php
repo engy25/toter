@@ -83,6 +83,7 @@ class ItemResource extends JsonResource
       'favourite' => ($fav) ? 1 : 0,
       'popuar' => $this->status,
       'delivery_fees' => $this->store->delivery_fees,
+      'points'=>$this->points
 
     ];
 

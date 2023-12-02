@@ -69,9 +69,11 @@ class HomeController extends Controller
         $discounts = Offer::valid()->where("subsection_id", $key)->latest()->take(10)->get();
 
         if ($discounts->count() > 0) {
-          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName) {
+          $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
+          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName, $highestDiscount) {
+            $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
             return [
-              'name' => $subsectionName . ' - ' . $offer->name,
+              'name' => $subsectionName . ' _ ' . $offerName,
               'details' => new MainOfferResource($offer),
             ];
           });
@@ -106,6 +108,94 @@ class HomeController extends Controller
     }
 
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public function yourFunction(Request $request)
+  {
+    // Offers in sections that are in the surrounded area
+    // Sections with surrounded stores
+    $surroundedSections = Section::SectionsWithSurroundedStores($request->header("lat"), $request->header("lng"));
+    $subsection_have_offers = Subsection::whereHas('offers')->whereIn("section_id", $surroundedSections->pluck('id')->toArray())->with('translations')->get();
+    $discountCategories = $subsection_have_offers->pluck('name', 'id')->toArray();
+
+    // Check if section type is specified in the request
+    if ($request->has('type')) {
+      $requestedType = $request->type;
+
+      // Check if the requested type exists in the discount categories
+      if (array_key_exists($requestedType, $discountCategories)) {
+        $key = $requestedType;
+        $subsectionName = $discountCategories[$key];
+
+        $discounts = Offer::valid()->where("subsection_id", $key)->latest()->take(10)->get();
+
+        if ($discounts->count() > 0) {
+          $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
+          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName, $highestDiscount) {
+            $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
+            return [
+              'name' => $subsectionName . ' - ' . $offerName,
+              'details' => new MainOfferResource($offer),
+            ];
+          });
+
+          $response[$offersData[0]['name']] = MainOfferResource::collection($discounts);
+        }
+      } else {
+        // Handle case where requested type does not exist
+        $response = ['error' => 'Invalid section type'];
+      }
+    } else {
+      // Iterate through offer categories to display all offers with the subsection
+      foreach ($discountCategories as $key => $subsectionName) {
+        $discounts = Offer::valid()->where("subsection_id", $key)->latest()->take(10)->get();
+
+        if ($discounts->count() > 0) {
+          $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
+          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName, $highestDiscount) {
+            $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
+            return [
+              'name' => $subsectionName . ' - ' . $offerName,
+              'details' => new MainOfferResource($offer),
+            ];
+          });
+
+          $response[$offersData[0]['name']] = MainOfferResource::collection($discounts);
+        }
+      }
+    }
+
+    return $response;
+  }
+
+
+
+
+
 
 
 

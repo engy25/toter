@@ -101,6 +101,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**offers */
       // Route::get('indexOffers/{id}/{tag_id?}', [OfferController::class, 'indexOffers']);
       Route::get('indexOffers/{name}', [OfferController::class, 'indexOffers']);
+      Route::get('offer', [OfferController::class, 'show']);
       /** */
 
       Route::get('sections', [SectionController::class, 'index']);
@@ -114,6 +115,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
 
       /**store */
       Route::get('store/{id}/{tag_id?}', [StoreController::class, 'show']);
+
+      /**Nearest Store */
+      Route::get('nearest-store', [StoreController::class, 'nearestStore']);
 
       /**review */
       Route::get('review',[ReviewController::class,"show"]);

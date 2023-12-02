@@ -32,13 +32,13 @@ class MainOfferResource extends JsonResource
     $items = new Item();
     $stores=Store::where("sub_section_id",$this->subsection_id)->get();
     return [
-      "id" => $this->id,
-      "icon" => $this->subsection->image,
-      "title"=>$this->title,
-      "name" => $this->name,
-      "description" => $this->description,
-      "discount_percentage" => $this->discount_percentage,
-      "required_points" => $this->required_points,
+      "offer_id" => $this->id,
+      "offer_icon" => $this->subsection->image,
+      "offer_title"=>$this->title,
+      "offer_name" => $this->name,
+      "offer_description" => $this->description,
+      "offer_discount_percentage" => $this->discount_percentage,
+      "offer_required_points" => $this->required_points,
       "tier" => $this->tier->name,
       "sub_section" => $this->subsection->name,
       // "stores"=>SimpleStoreResource::collection($stores)

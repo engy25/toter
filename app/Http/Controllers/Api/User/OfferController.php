@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Models\{Offer, Store, StoreCategory, Item,Subsection,Section};
-use App\Http\Resources\Api\User\{StoreResource, CategoryResource, SimpleItemResource, MainOfferResource};
+use App\Http\Resources\Api\User\{StoreResource, CategoryResource, SimpleItemResource, MainOfferResource,OfferResource};
 
 class OfferController extends Controller
 {
@@ -14,6 +14,28 @@ class OfferController extends Controller
   public function __construct()
   {
     $this->helper = new Helpers();
+  }
+
+
+  public function show(Request $request)
+  {
+    $offer=Offer::valid()->find($request->offer_id);
+
+    if (!$offer) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.not_found'),
+        404,
+        null
+      );
+    }
+
+    return $this->helper->responseJson(
+      'success',
+      trans('api.auth_data_retreive_success'),
+      200,
+      ["offer" =>  OfferResource::make($offer)]
+  );
   }
 
   /**
@@ -85,6 +107,8 @@ class OfferController extends Controller
           ["offers" => $offersData]
       );
   }
+
+
 
 
 

@@ -94,6 +94,6 @@ return [
   "popular"=>'popualr',
   "store_not_found"=>"المتجر غير موجود",
   "not_found" => "غير موجود",
-  "reviews_not_allowed"=>"غير مسموح بعمل مراجعه"
-
+  "reviews_not_allowed"=>"غير مسموح بعمل مراجعه",
+  "not_found"=>"غير موجود"
 ];
