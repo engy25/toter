@@ -58,4 +58,12 @@ class Size extends Model implements TranslatableContract
   {
     return $this->belongsTo(Store::class);
   }
+
+  public function getcurrencyAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+    $currency_name = CurrencyTranslation::where("currency_id", $default_currency->id)->first();
+    return $currency_name->name;
+
+  }
 }

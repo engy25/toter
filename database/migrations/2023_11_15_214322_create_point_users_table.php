@@ -14,9 +14,9 @@ class CreatePointUsersTable extends Migration {
 			$table->bigInteger('user_id')->unsigned();
 			$table->bigInteger('pointeable_id')->unsigned();
 			$table->string('pointeable_type');
-			$table->integer('point_earned')->default('0');
-			$table->integer('point_used')->default('0');
-			$table->integer('point_expired')->default('0');
+			$table->integer('point_earned',30)->default('0');
+			$table->integer('point_used',30)->default('0');
+			$table->integer('point_expired',30)->default('0');
 			$table->date('expired_at');
 		});
 	}

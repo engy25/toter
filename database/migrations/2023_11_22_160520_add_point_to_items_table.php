@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
 
-            $table->integer('points')->default(0);
+            $table->integer('points',30)->default(0);
         });
 
     }

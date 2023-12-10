@@ -2,22 +2,40 @@
 
 namespace App\Models;
 
+use App\Observers\CartObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class Cart extends Model {
+class Cart extends Model
+{
 
-	protected $table = 'carts';
-	public $timestamps = true;
+  protected $table = 'carts';
+  public $timestamps = true;
 
-	use SoftDeletes,HasFactory;
-  protected $guarded=[];
-	protected $dates = ['deleted_at'];
+  use SoftDeletes, HasFactory;
+  protected $guarded = [];
+  protected $dates = ['deleted_at'];
 
+  /**
+   * observer class //events
+   */
+  protected static function booted()
+  {
+    // static::creating(function(Cart $cart){
+    //   $cart->id=Str::uuid();
+
+    // });
+    static::observe(CartObserver::class);
+  }
+  public function cartItems()
+  {
+      return $this->hasMany(CartItemOption::class);
+  }
   public function store()
   {
-      return $this->belongsTo(Store::class);
+    return $this->belongsTo(Store::class);
   }
 
 

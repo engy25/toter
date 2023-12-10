@@ -89,9 +89,16 @@ return [
   "open" => 'مفتوح',
   "close" => 'مغلق',
   "popular" => 'شائع',
-  "store_not_found" => "store Not Found",
-  "not_found" => "Not Found",
-  "reviews_not_allowed"=>"Reviews Not Allowed",
-  "not_found"=>"Not Found"
+
+
+  "store_not_found"=>"المتجر غير موجود",
+  "not_found" => "غير موجود",
+  "reviews_not_allowed"=>"غير مسموح بعمل مراجعه",
+  "not_found"=>"غير موجود",
+  "reward_golden_tier"=>"المكافات الخاصه بالفئه الذهبية",
+  "msg_reward"=>"توصيل مجاني من الوضاح علي 10 طلبات متاح فقط للفئه الذهبيه حسابك ينتمي للفئه الخضراء لذلك قم باتمام 10 طلبات خلال شهر واحد للوصول للفئه الذهبيه وعاود شراء هذا الصنف ",
+  "msg_point"=>"انت لا تمتلك نقاط كافيه",
+  "alreadyaplliedoffer"=>"انت بالفعل استخدمت هذا العرض",
+  'offer_applied_success' => 'تم تطبيق العرض بنجاح',
 ];
 

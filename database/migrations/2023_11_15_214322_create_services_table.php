@@ -12,7 +12,7 @@ class CreateServicesTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 			$table->bigInteger('item_id')->unsigned();
-			$table->decimal('price', 10,2)->default('0');
+			$table->decimal('price', 30,2)->default('0');
 		});
 	}
 

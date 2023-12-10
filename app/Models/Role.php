@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model implements TranslatableContract
 {
-    use Translatable, SoftDeletes;
+    use Translatable;
 
     protected $guarded = ['id','created_at','updated_at','deleted_at'];
     public $translatedAttributes = ['name','desc'];

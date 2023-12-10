@@ -13,8 +13,8 @@ class CreateTiersTable extends Migration {
 			$table->softDeletes();
 			$table->integer('orders_count')->nullable();
 			$table->integer('duration_bydays')->default('30');
-			$table->integer('expired_duration_bydays')->default('90');
-			$table->integer('earn_reward_point');
+			$table->integer('expired_duration_bydays',30)->default('90');
+			$table->integer('earn_reward_point',30);
       $table->string('image')->nullable();
 		});
 	}

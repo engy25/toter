@@ -11,7 +11,7 @@ class CreateSidesTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->decimal('price', 10,2)->default('0');
+			$table->decimal('price', 30,2)->default('0');
 			$table->string('image');
 			$table->bigInteger('item_id')->unsigned();
 		});

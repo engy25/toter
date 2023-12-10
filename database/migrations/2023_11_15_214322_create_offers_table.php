@@ -15,12 +15,12 @@ class CreateOffersTable extends Migration {
 			$table->integer('discount_percentage')->nullable();
 			$table->integer('order_counts')->default('1');
 			$table->string('image');
-			$table->decimal('min_price', 10,2)->default(0);
-			$table->integer('required_points');
+			$table->decimal('min_price', 30,2)->default(0);
+			$table->integer('required_points',30);
 			$table->bigInteger('tier_id')->unsigned()->default('1');
-			$table->integer('earned_points')->default('0');
-			$table->decimal('saveup_price', 10,2)->default('0');
-			$table->integer('user_count')->default('10');
+			$table->integer('earned_points',30)->default('0');
+			$table->decimal('saveup_price', 30,2)->default('0');
+			// $table->integer('user_count')->default('10');
 			$table->tinyInteger('free_delivery')->default('0');
 			$table->date('from_date');
 			$table->date('to_date');

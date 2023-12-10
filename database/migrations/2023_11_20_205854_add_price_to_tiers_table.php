@@ -14,8 +14,8 @@ class AddPriceToTiersTable extends Migration
     public function up()
     {
         Schema::table('tiers', function (Blueprint $table) {
-            // $table->integer('extra_point_percentage')->default(0);
-            // $table->decimal('price', 10, 2);
+            // $table->integer('extra_point_percentage',30)->default(0);
+            // $table->decimal('price', 30, 2);
             // $table->bigInteger('currency_id')->unsigned();
 
 

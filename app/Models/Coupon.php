@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Coupon extends Model {
 
@@ -16,6 +17,11 @@ class Coupon extends Model {
   protected $guarded = [];
 
 	protected $dates = ['deleted_at'];
+
+  public function scopeLive($query)
+  {
+    $query->where("expire_date",'>=',date('Y-m-d'))->where("is_active",1);
+  }
 
 	public function users()
 	{

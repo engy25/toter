@@ -17,8 +17,11 @@ use App\Http\Controllers\Api\{
   User\SubSectionController,
   User\StoreController,
   User\ReviewController,
-  User\ItemController
-
+  User\ItemController,
+  User\SearchHistoryController,
+  User\OderButlerController,
+  User\OderController,
+  User\PointUserController,
 
 };
 use App\Http\Middleware\CheckRoleScopeMiddleware;
@@ -95,9 +98,11 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       Route::get('get-country', [CountryController::class, 'index']);
 
       Route::get('home', [HomeController::class, 'index']);
-      /***new  */
+      /***new and up_to_50 section  pagination in home */
       Route::get('indexStores/{type}', [HomeController::class, 'indexStores']);
 
+      /**offer of home pagination */
+      Route::get('index-offer-type', [HomeController::class, 'indexOfferType']);
       /**offers */
       // Route::get('indexOffers/{id}/{tag_id?}', [OfferController::class, 'indexOffers']);
       Route::get('indexOffers/{name}', [OfferController::class, 'indexOffers']);
@@ -125,6 +130,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
 
       /**itm details */
       Route::get('item',[ItemController::class,"show"]);
+
+      /**serch history */
+      Route::get("filter",[SearchHistoryController::class,"filter"]);
 
 
 
@@ -186,6 +194,27 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
               /**review */
         Route::post('add-review',[ReviewController::class,"add"]);
 
+
+
+        /**point  user */
+        Route::get("point-user-history",[PointUserController::class,"show"]);
+
+        /**recent Searches */
+
+
+        Route::get('recent-search',[SearchHistoryController::class,"recentSearches"]);
+        Route::post('recent-searches/delete', [SearchHistoryController::class,'deleteSearches']);
+        Route::post('recent-searches/destroy/{searchId}', [SearchHistoryController::class,'destroy']);
+        Route::post('store-search', [SearchHistoryController::class,'store']);
+
+        /**apply coupon */
+        Route::post("apply-coupon",[OderButlerController::class,"applyCoupon"]);
+
+        /**make order */
+
+        Route::post('make-butler-order',[OderButlerController::class,"store"]);
+        Route::post('make-order',[OderController::class,"store"]);
+        Route::post('apply-offer',[OfferController::class,"applyOffer"]);
 
 
       });

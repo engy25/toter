@@ -14,16 +14,12 @@ class CreateCartsTable extends Migration {
 			$table->bigInteger('item_id')->unsigned();
 			$table->bigInteger('user_id')->unsigned();
 			$table->bigInteger('size_id')->unsigned()->nullable();
-			$table->text('sides')->nullable();
 			$table->integer('qty')->default('1');
-			$table->text('options')->default('null');
 			$table->bigInteger('preference_id')->unsigned()->nullable();
 			$table->bigInteger('option_id')->unsigned()->nullable();
-			$table->string('drinks')->nullable();
-			$table->text('services')->nullable();
 			$table->text('notes')->nullable();
 			$table->bigInteger('gift_id')->unsigned()->nullable();
-      $table->text('choose_days')->nullable();
+
 		});
 	}
 

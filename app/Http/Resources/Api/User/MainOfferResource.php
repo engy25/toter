@@ -46,8 +46,8 @@ class MainOfferResource extends JsonResource
       "store_name" => $this->store->name,
       "store_image" => $this->store->image,
       "price" => $this->store->price,
-
-      "currency" => $this->store->defaultCurrency->name,
+      "currency" => $this->currency,
+      // "currency" => $this->store->defaultCurrency->name,
       "reviews_count" => $reviews_count,
       "delivery_time"=>$this->store->delivery_time,
       'rating' => $this->store->reviews->isEmpty() ? 0 : (double) round($this->store->reviews->pluck('rating')->sum() / $this->store->reviews->pluck('rating')->count(), 1),

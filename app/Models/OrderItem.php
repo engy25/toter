@@ -11,7 +11,7 @@ class OrderItem extends Model {
 	protected $table = 'order_items';
 	public $timestamps = true;
 
-	use SoftDeletes,HasFactory;
+	use HasFactory;
   protected $guarded = [];
 	protected $dates = ['deleted_at'];
 

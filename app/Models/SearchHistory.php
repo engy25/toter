@@ -11,7 +11,7 @@ class SearchHistory extends Model {
 	protected $table = 'search_histories';
 	public $timestamps = true;
 
-	use SoftDeletes,HasFactory;
+	use HasFactory;
 
 	protected $dates = ['deleted_at'];
   protected $guarded = [];

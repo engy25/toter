@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\User\SubSectionResource;
 use App\Models\Subsection;
+use App\Models\SubsectionTranslation;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\User\RequestOfferType;
 use App\Models\{User, Tier, Offer, Section, Store};
 use App\Http\Resources\Api\User\{HomeResource, TierResource, OfferResource, SectionResource, MainOfferResource, SimpleStoreResource};
 use App\Helpers\Helpers;
@@ -111,86 +113,53 @@ class HomeController extends Controller
 
 
 
+  /**
+   * Display THe offer pagination of the subsection depends on subsectionname
+   */
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  public function yourFunction(Request $request)
+  public function indexOfferType(RequestOfferType $request)
   {
-    // Offers in sections that are in the surrounded area
-    // Sections with surrounded stores
-    $surroundedSections = Section::SectionsWithSurroundedStores($request->header("lat"), $request->header("lng"));
-    $subsection_have_offers = Subsection::whereHas('offers')->whereIn("section_id", $surroundedSections->pluck('id')->toArray())->with('translations')->get();
-    $discountCategories = $subsection_have_offers->pluck('name', 'id')->toArray();
+    $requestedType = $request->subsection_name;
 
-    // Check if section type is specified in the request
-    if ($request->has('type')) {
-      $requestedType = $request->type;
+    $subsectionId = SubsectionTranslation::
+      where('name', $requestedType)
+      ->pluck("sub_section_id");
 
-      // Check if the requested type exists in the discount categories
-      if (array_key_exists($requestedType, $discountCategories)) {
-        $key = $requestedType;
-        $subsectionName = $discountCategories[$key];
+    $subsectionName = $requestedType;
 
-        $discounts = Offer::valid()->where("subsection_id", $key)->latest()->take(10)->get();
+    $discounts = Offer::valid()->where("subsection_id", $subsectionId)->paginate(15);
 
-        if ($discounts->count() > 0) {
-          $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
-          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName, $highestDiscount) {
-            $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
-            return [
-              'name' => $subsectionName . ' - ' . $offerName,
-              'details' => new MainOfferResource($offer),
-            ];
-          });
+    if ($discounts->count() > 0) {
 
-          $response[$offersData[0]['name']] = MainOfferResource::collection($discounts);
-        }
-      } else {
-        // Handle case where requested type does not exist
-        $response = ['error' => 'Invalid section type'];
-      }
-    } else {
-      // Iterate through offer categories to display all offers with the subsection
-      foreach ($discountCategories as $key => $subsectionName) {
-        $discounts = Offer::valid()->where("subsection_id", $key)->latest()->take(10)->get();
+      $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
+      $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionId, $subsectionName, $highestDiscount) {
+        $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
 
-        if ($discounts->count() > 0) {
-          $highestDiscount = $discounts->sortByDesc('discount_percentage')->first();
-          $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($subsectionName, $highestDiscount) {
-            $offerName = ($offer->id === $highestDiscount->id) ? $offer->name : $highestDiscount->name;
-            return [
-              'name' => $subsectionName . ' - ' . $offerName,
-              'details' => new MainOfferResource($offer),
-            ];
-          });
+        return [
+          'name' => $subsectionName . ' - ' . $offerName,
+          'details' => new MainOfferResource($offer),
+        ];
 
-          $response[$offersData[0]['name']] = MainOfferResource::collection($discounts);
-        }
-      }
+      });
+
+      return $this->helper->responseJson(
+        'success',
+        trans('api.auth_data_retreive_success'),
+        200,
+        [$offersData[0]['name'] => MainOfferResource::collection($discounts)->response()->getData(true)]
+      );
+
     }
-
-    return $response;
   }
+
+
+
+
+
+
 
 
 

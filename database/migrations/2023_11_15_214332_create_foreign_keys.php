@@ -363,16 +363,7 @@ class CreateForeignKeys extends Migration {
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
-		Schema::table('wallets', function(Blueprint $table) {
-			$table->foreign('user_id')->references('id')->on('users')
-						->onDelete('restrict')
-						->onUpdate('restrict');
-		});
-		Schema::table('wallets', function(Blueprint $table) {
-			$table->foreign('primary_currency_id')->references('id')->on('currencies')
-						->onDelete('restrict')
-						->onUpdate('restrict');
-		});
+		
 		Schema::table('options', function(Blueprint $table) {
 			$table->foreign('item_id')->references('id')->on('items')
 						->onDelete('restrict')

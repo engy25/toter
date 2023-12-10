@@ -24,13 +24,13 @@ class ServiceResource extends JsonResource
       }
         return [
           "id"=>$this->id,
-          'price'=>(double)$this->price,
           "name"=>$this->name,
           "price" => (double) $this->price,
-          "default_currency" => $this->store->defaultCurrency->name,
-          "to_currency" => $to_currency,
-          "to_price"=>$to_price,
-          'exchange_rate' => (double) $this->store->exchange_rate,
+          "currency" => $this->currency,
+          // "default_currency" => $this->store->defaultCurrency->name,
+          // "to_currency" => $to_currency,
+          // "to_price"=>$to_price,
+          // 'exchange_rate' => (double) $this->store->exchange_rate,
         ];
     }
 }

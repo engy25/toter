@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\User\OfferRequest;
 use App\Helpers\Helpers;
-use App\Models\{Offer, Store, StoreCategory, Item,Subsection,Section};
-use App\Http\Resources\Api\User\{StoreResource, CategoryResource, SimpleItemResource, MainOfferResource,OfferResource};
+use App\Models\{Offer, Store, StoreCategory, Item, Subsection, Section, PointUser, OfferUser};
+use App\Http\Resources\Api\User\{StoreResource, CategoryResource, SimpleItemResource, MainOfferResource, OfferResource};
 
 class OfferController extends Controller
 {
@@ -19,7 +20,7 @@ class OfferController extends Controller
 
   public function show(Request $request)
   {
-    $offer=Offer::valid()->find($request->offer_id);
+    $offer = Offer::valid()->find($request->offer_id);
 
     if (!$offer) {
       return $this->helper->responseJson(
@@ -34,8 +35,8 @@ class OfferController extends Controller
       'success',
       trans('api.auth_data_retreive_success'),
       200,
-      ["offer" =>  OfferResource::make($offer)]
-  );
+      ["offer" => OfferResource::make($offer)]
+    );
   }
 
   /**
@@ -89,24 +90,88 @@ class OfferController extends Controller
     $subsection_have_offers = Subsection::whereHas('offers')->whereIn("section_id", $surroundedSections->pluck('id')->toArray())->with('translations')->get();
     $discountCategories = $subsection_have_offers->pluck('name', 'id')->toArray();
 
-      $discounts = Offer::valid()->whereNotNull("item_id")->latest()->get();
+    $discounts = Offer::valid()->whereNotNull("item_id")->latest()->get();
 
-      $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($name) {
-          return [
-              'name' => $name . ' - ' . $offer->name,
-              'id'=>$offer->id,
+    $offersData = MainOfferResource::collection($discounts)->map(function ($offer) use ($name) {
+      return [
+        'name' => $name . ' - ' . $offer->name,
+        'id' => $offer->id,
 
-              'details' => new MainOfferResource($offer),
-          ];
-      });
+        'details' => new MainOfferResource($offer),
+      ];
+    });
+
+    return $this->helper->responseJson(
+      'success',
+      trans('api.auth_data_retreive_success'),
+      200,
+      ["offers" => $offersData]
+    );
+  }
+
+  /**
+   * in point user make
+   */
+  public function applyOffer(OfferRequest $request)
+  {
+    $user = auth("api")->user();
+
+    $offer = Offer::valid()->find($request->offer_id);
+    if (!$offer) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.not_found'),
+        422,
+        null
+      );
+
+    }
+    if ($offer->tier_id == 2 && $user->tier_id == 1) {
 
       return $this->helper->responseJson(
-          'success',
-          trans('api.auth_data_retreive_success'),
-          200,
-          ["offers" => $offersData]
+        'failed',
+        trans('api.msg_reward'),
+        422,
+        [trans('api.reward_golden_tier') => trans('api.msg_reward')]
       );
+
+    }
+    if ($offer->required_points > $user->userPoints()) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.msg_point'),
+        422,
+        null
+      );
+    }
+    $points = OfferUser::where("user_id", $user->id)->where("offer_id", $offer->id)->first();
+
+    if ($points) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.alreadyaplliedoffer'),
+        422,
+        null
+      );
+    }
+
+    OfferUser::create([
+      "user_id" => $user->id,
+      "offer_id" => $offer->id,
+      "order_count_of_user" => $offer->order_counts,
+      "expire_at" => $offer->to_date,
+      "point_earned" => $offer->earned_points,
+      "free_delivery" => $offer->free_delivery
+    ]);
+
+    return $this->helper->responseJson('succcess', trans('api.offer_applied_success'), 200, null);
+
+
+
+
+
   }
+
 
 
 

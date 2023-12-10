@@ -14,7 +14,7 @@ class CreateItemsTable extends Migration {
 			$table->bigInteger('category_id')->unsigned()->default('0');
 			$table->bigInteger('store_id')->unsigned();
 			$table->string('image');
-			$table->decimal('price', 10,2);
+			$table->decimal('price', 30,2);
 			$table->bigInteger('default_currency_id')->unsigned();
 			$table->tinyInteger('has_gift')->default('0');
 			$table->bigInteger('has_offer')->default('0');

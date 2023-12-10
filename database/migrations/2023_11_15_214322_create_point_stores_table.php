@@ -14,8 +14,8 @@ class CreatePointStoresTable extends Migration {
 			$table->bigInteger('store_id')->unique()->unsigned();
 			$table->integer('order_counts')->default('0');
 			$table->integer('expire_days')->default('1');
-			$table->decimal('min_price', 10,2);
-			$table->integer('points_earned')->default('0');
+			$table->decimal('min_price', 30,2);
+			$table->integer('points_earned',30)->default('0');
 		});
 	}
 

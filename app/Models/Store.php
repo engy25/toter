@@ -147,20 +147,20 @@ class Store extends Model implements TranslatableContract
   public function getStatusValueAttribute()
   {
     $todayName = Carbon::parse(now())->dayName;
-    $lang=app()->getLocale();
+    $lang = app()->getLocale();
 
 
     $weekHourRestaurantToday = WeekHour::where(['weekhours.store_id' => $this->id])
       ->join('days', 'days.id', 'weekhours.day_id')
       ->join('day_translations as dTrans', 'dTrans.day_id', 'days.id')
-            ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])
+      ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])
       ->where(['name' => $todayName])
       ->select([
         'weekhours.from',
         'weekhours.to',
       ])->first();
 
-   return now()->format('H:i:s') < ($weekHourRestaurantToday->to ?? null) && now()->format('H:i:s') > ($weekHourRestaurantToday->from ?? null) ? trans('api.open') : trans('api.close');
+    return now()->format('H:i:s') < ($weekHourRestaurantToday->to ?? null) && now()->format('H:i:s') > ($weekHourRestaurantToday->from ?? null) ? trans('api.open') : trans('api.close');
   }
 
   public function getTodayWorkingHoursAttribute()
@@ -180,4 +180,19 @@ class Store extends Model implements TranslatableContract
     $weekHourRestaurantToday = Carbon::parse($weekHourRestaurantToday->from)->format('g:i A') . ' - ' . Carbon::parse($weekHourRestaurantToday->to)->format('g:i A');
     return $weekHourRestaurantToday;
   }
+
+  public function getcurrencyAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+    $currency_name = CurrencyTranslation::where("currency_id", $default_currency->id)->first();
+    return $currency_name->name;
+
+  }
+
+  public function districts()
+  {
+    return $this->hasMany(District::class);
+    
+  }
+
 }

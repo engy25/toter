@@ -11,7 +11,7 @@ class CreatePreferencesTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->decimal('price', 10,2)->default('0');
+			$table->decimal('price', 30,2)->default('0');
 			$table->bigInteger('item_id')->unsigned();
 		});
 	}

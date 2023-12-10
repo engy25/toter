@@ -10,7 +10,7 @@ class CreateSearchHistoriesTable extends Migration {
 		Schema::create('search_histories', function(Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->timestamps();
-			$table->softDeletes();
+		
 			$table->bigInteger('user_id')->unsigned();
 			$table->tinyInteger('is_active')->default('1');
 			$table->string('keyword');

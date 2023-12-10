@@ -13,7 +13,7 @@ class CreateAddonsTable extends Migration {
 			$table->softDeletes();
 			$table->string('name');
 			$table->string('image')->nullable();
-			$table->decimal('price', 10,2)->default('0');
+			$table->decimal('price', 30,2)->default('0');
 		});
 	}
 

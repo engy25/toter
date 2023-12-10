@@ -70,9 +70,14 @@ class Tier extends Model implements TranslatableContract
 
   public function userPoints()
   {
-      $user_id = auth('api')->id();
-      $point_user = PointUser::where("user_id", $user_id)->sum('point_earned');
-      return (int)$point_user;
+    $user_id = auth('api')->id();
+    $point_user = PointUser::where("user_id", $user_id)->where("expired_at", '>=', date('Y-m-d'))->sum('point_earned');
+    $offer_point=OfferUser::where("user_id", $user_id)->where("expire_at", '>=', date('Y-m-d'))->sum('point_earned');
+
+
+    $points=$point_user+$offer_point;
+
+    return (int) $points;
   }
 
 

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('ingredients', function (Blueprint $table) {
             //
-            $table->decimal('price',10,2)->default(0);
+            $table->decimal('price',30,2)->default(0);
         });
     }
 

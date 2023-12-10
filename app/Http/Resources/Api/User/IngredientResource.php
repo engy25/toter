@@ -28,10 +28,11 @@ class IngredientResource extends JsonResource
           "name"=>$this->name,
           "imge"=>$this->image,
           "price" => (double) $this->price,
-          "default_currency" => $this->store->defaultCurrency->name,
-          "to_currency" => $to_currency,
-          "to_price"=>$to_price,
-          'exchange_rate' => (double) $this->store->exchange_rate,
+          "currency" => $this->currency,
+          // "default_currency" => $this->store->defaultCurrency->name,
+          // "to_currency" => $to_currency,
+          // "to_price"=>$to_price,
+          // 'exchange_rate' => (double) $this->store->exchange_rate,
         ];
     }
 }

@@ -49,9 +49,15 @@ class Addon extends Model
 
 
   public function items()
-	{
-		return $this->belongsToMany(Item::class, 'item_addons', 'addon_id',"item_id");
-	}
+  {
+    return $this->belongsToMany(Item::class, 'item_addons', 'addon_id', "item_id");
+  }
+  public function getcurrencyAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+    $currency_name = CurrencyTranslation::where("currency_id", $default_currency->id)->first();
+    return $currency_name->name;
 
+  }
 
 }

@@ -10,21 +10,22 @@ use App\Helpers\Helpers;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 
-class Item extends Model implements TranslatableContract {
+class Item extends Model implements TranslatableContract
+{
 
-	protected $table = 'items';
-	public $timestamps = true;
+  protected $table = 'items';
+  public $timestamps = true;
 
-	use SoftDeletes,HasFactory,Translatable;
-  public $translatedAttributes = ['name','description'];
+  use SoftDeletes, HasFactory, Translatable;
+  public $translatedAttributes = ['name', 'description'];
   protected $guarded = [];
-	protected $dates = ['deleted_at'];
+  protected $dates = ['deleted_at'];
 
 
   public $helper;
   public function __construct()
   {
-      $this->helper= new Helpers();
+    $this->helper = new Helpers();
   }
 
   public function getImageAttribute()
@@ -55,15 +56,15 @@ class Item extends Model implements TranslatableContract {
 
 
 
-	public function drinks()
-	{
-		return $this->belongsToMany(Drink::class, 'item_drinks', 'item_id', 'drink_id');
-	}
+  public function drinks()
+  {
+    return $this->belongsToMany(Drink::class, 'item_drinks', 'item_id', 'drink_id');
+  }
 
   public function addons()
-	{
-		return $this->belongsToMany(Addon::class, 'item_addons', 'item_id', 'addon_id');
-	}
+  {
+    return $this->belongsToMany(Addon::class, 'item_addons', 'item_id', 'addon_id');
+  }
 
   public function gifts()
   {
@@ -77,12 +78,12 @@ class Item extends Model implements TranslatableContract {
 
   public function Addingredients()
   {
-    return $this->hasMany(Ingredient::class)->where("add",1);
+    return $this->hasMany(Ingredient::class)->where("add", 1);
   }
 
   public function Removeingredients()
   {
-    return $this->hasMany(Ingredient::class)->where("add",0);
+    return $this->hasMany(Ingredient::class)->where("add", 0);
   }
 
   public function days()
@@ -105,54 +106,92 @@ class Item extends Model implements TranslatableContract {
     return $this->hasMany(Option::class);
   }
 
-	public function store()
-	{
-		return $this->belongsTo(Store::class);
-	}
+  public function store()
+  {
+    return $this->belongsTo(Store::class);
+  }
 
-	public function category()
-	{
-		return $this->belongsTo(StoreCategory::class);
-	}
+  public function category()
+  {
+    return $this->belongsTo(StoreCategory::class);
+  }
 
-	public function sides()
-	{
-		return $this->hasMany(Side::class);
-	}
+  public function sides()
+  {
+    return $this->hasMany(Side::class);
+  }
 
   public function favourites()
   {
-     return $this->morphMany(Favourite::class,'favoriteable');
+    return $this->morphMany(Favourite::class, 'favoriteable');
   }
 
 
 
   public function reviews()
   {
-     return $this->morphMany(Review::class,'reviewable');
+    return $this->morphMany(Review::class, 'reviewable');
   }
 
   public function orderItems()
   {
     return $this->hasMany(OrderItem::class);
   }
-/**this items popular or not */
-public function getStatusAttribute()
-{
+  /**this items popular or not */
+  public function getStatusAttribute()
+  {
     $orderItemsCount = $this->orderItems()->count();
 
     return ($orderItemsCount > 1) ? trans('api.popular') : null;
-}
+  }
 
-public function section()
-{
-  return $this->belongsto(Section::class);
-}
+  public function section()
+  {
+    return $this->belongsto(Section::class);
+  }
 
-public function subsection()
-{
-  return $this->belongsto(SubSection::class);
-}
+  public function subsection()
+  {
+    return $this->belongsto(SubSection::class);
+  }
+
+
+  /***
+   *
+   *  public static function applyCouponDiscount($coupon, &$order_data, $sub_total)
+    {
+      $percentage = $coupon->discount_percentage / 100;
+      $coupon_discount = $sub_total * $percentage;
+
+      $order_data["total"] = $sub_total - $coupon_discount;
+      $order_data["sub_total"] = $order_data["total"];
+      $order_data['coupon_id'] = $coupon->id;
+
+      $coupon->update([
+        'user_used_code_count' => $coupon->user_used_code_count + 1,
+      ]);
+    }
+   */
+  public function getPriceAttribute()
+  {
+    $added_value = $this->attributes["added_value"];
+    $item_price = $this->attributes["price"];
+    $percentage = $added_value / 100;
+
+    $item_added_value = $item_price * $percentage;
+
+    return $item_price + $item_added_value;
+
+
+  }
+
+  public function getcurrencyAttribute()
+  {
+    $default_currency=Currency::where("default",1)->first();
+    $currency_name=CurrencyTranslation::where("currency_id",$default_currency->id)->first();
+    return $currency_name->name;
+
+  }
 
 
 }

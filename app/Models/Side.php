@@ -10,10 +10,11 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use App\Helpers\Helpers;
 
-class Side extends Model implements TranslatableContract {
+class Side extends Model implements TranslatableContract
+{
 
-	protected $table = 'sides';
-	public $timestamps = true;
+  protected $table = 'sides';
+  public $timestamps = true;
 
   protected $guarded = [];
 
@@ -23,7 +24,7 @@ class Side extends Model implements TranslatableContract {
   public $helper;
   public function __construct()
   {
-      $this->helper= new Helpers();
+    $this->helper = new Helpers();
   }
 
   public function getImageAttribute()
@@ -45,12 +46,12 @@ class Side extends Model implements TranslatableContract {
     }
   }
 
-	protected $dates = ['deleted_at'];
+  protected $dates = ['deleted_at'];
 
-	public function item()
-	{
-		return $this->belongsTo(Item::class);
-	}
+  public function item()
+  {
+    return $this->belongsTo(Item::class);
+  }
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
@@ -62,4 +63,16 @@ class Side extends Model implements TranslatableContract {
   }
 
 
+  public function options()
+  {
+    return $this->morphMany(CartItemOption::class, 'optionable');
+  }
+
+  public function getcurrencyAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+    $currency_name = CurrencyTranslation::where("currency_id", $default_currency->id)->first();
+    return $currency_name->name;
+
+  }
 }

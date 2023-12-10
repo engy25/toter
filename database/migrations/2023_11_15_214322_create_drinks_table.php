@@ -12,7 +12,7 @@ class CreateDrinksTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('image')->nullable();
-			$table->float('price');
+			$table->float('price',30,2);
 		});
 	}
 

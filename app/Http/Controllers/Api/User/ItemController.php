@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\{Item};
 use App\Helpers\Helpers;
 use App\Http\Resources\Api\User\ItemResource;
+
 class ItemController extends Controller
 {
   //
@@ -20,7 +21,7 @@ class ItemController extends Controller
 
   public function show(Request $request)
   {
-    $item = Item::with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Removeingredients","services", "options", "preferences"])->find($request->item_id);
+    $item = Item::with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Removeingredients", "services", "options", "preferences"])->find($request->item_id);
     if (!$item) {
       return $this->helper->responseJson(
         'failed',
@@ -30,14 +31,14 @@ class ItemController extends Controller
       );
     }
 
-    $response=ItemResource::make($item);
+    $response = ItemResource::make($item);
 
     return $this->helper->responseJson(
       'success',
       trans('api.auth_data_retreive_success'),
       200,
-      ["item" =>  $response]
-  );
+      ["item" => $response]
+    );
 
   }
 }

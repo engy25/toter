@@ -25,7 +25,7 @@ return new class extends Migration
           $table->bigInteger('store_id')->unsigned()->nullable();
           $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
 
-          $table->bigInteger('status_id')->unsigned();
+          $table->bigInteger('status_id')->unsigned()->nullable();
           $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
       });
     }

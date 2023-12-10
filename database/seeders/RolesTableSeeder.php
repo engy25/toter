@@ -20,7 +20,8 @@ class RolesTableSeeder extends Seeder
         ['name'=>'Admin','guard_name'=>'web'],
         ['name'=>'Vendor','guard_name'=>'web'],
         ['name'=>'User','guard_name'=>'api'],
-        ['name' => 'DataEntry','guard_name'=> 'web']
+        ['name' => 'DataEntry','guard_name'=> 'web'],
+        ['name' => 'Delivery','guard_name'=> 'api']
         // Add more roles as needed
     ]);
 

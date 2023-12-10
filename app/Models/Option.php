@@ -24,6 +24,9 @@ class Option extends Model implements TranslatableContract
     $this->helper = new Helpers();
   }
 
+
+
+
   protected $dates = ['deleted_at'];
 
 
@@ -69,5 +72,11 @@ class Option extends Model implements TranslatableContract
   {
     return $this->belongsTo(Item::class);
   }
+  public function getcurrencyAttribute()
+  {
+    $default_currency=Currency::where("default",1)->first();
+    $currency_name=CurrencyTranslation::where("currency_id",$default_currency->id)->first();
+    return $currency_name->name;
 
+  }
 }

@@ -12,8 +12,8 @@ class CreateStoresTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 			$table->bigInteger('default_currency_id')->unsigned()->default(1);
-			$table->decimal('price', 10,2)->nullable();
-      $table->decimal('exchange_rate', 10, 4);
+			$table->decimal('price', 30,2)->nullable();
+      $table->decimal('exchange_rate', 30, 2);
 			$table->bigInteger('to_currency_id')->unsigned();
 			$table->string('image');
 			// $table->time('from_hour');
@@ -22,7 +22,7 @@ class CreateStoresTable extends Migration {
 			$table->double('lat');
 			$table->double('lng');
 			$table->integer('delivery_time');
-			$table->float('delivery_fees');
+			$table->float('delivery_fees',30,2);
       $table->decimal('avg_rating', 3, 2)->default('0');
 			$table->tinyInteger('is_offered')->default('0');
 			$table->bigInteger('admin_id')->unsigned();

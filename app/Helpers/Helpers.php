@@ -453,15 +453,37 @@ class Helpers
   }
   public static function stripText($text, int $limit = null, $stripSpace = false)
   {
-      $description = strip_tags(html_entity_decode($text));
-      $description = preg_replace('/\s\s+/', ' ', $description);
-      if ($limit){
-          $description = \Illuminate\Support\Str::limit($description, $limit);
-      }
-      if ($stripSpace){
-          $description = str_replace(' ', '', $description);
-      }
-      return $description ?? '';
+    $description = strip_tags(html_entity_decode($text));
+    $description = preg_replace('/\s\s+/', ' ', $description);
+    if ($limit) {
+      $description = \Illuminate\Support\Str::limit($description, $limit);
+    }
+    if ($stripSpace) {
+      $description = str_replace(' ', '', $description);
+    }
+    return $description ?? '';
   }
+
+  public static function applyCouponDiscount($coupon, &$order_data, $sub_total)
+  {
+    $percentage = $coupon->discount_percentage / 100;
+    $coupon_discount = $sub_total * $percentage;
+
+    $order_data["total"] = $sub_total - $coupon_discount;
+    $order_data["sub_total"] = $order_data["total"];
+    $order_data['coupon_id'] = $coupon->id;
+
+    $coupon->update([
+      'user_used_code_count' => $coupon->user_used_code_count + 1,
+    ]);
+  }
+
+  public static function applyOffer( &$order_data, $sub_total)
+  {
+    
+
+  }
+
+
 
 }
