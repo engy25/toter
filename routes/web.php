@@ -35,6 +35,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
 */
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 $controller_path = 'App\Http\Controllers';
 
 // Main Page Route
