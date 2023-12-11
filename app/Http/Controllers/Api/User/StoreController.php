@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
-use App\Http\Resources\Api\User\{StoreResource, SimpleItemResource, SimpleStoreResource};
+use App\Http\Resources\Api\User\{StoreResource, SimpleItemResource, SimpleStoreResource,DistrictResource};
 use App\Models\{Store, Item};
 
 
@@ -70,6 +70,27 @@ class StoreController extends Controller
       );
 
   }
+  public function showStoreAreas(Request $request)
+  {
+    $store=Store::with('districts')->find($request->store_id);
+    if (!$store) {
+      return $this->helper->responseJson('failed', trans('api.store_not_found'), 404, null);
+    }
+    $districts=$store->districts;
+  
+
+    return $this->helper->responseJson(
+      'success',
+      trans('api.auth_data_retreive_success'),
+      200,
+       ["districts" => DistrictResource::collection($districts)]
+    );
+
+
+  }
+
+
+
 
 
 

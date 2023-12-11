@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
 //  $this->call(itemDrinkSeeder::class);
 // $this->call(itemGiftSeeder::class);
 
-// $this->call(optionSeeder::class);
+    // $this->call(optionSeeder::class);
 // $this->call(SizeSeeder::class);
 // $this->call(SideSeeder::class);
 // $this->call(preferenceSeeder::class);
@@ -41,5 +41,7 @@ class DatabaseSeeder extends Seeder
 // $this->call(serviceSeeder::class);
 //  $this->call(butlerSeeder::class);
 // $this->call(StatusSeeder::class);
+  //  $this->call(DistricSeeder::class);
+   // $this->call(DistrictStoreSeeder::class);
   }
 }

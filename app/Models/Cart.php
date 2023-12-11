@@ -31,7 +31,7 @@ class Cart extends Model
   }
   public function cartItems()
   {
-      return $this->hasMany(CartItemOption::class);
+    return $this->hasMany(CartItemOption::class);
   }
   public function store()
   {
@@ -65,4 +65,6 @@ class Cart extends Model
   {
     return $this->belongsTo(Item::class);
   }
+
+
 }

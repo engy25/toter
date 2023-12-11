@@ -22,7 +22,7 @@ use App\Http\Controllers\Api\{
   User\OderButlerController,
   User\OderController,
   User\PointUserController,
-
+  User\CartController,
 };
 use App\Http\Middleware\CheckRoleScopeMiddleware;
 
@@ -121,6 +121,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**store */
       Route::get('store/{id}/{tag_id?}', [StoreController::class, 'show']);
 
+      Route::get("store-areas",[StoreController::class,"showStoreAreas"]);
+
       /**Nearest Store */
       Route::get('nearest-store', [StoreController::class, 'nearestStore']);
 
@@ -210,11 +212,17 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         /**apply coupon */
         Route::post("apply-coupon",[OderButlerController::class,"applyCoupon"]);
 
+        /**
+         * Add To Cart
+         */
+        Route::post("add-to-cart",[CartController::class,"store"]);
+
         /**make order */
 
         Route::post('make-butler-order',[OderButlerController::class,"store"]);
         Route::post('make-order',[OderController::class,"store"]);
         Route::post('apply-offer',[OfferController::class,"applyOffer"]);
+
 
 
       });

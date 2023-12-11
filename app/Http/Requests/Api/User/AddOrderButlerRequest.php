@@ -34,6 +34,7 @@ class AddOrderButlerRequest extends ApiMasterRequest
       'payment_type' => 'required|in:cash,visa',
       'transaction_id' => 'required_if:payment_type,online',
       'butler_id' => 'required|exists:butlers,id',
+      'expected_delivery_charge'=>'required|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
 
     ];
 
@@ -41,7 +42,7 @@ class AddOrderButlerRequest extends ApiMasterRequest
       $rules['items'] = 'required|array';
       $rules['item.*'] = 'required|string|min:3|max:1000';
       $rules['items.*image'] = 'mimes:jpeg,jpg,png,gif|nullable|max:1000';
-      $rules['expected_cost']= 'required|min:4|max:200';
+      $rules['expected_cost']= 'nullable|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/';
     } else {
       $rules["order"] = "required|string|min:4|max:65535";
 

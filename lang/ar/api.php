@@ -48,6 +48,7 @@ return [
   'cart_delete_success' => 'تم حذف العربة بنجاح',
   'cart_not_found' => 'cart_not_found',
   'coupon_is_expired' => 'الكوبون منتهي الصلاحيه',
+  'coupon_already_applied' => 'تم استخدام الكوبون من قبل',
   'coupon_applied_success' => 'تم تطبيق الكوبون بنجاح',
   'collection_not_found' => "المجموعة غير موجوده",
   'package_not_found' => "المجموعة غير موجوده",

@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration {
 			$table->decimal('sub_total', 30,2);
 			$table->decimal('total', 30,2);
 			$table->decimal('delivery_charge', 30,2)->default('0');
-			$table->decimal('service_charge', 30,2)->default('0');
+		//	$table->decimal('service_charge', 30,2)->default('0');
 			$table->string('payment_type')->default('cach');
 			$table->string('transaction_id')->nullable();
 			$table->bigInteger('default_currency_id')->unsigned()->default('1');
@@ -25,7 +25,7 @@ class CreateOrdersTable extends Migration {
 			$table->bigInteger('address_id')->unsigned()->nullable();
 
 			$table->integer('delivery_time')->nullable();
-			$table->decimal('exchange_rate',30,2);
+			$table->decimal('exchange_rate',30,2)->nullable();
 			$table->bigInteger('coupon_id')->unsigned()->nullable();
 		});
 	}

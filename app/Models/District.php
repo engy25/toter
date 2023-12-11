@@ -12,7 +12,7 @@ class District extends Model implements TranslatableContract
     use HasFactory, Translatable;
 
     protected $guarded=[];
-
+    public $translatedAttributes = ['name'];
     public function city()
     {
       return $this->belongsTo(City::class);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\{OrderButler, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus};
+use App\Models\{OrderButler, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus,Store};
 use App\Http\Requests\Api\User\{AddOrderButlerRequest, ApplyCouponRequest};
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
@@ -68,9 +68,8 @@ class OderButlerController extends Controller
       $butler_id = $request->butler_id;
       $butler = Butler::findOrFail($butler_id);
 
-      $service_charge = $butler->service_charge;
-      $delivery_charge = $butler->delivery_charge;
-      $sub_total = $service_charge + $delivery_charge;
+
+      $sub_total =(double) $request->expected_delivery_charge +(double) $request->expected_cost;
 
       $order_data = [
         "from_address" => $request->from_address_id,
@@ -79,17 +78,14 @@ class OderButlerController extends Controller
         "to_driver_instructions" => $request->to_driver_instructions,
         'payment_type' => $request->payment_type,
         'transaction_id' => $request->transaction_id,
-        "expected_cost" => $request->expected_cost,
         "order" => $request->order,
         "delivery_time" => $butler->delivery_time,
-        "service_charge" => $service_charge,
-        "delivery_charge" => $delivery_charge,
-        "default_currency_id" => $butler->default_currency_id,
-        "exchange_rate" => $butler->exchange_rate,
-        "to_currency_id" => $butler->to_currency_id,
+        "expected_delivery_charge" => $request->expected_delivery_charge,
+        "expected_cost" => $request->expected_cost,
+        // "default_currency_id" => $butler->default_currency_id,
+        // "exchange_rate" => $butler->exchange_rate,
+        // "to_currency_id" => $butler->to_currency_id,
         "admin_id" => $butler->admin_id,
-        "to_currency_id" => $butler->to_currency_id,
-        "exchange_rate" => $butler->exchange_rate,
         "butler_id" => $butler->id,
       ];
 
@@ -115,13 +111,13 @@ class OderButlerController extends Controller
       if (is_array($request->items)) {
 
 
-        foreach($request->items as $item)
+        foreach ($request->items as $item)
 
-        $order->orderItems()->create([
-          "order_id" => $order->id,
-          "item" => $item["item"],
-          "image" => $item["image"] ?? null,
-        ]);
+          $order->orderItems()->create([
+            "order_id" => $order->id,
+            "item" => $item["item"],
+            "image" => $item["image"] ?? null,
+          ]);
       }
 
       $status_pending = StatusTranslation::where("name", "pending")->first();
@@ -132,6 +128,8 @@ class OderButlerController extends Controller
       return $this->helper->responseJson('failed', trans('api.auth_something_went_wrong'), 422, null);
     }
   }
+
+
 
 
 

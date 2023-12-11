@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
 use App\Models\{Item};
 use App\Helpers\Helpers;
@@ -21,11 +22,12 @@ class ItemController extends Controller
 
   public function show(Request $request)
   {
-    $item = Item::with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Removeingredients", "services", "options", "preferences"])->find($request->item_id);
+
+    $item = Item::withoutGlobalScope(ItemScope::class)->with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Removeingredients", "services", "options", "preferences"])->find($request->item_id);
     if (!$item) {
       return $this->helper->responseJson(
         'failed',
-        trans('api.store_not_found'),
+        trans('api.not_found'),
         404,
         null
       );

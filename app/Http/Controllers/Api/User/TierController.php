@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\User\SimpleItemResource;
+use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
-use App\Models\{Tier, Offer};
+use App\Models\{Tier, Offer,item};
 use App\Http\Resources\Api\User\{TierResource, OfferResource};
 use App\Helpers\Helpers;
 
@@ -32,6 +34,7 @@ class TierController extends Controller
 
     $response = [
       'tier' => TierResource::make($tier),
+      "Items"=>SimpleItemResource::collection(Item::withoutGlobalScope(ItemScope::class)->where("points","!=",0)->latest()->take(10)->get()),
       'Discounts On Fresh' => OfferResource::collection(Offer::valid()->whereNull("item_id")->where("store_id", 3)->latest()->take(10)->get()),
       'Discounts and offers' => OfferResource::collection(Offer::valid()->whereNull("item_id")->where("store_id", 1)->latest()->take(10)->get()),
     ];
@@ -44,7 +47,7 @@ class TierController extends Controller
    * 89
   */
 
-  
+
 
 
 

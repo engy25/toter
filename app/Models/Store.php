@@ -191,8 +191,8 @@ class Store extends Model implements TranslatableContract
 
   public function districts()
   {
-    return $this->hasMany(District::class);
-    
+    return $this->belongsToMany(District::class,"store_districts","store_id","district_id")->withPivot("delivery_charge");
+
   }
 
 }

@@ -25,7 +25,12 @@ class AddOrderRequest extends ApiMasterRequest
     public function rules()
     {
         return [
-            //
+            "district_id"=>$this->district_id,
+            'payment_type' => 'required|in:cash,visa',
+            'transaction_id' => 'required_if:payment_type,online',
+            'coupon_id' => 'nullable|exists:coupons,id',
+            'address_id' => 'required|exists:addresses,id',
+            
         ];
     }
 }
