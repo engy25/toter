@@ -26,7 +26,6 @@ class Option extends Model implements TranslatableContract
 
 
 
-
   protected $dates = ['deleted_at'];
 
 

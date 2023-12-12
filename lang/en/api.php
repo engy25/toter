@@ -102,4 +102,6 @@ return [
    "msg_point"=>"you don't have enough points",
    "alreadyaplliedoffer"=>"You have already applied this offer",
    'offer_applied_success' => 'Offer Applied Success',
+   'invalid_ingredient'=>'Invalid ingredient selected for this item.',
+   'invalid_details_in_this_item'=>'تفاصيل غير متاحع في ذلك العنصر'
 ];

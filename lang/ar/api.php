@@ -101,5 +101,7 @@ return [
   "msg_point"=>"انت لا تمتلك نقاط كافيه",
   "alreadyaplliedoffer"=>"انت بالفعل استخدمت هذا العرض",
   'offer_applied_success' => 'تم تطبيق العرض بنجاح',
+  'invalid_ingredient'=>'تم تحديد مكون غير صالح لهذا العنصر.',
+  'invalid_details_in_this_item'=>'Invalid details in this item'
 ];
 

@@ -69,7 +69,7 @@ class Item extends Model implements TranslatableContract
 
   public function addons()
   {
-    return $this->belongsToMany(Addon::class, 'item_addons', 'item_id', 'addon_id');
+    return $this->belongsToMany(Addon::class, 'item_addons', 'item_id', 'addon_id')->withPivot("addon_id");
   }
 
   public function gifts()

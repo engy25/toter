@@ -21,14 +21,14 @@ class Cart extends Model
   /**
    * observer class //events
    */
-  protected static function booted()
-  {
-    // static::creating(function(Cart $cart){
-    //   $cart->id=Str::uuid();
+  // protected static function booted()
+  // {
+  //   // static::creating(function(Cart $cart){
+  //   //   $cart->id=Str::uuid();
 
-    // });
-    static::observe(CartObserver::class);
-  }
+  //   // });
+  //   static::observe(CartObserver::class);
+  // }
   public function cartItems()
   {
     return $this->hasMany(CartItemOption::class);
