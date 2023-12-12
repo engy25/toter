@@ -70,7 +70,7 @@ $configData = Helper::appClasses();
 
 
         <!-- /Logo -->
-        <h3 class=" mb-1 fw-bold">Welcome to Sports 👋</h3>
+        <h3 class=" mb-1 fw-bold">Welcome to Elwadah 👋</h3>
         <p class="mb-4">Please sign-in to your account</p>
 
         <form id="formAuthentication" action="{{ route('login') }}" class="mb-3" method="POST">
