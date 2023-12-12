@@ -37,9 +37,10 @@ $dir = (app()->getLocale() == 'en') ? 'ltr' : 'rtl';
 
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <a href="#" class="btn bg-info-transparent d-flex align-items-center justify-content-center">
+  {{-- <a href="#" class="btn bg-info-transparent d-flex align-items-center justify-content-center">
     <i style="font-size: 20px;" class="fe fe-edit text-info "></i>
-</a>&nbsp;
+</a> --}}
+&nbsp;
 
 
 
