@@ -4,11 +4,13 @@ namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\dash\DE\CityRequest;
+use App\Models\CityTranslation;
 use Illuminate\Http\Request;
 use App\Models\{
   City,
   Country
 };
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -20,37 +22,37 @@ class CityController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
+  public function searchCity(Request $request)
+  {
+    $locale = LaravelLocalization::getCurrentLocale();
+    $searchString = '%' . $request->search_string . '%';
 
-   public function searchCity(Request $request)
-   {
-       $locale = LaravelLocalization::getCurrentLocale();
+    $cities = City::whereHas('country.translations', function ($query) use ($searchString) {
+      $query->where('name', 'like', $searchString);
+    })
+      ->orWhereHas('translations', function ($query) use ($searchString) {
+        $query->where('name', 'like', $searchString);
+      })
+      ->with([
+        'country' => function ($query) {
+          $query->select('id', 'country_code');
+        },
+        'translations' => function ($query) {
+          $query->select('city_id', 'name');
+        },
+      ])
+      ->latest()
+      ->paginate(PAGINATION_COUNT);
 
-       $searchString = '%' . $request->search_string . '%';
-
-       $cities = City::where("name_" . $locale, 'like', $searchString)
-           ->orWhere("district_" . $locale, 'like', $searchString)->select(
-            "id",
-            "name_" . $locale . " as name",
-            "name_en",
-            "name_ar",
-            "district_en",
-            "district_ar",
-            "district_" . $locale . " as district",
-            "CountryCode",
-            "population",
-            "country_id")
-           ->latest()
-           ->paginate(PAGINATION_COUNT);
-
-       if ($cities->count() > 0) {
-           // Return the search results as HTML
-           return view("content.city.pagination_index", compact("cities"))->render();
-       } else {
-           return response()->json([
-               "status" => 'nothing_found',
-           ]);
-       }
-   }
+    if ($cities->count() > 0) {
+      // Return the search results as HTML
+      return view("content.city.pagination_index", compact("cities"))->render();
+    } else {
+      return response()->json([
+        "status" => 'nothing_found',
+      ]);
+    }
+  }
 
 
   public function index()
@@ -59,28 +61,14 @@ class CityController extends Controller
     $locale = LaravelLocalization::getCurrentLocale();
 
     $cities = City::with([
-      "country" =>
-        function ($query) use ($locale) {
+      'country' => function ($query) use ($locale) {
+        $query->select('id', 'country_code');
+      },
+      'translations' => function ($query) use ($locale) {
+        $query->select('city_id', 'name')->where('locale', $locale);
+      },
+    ])->latest()->paginate(PAGINATION_COUNT);
 
-          $query->select("id", "name_" . $locale . " as name");
-
-        }
-    ])->select(
-        "id",
-        "name_" . $locale . " as name",
-        "name_en",
-        "name_ar",
-        "district_en",
-        "district_ar",
-        "district_" . $locale . " as district",
-        "CountryCode",
-        "population",
-        "country_id"
-      )->latest()->paginate(PAGINATION_COUNT);
-
-    // if ($request->ajax()) {
-    //   return view("content.city.presult", compact("cities"));
-    // }
 
 
     return view("content.city.index", compact("cities"));
@@ -96,24 +84,13 @@ class CityController extends Controller
     $locale = LaravelLocalization::getCurrentLocale();
 
     $cities = City::with([
-      "country" =>
-        function ($query) use ($locale) {
-
-          $query->select("id", "name_" . $locale . " as name");
-
-        }
-    ])->select(
-        "id",
-        "name_" . $locale . " as name",
-        "name_en",
-        "name_ar",
-        "district_en",
-        "district_ar",
-        "district_" . $locale . " as district",
-        "CountryCode",
-        "population",
-        "country_id"
-      )->latest()->paginate(PAGINATION_COUNT);
+      'country' => function ($query) use ($locale) {
+        $query->select('id', 'country_code');
+      },
+      'translations' => function ($query) use ($locale) {
+        $query->select('city_id', 'name')->where('locale', $locale);
+      },
+    ])->latest()->paginate(PAGINATION_COUNT);
     return view("content.city.pagination_index", compact("cities"))->render();
 
   }
@@ -137,15 +114,12 @@ class CityController extends Controller
   public function store(CityRequest $request)
   {
     $city = City::create([
-      "name_en" => $request->name_en,
-      "name_ar" => $request->name_ar,
-      "population" => $request->population,
-      "CountryCode" => $request->CountryCode,
-      "district_en" => $request->district_en,
-      "district_ar" => $request->district_ar,
       "country_id" => $request->country_id
 
     ]);
+
+    CityTranslation::create(['name' => $request->name_en, "city_id" => $city->id, "locale" => "en"]);
+    CityTranslation::create(['name' => $request->name_ar, "locale" => "ar", "city_id" => $city->id]);
 
 
     if ($city) {
@@ -193,16 +167,29 @@ class CityController extends Controller
   public function update(Request $request, City $city)
   {
     $rules = [
-      'up_name_en' => 'required|string|max:30|min:3|unique:cities,name_en,' . $city->id,
-      'up_name_ar' => 'required|string|max:30|min:3|unique:cities,name_ar,' . $city->id,
-      'up_district_en' => 'required|string|max:30|min:3',
-      'up_district_ar' => 'required|string|max:30|min:3',
-      'up_population' => 'required|numeric',
-      'up_CountryCode' => 'required',
-      'up_population'=>'nullable|integer|digits_between:1,11',
-      'up_country_id'=>'required|exists:countries,id'
-
+      'up_country_id' => 'required|exists:countries,id',
+      'up_name_en' => [
+        'required',
+        'string',
+        'max:30',
+        'min:3',
+        Rule::unique('city_translations', 'name')->ignore($city->id, 'city_id')->where(function ($query) use ($request, $city) {
+          // Check if the English name is different
+          return $request->up_name_en !== $city->nameTranslation('en');
+        }),
+      ],
+      'up_name_ar' => [
+        'required',
+        'string',
+        'max:30',
+        'min:3',
+        Rule::unique('city_translations', 'name')->ignore($city->id, 'city_id')->where(function ($query) use ($request, $city) {
+          // Check if the Arabic name is different
+          return $request->up_name_ar !== $city->nameTranslation('ar');
+        }),
+      ],
     ];
+
 
     $validator = \Validator::make($request->all(), $rules);
 
@@ -210,15 +197,12 @@ class CityController extends Controller
       return response()->json(['errors' => $validator->errors()], 422);
     }
 
-    $city->name_en = $request->up_name_en;
-    $city->name_ar = $request->up_name_ar;
-    $city->district_en = $request->up_district_en;
-    $city->district_ar = $request->up_district_ar;
-    $city->population = $request->up_population;
-    $city->CountryCode = $request->up_CountryCode;
+
     $city->country_id = $request->up_country_id;
 
     $city->save();
+    CityTranslation::where(['city_id' => $city->id, "locale" => "en"])->update(['name' => $request->up_name_en]);
+    CityTranslation::where(['city_id' => $city->id, "locale" => "ar"])->update(['name' => $request->up_name_ar]);
 
     return response()->json([
       "status" => true,

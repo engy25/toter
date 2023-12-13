@@ -35,7 +35,7 @@ class SimpleResource extends JsonResource
             'image' => $this->image,
             'phone' => $this->phone,
             'flag' => $countries->flag,
-            'email_address' => $this->email_address,
+            'email' => $this->email,
             'orders_make_This_month'=> $this->count_orders_created_this_month(),
             'duration_expired'=>Carbon::now()->endOfMonth()->format('d F'),
             // 'tier'=>new TierResource($this->tier),

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     // $this->call(currencySeeder::class);
     // $this->call(countrySeeder::class);
     // \App\Models\User::factory(30)->create();
-    //  $this->call(RolesTableSeeder::class);
+  //   $this->call(RolesTableSeeder::class);
     //  $this->call(TierTableSeeder::class);
     //  $this->call(TierTableTranslationSeeder::class);
     // $this->call(sectionSeeder::class);
@@ -43,5 +43,6 @@ class DatabaseSeeder extends Seeder
 // $this->call(StatusSeeder::class);
   //  $this->call(DistricSeeder::class);
    // $this->call(DistrictStoreSeeder::class);
+   $this->call(RolesAndPerissionSeeder::class);
   }
 }

@@ -6,9 +6,6 @@ $i=0;
     <tr style="background:#f4f5f7">
       <th class="fw-semibold border-bottom">ID</th>
       <th class="fw-semibold border-bottom">{{ trans('words.name') }}</th>
-      <th class="fw-semibold border-bottom">{{ trans('words.District') }}</th>
-      <th class="fw-semibold border-bottom">{{ trans('words.CountryCode') }}</th>
-      <th class="fw-semibold border-bottom">{{ trans('words.Population') }}</th>
       <th class="fw-semibold border-bottom">{{ trans('words.CountryName') }}</th>
 
       <th class="bg-transparent fw-semibold border-bottom">Action</th>
@@ -21,19 +18,15 @@ $i=0;
         <span class="text-dark fs-13 fw-semibold">{{ $i++ }}</span>
       </td>
       <td>
-        <span class="text-dark fs-13 fw-semibold">{{ $city->name }}</span>
+        <span class="text-dark fs-13 fw-semibold">
+          @if ($city->translations->isNotEmpty())
+          {{ $city->translations[0]->name }}
+          @else
+          {{ $city->name }}
+          @endif
+        </span>
       </td>
-      <td>
-        <span class="text-dark fs-13 fw-semibold">{{ $city->district }}</span>
-      </td>
-
-      <td>
-        <span class="text-dark fs-13 fw-semibold">{{ $city->CountryCode}}</span>
-      </td>
-
-      <td>
-        <span class="text-dark fs-13 fw-semibold">{{ $city->population  }}</span>
-      </td>
+    
 
       <td>
         <span class="text-dark fs-13 fw-semibold">{{ $city->country->name }}</span>

@@ -27,7 +27,7 @@ class UpdateProfileRequest extends ApiMasterRequest
             'lname'=>'nullable|string|between:3,40',
             'nickname'=>'nullable|string|between:3,40',
             'dob' => 'nullable|date|date_format:Y-m-d',
-            'email_address'=>'nullable|email|max:40',
+            'email'=>'nullable|email|max:40',
             'image'=>'mimes:jpeg,jpg,png,gif|nullable|max:10000',
         ];
     }

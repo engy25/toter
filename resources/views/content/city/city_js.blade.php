@@ -49,7 +49,8 @@
     // populate the dropdown with the received country data
     var options='<option value=""> Select Country </option>';
     $.each(data, function (index, country) {
-      options += '<option value="' + country.id + '">' + country.name + '</option>';
+      var countryName = country.translations ? country.translations[0].name : country.name;
+      options += '<option value="' + country.id + '">' + countryName+ '</option>';
     });
     $('#country_id').html(options);
   },
@@ -83,7 +84,9 @@
     // populate the dropdown with the received country data
     var options='<option value=""> Select Country </option>';
     $.each(data, function (index, country) {
-      options += '<option value="' + country.id + '">' + country.name + '</option>';
+     var countryName = country.translations ? country.translations[0].name : country.name;
+
+      options += '<option value="' + country.id + '">' + countryName+ '</option>';
     });
     $('#up_country_id').html(options);
   },
@@ -115,22 +118,17 @@
     let id = $(this).data('id');
     let name_en = $(this).data('name_en');
     let name_ar = $(this).data('name_ar');
-    let district_en = $(this).data('district_en');
-    let district_ar = $(this).data('district_ar');
-    let population = $(this).data('population');
-    let countrycode = $(this).data('countrycode');
+
     let country_id =$(this).data('country_id');
+
 
 
     /** To set the values for each input **/
     $('#up_id').val(id);
     $('#up_name_en').val(name_en);
     $('#up_name_ar').val(name_ar);
-    $('#up_district_en').val(district_en);
-    $('#up_district_ar').val(district_ar);
-    $('#up_population').val(population);
-    $('#up_CountryCode').val(countrycode);
     $('#up_country_id').val(country_id);
+
 });
 
 $(document).on("click", ".update_city", function(e) {
@@ -138,10 +136,6 @@ $(document).on("click", ".update_city", function(e) {
     let id = $('#up_id').val();
     let up_name_en = $('#up_name_en').val();
     let up_name_ar = $('#up_name_ar').val();
-    let up_district_ar = $('#up_district_ar').val();
-    let up_district_en = $('#up_district_en').val();
-    let up_CountryCode = $('#up_CountryCode').val();
-    let up_population = $('#up_population').val();
     let up_country_id = $('#up_country_id').val();
     $('.errMsgContainer').empty(); // Clear previous error messages
 
@@ -155,10 +149,6 @@ $(document).on("click", ".update_city", function(e) {
             id: id,
             up_name_en: up_name_en,
             up_name_ar: up_name_ar,
-            up_district_en: up_district_en,
-            up_district_ar: up_district_ar,
-            up_CountryCode: up_CountryCode,
-            up_population: up_population,
             up_country_id:up_country_id
         },
         dataType: "json",
@@ -181,6 +171,7 @@ $(document).on("click", ".update_city", function(e) {
             }
         },
         error: function(response) {
+        
           $('.errMsgContainer').empty(); // Clear previous error messages
             errors = response.responseJSON.errors;
             $.each(errors, function(index, value) {
@@ -197,26 +188,20 @@ $(document).on("click", ".update_city", function(e) {
   $(document).ready(function(){
     $(document).on("click", '.add_city', function(e){
         e.preventDefault();
-        let name_en = $('#name_en').val();
-        let name_ar= $('#name_ar').val();
-        let population= $('#population').val();
-        let CountryCode = $('#CountryCode').val();
-        let district_en= $('#district_en').val();
-        let district_ar= $('#district_ar').val();
+         let name_en = $('#name_en').val();
+         let name_ar= $('#name_ar').val();
         let country_id=$('#country_id').val();
 
         $('.errMsgContainer').empty(); // Clear previous error messages
-
+        // console.log(name_en);
+        // console.log(name_ar);
+        // console.log(country_id);
         $.ajax({
             url: "{{ route('cities.store') }}",
             method: 'post',
             data: {
                 name_en: name_en,
                 name_ar: name_ar,
-                district_en: district_en,
-                district_ar: district_ar,
-                CountryCode: CountryCode,
-                population: population,
                 country_id:country_id
             },
             dataType: "json",
@@ -224,6 +209,7 @@ $(document).on("click", ".update_city", function(e) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
+              console.log(data);
               $('.errMsgContainer').empty(); // Clear previous error messages
               $("#addModal").modal("hide");
               $('#addCityForm')[0].reset();
@@ -237,6 +223,7 @@ $(document).on("click", ".update_city", function(e) {
 
             },
             error: function(response) {
+              console.log(response.responseJSON);
 
                 $('.errMsgContainer').empty(); // Clear previous error messages
                 errors = response.responseJSON.errors;
@@ -264,7 +251,7 @@ $(document).on("click", ".update_city", function(e) {
     }
 });
 
-$('.delete-city').on('click', function(e) {
+$('.delete-city').on('click', function (e) {
     e.preventDefault();
     var city_id = $(this).data('id');
 
@@ -276,13 +263,13 @@ $('.delete-city').on('click', function(e) {
                 _token: '{{ csrf_token() }}',
                 city: city_id
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.status == true) {
                     // City was deleted successfully
                     $('#data-table2').load(location.href + ' #data-table2');
                     $('#success3').show();
                     /* hide success message after 4 seconds */
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('#success3').hide();
                     }, 2000);
                 } else if (data.status == 422) {
@@ -293,7 +280,7 @@ $('.delete-city').on('click', function(e) {
                     alert('Deletion of this city is forbidden as it is related to other tables.');
                 }
             },
-            error: function(data) {
+            error: function (data) {
                 console.log(data);
                 if (data.status !== 500) {
                     alert('An error occurred while deleting the city.');
@@ -301,22 +288,18 @@ $('.delete-city').on('click', function(e) {
             }
         });
     }
-
-
-
 });
+
 
 </script>
 
-            {{-- //////////////////////////////DElete City////////////////////////////// --}}
+{{-- //////////////////////////////DElete City////////////////////////////// --}}
 
 
 
-            {{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
+{{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
 <script>
-
-
- $(document).on('click', '.pagination a', function(e){
+   $(document).on('click', '.pagination a', function(e){
 
   e.preventDefault();
   let page = $(this).attr('href').split('page=')[1];
@@ -332,13 +315,14 @@ function city(page) {
         }
     });
 }
+
 </script>
-            {{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
+ {{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
 
 
-                        {{-- /////////////////////////////Search City///////////////////////////////////// --}}
-<script>
-$(document).on('keyup',function(e){
+ {{-- /////////////////////////////Search City///////////////////////////////////// --}}
+ <script>
+  $(document).on('keyup',function(e){
   e.preventDefault();
   let search_string=$('#search').val();
   // console.log(search_string);
@@ -358,7 +342,8 @@ $(document).on('keyup',function(e){
 
 
 })
+
 </script>
 
 
-                        {{-- /////////////////////////////Search City///////////////////////////////////// --}}
+{{-- /////////////////////////////Search City///////////////////////////////////// --}}

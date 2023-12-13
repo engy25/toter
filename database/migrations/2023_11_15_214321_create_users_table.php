@@ -16,14 +16,14 @@ class CreateUsersTable extends Migration {
 			$table->char('nickname')->nullable();
 			$table->char('image', 100)->nullable();
 			$table->date('dob')->nullable();
-			$table->char('email_address', 60)->unique()->nullable();
+			$table->char('email', 60)->unique()->nullable();
 			$table->char('phone', 50)->unique();
 			$table->char('country_code', 10);
 			$table->char('otp', 4)->nullable();
 			$table->tinyInteger('is_active')->default('0');
 			$table->char('updated_phone', 50)->nullable();
 			$table->char('updated_country_code', 10)->nullable();
-      $table->bigInteger('tier_id')->unsigned()->default(1);
+      $table->bigInteger('tier_id')->unsigned()->nullable();
 			$table->integer('orders_count')->default('0');
 		});
 	}

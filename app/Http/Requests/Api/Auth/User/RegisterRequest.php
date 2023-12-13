@@ -34,7 +34,7 @@ class RegisterRequest extends ApiMasterRequest
       'terms' => 'required|in:1',
       'password' => 'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
       'confirm_password' => 'required|same:password',
-      'email_address'=>'required|email|max:55|unique:users,email_address'
+      'email'=>'required|email|max:55|unique:users,email'
       // 'provider' => 'nullable|in:facebook,google,apple',
       // 'provider_id' => 'nullable|string|between:2,255',
 

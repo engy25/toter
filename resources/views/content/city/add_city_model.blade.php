@@ -15,46 +15,26 @@
 
           <div class="form-group"></div>
           <label for="population">Country </label>
-          <select name="country_id" class="form-control" id ="country_id" >
-             <!-- Options will be dynamically populated here using JavaScript -->
+          <select name="country_id" class="form-control" id="country_id">
+            <!-- Options will be dynamically populated here using JavaScript -->
           </select>
-           <span class="text-danger error-message" id="error_country_id"></span>
-          <br>
-          
-
-
-          <div class="form-group"></div>
-          <label for="name">CountryCode</label>
-          <input type="text" name="CountryCode" class="form-control" id="CountryCode">
-          <span class="text-danger error-message" id="error_CountryCode"></span>
+          <span class="text-danger error-message" id="error_country_id"></span>
           <br>
 
 
 
-          <div class="form-group"></div>
-          <label for="name">District(Arabic)</label>
-          <input type="text" name="district_ar" class="form-control" id="district_ar">
-          <span class="text-danger error-message" id="error_district_ar"></span>
-           <br>
-           <div class="form-group"></div>
-           <label for="name">District(English)</label>
-           <input type="text" name="district_en" class="form-control" id="district_en">
-           <span class="text-danger error-message" id="error_district_en"></span> <br>
           <div class="form-group"></div>
           <label for="name">Name(Arabic)</label>
           <input type="text" name="name_ar" class="form-control" id="name_ar">
           <span class="text-danger error-message" id="error_name_ar"></span>
-           <br>
+          <br>
+          
           <div class="form-group"></div>
           <label for="name">Name(English)</label>
           <input type="text" name="name_en" class="form-control" id="name_en">
           <span class="text-danger error-message" id="error_name_en"></span>
           <br>
 
-            <div class="form-group"></div>
-            <label for="population">Population </label>
-            <input type="number" name="population" class="form-control" id="population" >
-            <span class="text-danger error-message" id="error_population"></span>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>

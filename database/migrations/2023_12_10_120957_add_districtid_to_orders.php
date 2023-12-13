@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
-            $table->bigInteger("district_id")->unsigned()->default(1);
-            $table->foreign("currency_id")->references("id")->on("currencies")->onDelete("cascade");
+            // //
+            // $table->bigInteger("district_id")->unsigned()->default(1);
+            // $table->foreign("currency_id")->references("id")->on("currencies")->onDelete("cascade");
         });
     }
 

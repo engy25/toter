@@ -341,8 +341,9 @@ class CountryController extends Controller
   public function countryIndex()
   {
     $locale = LaravelLocalization::getCurrentLocale();
-    $countries = Country::select("name_" . $locale . " as name", "id")->get();
-
+    $countries = Country::with(["translations"=>function ($query) use ($locale){
+      $query->select("country_id","name")->where("locale",$locale);
+    }])->select('id')->get();
     return response()->json($countries);
 
   }

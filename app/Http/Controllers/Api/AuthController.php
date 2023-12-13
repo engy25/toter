@@ -12,6 +12,9 @@ use App\Models\{
   Device,
 
 };
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Crypt;
 use Laravel\Passport\Token;
@@ -52,20 +55,21 @@ class AuthController extends Controller
    */
   public function register(RegisterRequest $request)
   {
-    \DB::beginTransaction();
-    try {
+    // \DB::beginTransaction();
+    // try {
 
       // $user_data = ['phone', 'country_code', 'fullname', 'password','email_address'];
       // $encrypted_password=$request->password;
       // $encryption_key= config('app.encryption_key');
       // $decrypted_password=Crypt::decrypt(base64_decode($encrypted_password,false));
+
       $verified_code = 1111 ?? $this->helper->apiCode();
       //$user = User::create(Arr::only($request->validated(), $user_data)+ ['verified_code' => $verified_code,'is_active'=>0,'user_type'=>'Client','role_id'=>1]);
       $country = Country::where("country_code", $request->country_code)->first();
 
       $user = User::create([
         'phone' => $request->phone,
-        'email_address' => $request->email_address,
+        'email' => $request->email,
         'country_code' => $request->country_code,
         'fname' => $request->fname,
         'password' => $request->password,
@@ -76,6 +80,9 @@ class AuthController extends Controller
         'tier_id' => 1,
 
       ]);
+      $role = Role::where('name', 'User')->where('guard_name', 'api')->first();
+
+      $user->assignRole($role);
 
       // if ($request->provider && $request->provider_id) {
       //     $user->providers()->create(['provider' => $request->provider, 'provider_id' => $request->provider_id]);
@@ -86,18 +93,18 @@ class AuthController extends Controller
       // sendSMS($user->phone, $message);
 
 
-      $data = ['id' => $user->id, 'otp' => $verified_code, 'phone' => $user->phone, 'country_code' => $user->country_code, "email_address" => $user->email_address];
+      $data = ['id' => $user->id, 'otp' => $verified_code, 'phone' => $user->phone, 'country_code' => $user->country_code, "email" => $user->email];
 
       \DB::commit();
 
       return $this->helper->responseJson('success', trans('api.first_step_sign_up'), (int) 200, ['user' => $data]);
 
 
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return $this->helper->responseJson('fail', trans('api.auth_failed'), 422, null);
+    // } catch (\Exception $e) {
+    //   \DB::rollBack();
+    //   return $this->helper->responseJson('fail', trans('api.auth_failed'), 422, null);
 
-    }
+    // }
 
 
   }
@@ -148,7 +155,7 @@ class AuthController extends Controller
     // $decrypted_password=Crypt::decrypt(base64_decode($encrypted_password,false));
     $credentials = [
       'phone' => $request->phone,
-      'email_address' => $request->email_address,
+      'email' => $request->email,
       'password' => $request->password,
       'country_code' => $request->country_code,
       'role_id' => 3,

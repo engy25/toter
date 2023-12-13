@@ -56,7 +56,10 @@ class Country extends Model implements TranslatableContract
   {
     return $this->belongsTo(Currency::class);
   }
-
+  public function cities()
+  {
+      return $this->hasMany(City::class);
+  }
 
 
 

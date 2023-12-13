@@ -41,38 +41,10 @@
         </div>
         <span class="text-danger error-message" id="error_name_ar"></span>
 
-        <div class="modal-body">
-          <div class="form-group"></div>
-          <label for="district_en">District (English) </label>
-
-          <input type="text" name="up_district_en" class="form-control" id="up_district_en" >
-        </div>
-        <span class="text-danger error-message" id="error_district_en"></span>
 
 
 
-        <div class="modal-body">
-          <div class="form-group"></div>
-          <label for="district_ar">District (Arabic) </label>
-          <input type="text" name="up_district_ar" class="form-control" id="up_district_ar">
-        </div>
-        <span class="text-danger error-message" id="error_district_ar"></span>
 
-
-        <div class="modal-body">
-          <div class="form-group"></div>
-          <label for="population">Population </label>
-          <input type="number" name="up_population" class="form-control" id="up_population" >
-        </div>
-        <span class="text-danger error-message" id="error_population"></span>
-
-
-        <div class="modal-body">
-          <div class="form-group"></div>
-          <label for="CountryCode">CountryCode </label>
-          <input type="text" name="up_CountryCode" class="form-control" id="up_CountryCode" >
-        </div>
-        <span class="text-danger error-message" id="error_CountryCode"></span>
 
 
 

@@ -35,6 +35,7 @@
       "name":  "Countries",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "app-user-view",
+      "permissions": ["view Countries"],
       "submenu": [
         {
           "url": "countries",
@@ -53,6 +54,7 @@
       "name":"Cities",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "app-user-view",
+      "permissions": ["view Cities"],
       "submenu": [
         {
           "url": "cities",
