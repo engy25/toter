@@ -55,7 +55,8 @@ class LoginRequest extends FormRequest
     }
 
     $user = Auth::user();
-   
+    dd($user);
+
 
 
     if ($user && $user->is_active != 1) {
