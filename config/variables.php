@@ -3,7 +3,7 @@
   return [
     "creatorName" => "Pixinvent",
     "creatorUrl" => "https://pixinvent.com",
-    "templateName" => "Vuexy",
+    "templateName" => "Elwadah",
     "templateSuffix" => "Bootstrap Admin Template",
     "templateVersion" => "1.0.0",
     "templateFree" => false,
@@ -26,5 +26,5 @@
     "githubUrl" => "https://github.com/pixinvent",
     "dribbbleUrl" => "https://dribbble.com/pixinvent",
     "instagramUrl" => "https://www.instagram.com/pixinvents/",
-  
+
   ];
