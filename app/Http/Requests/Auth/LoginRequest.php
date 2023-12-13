@@ -55,7 +55,7 @@ class LoginRequest extends FormRequest
     }
 
     $user = Auth::user();
-    dd($user);
+   
 
 
 
