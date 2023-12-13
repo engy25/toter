@@ -37,6 +37,8 @@ return [
   "Add_Country"=>"اضافه دوله",
   "currency"=>"Currency",
   "update_Country"=>"تحديث الدوله",
+  "SectionName"=>"اسم السكشن",
+  "image"=>"الصوره",
 
 
 

@@ -20,7 +20,8 @@ use App\Http\Controllers\Web\{
 use App\Http\Controllers\dashboard\DataEntry\{
   CityController,
   CountryController,
-  CurrencyController
+  CurrencyController,
+  SubSectionController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -207,13 +208,16 @@ Route::group(
     Route::get("/pagination/paginate-city", [CityController::class, "paginationCity"]);
     Route::get('/search-city', [CityController::class, 'searchCity'])->name('search.city');
 
-    /**countries */
+
         /**Countries */
     Route::Resource('countries', CountryController::class);
     Route::get("/pagination/paginate-country", [CountryController::class, "paginationCountry"]);
     Route::get('/search-country', [CountryController::class, 'searchCountry'])->name('search.country');
     Route::get('countries-display', [CountryController::class,"countryIndex"])->name("countries.display");
 
+
+    Route::Resource('subsections', SubSectionController::class);
+    Route::get("/pagination/paginate-subsection", [SubSectionController::class, "paginationSubsection"]);
 
     /***currencies */
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");

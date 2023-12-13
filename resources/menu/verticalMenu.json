@@ -64,6 +64,25 @@
       ]
     },
 
+ 
+
+
+    {
+      "menuHeader": "SubSections"
+    },
+    {
+      "name":"SubSections",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view SubSections"],
+      "submenu": [
+        {
+          "url": "subsections",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
 
 
     {

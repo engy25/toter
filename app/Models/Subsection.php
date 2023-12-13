@@ -26,6 +26,19 @@ class Subsection extends Model implements TranslatableContract
   {
     return $this->belongsTo(Section::class);
   }
+  protected static function boot()
+  {
+    parent::boot();
+    static::deleting(function ($subsection) {
+      /***check if the city related to any other table */
+
+      if ($subsection->offers()->count() > 0 ||$subsection->stores()->count()  ||$subsection->offers()->count()) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
 
   public $helper;
   public function __construct()
@@ -87,7 +100,13 @@ class Subsection extends Model implements TranslatableContract
     });
   }
 
+  public function scopeValidWeb($query){
 
+    $query->whereHas('translations',function($subquery){
+      $subquery->whereNotIn("name",["Main"]);
+    });
+
+  }
 
 }
 

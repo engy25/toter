@@ -36,10 +36,9 @@ return [
   "countrty_del_success"=>"Countrty Deleted Successfully",
   "Add_Country"=>"Add Country",
   "currency"=>"عمله",
-  "update_Country"=>"Update Country"
-
-
-
+  "update_Country"=>"Update Country",
+  "SectionName"=>"SectionName",
+  "image"=>"image",
 
 
 
