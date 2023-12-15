@@ -48,15 +48,15 @@ $i=0;
             data-bs-target="#updateModal" data-id="{{ $subsection->id }}"
             data-name_en="{{ optional($subsection->translations()->where('locale', 'en')->first())->name }}"
             data-name_ar="{{ optional($subsection->translations()->where('locale', 'ar')->first())->name }}"
-            data-section_id="{{ $subsection->section->id }}"
-            data-image="{{ $subsection->image }}"
-            title="Edit"
+            data-section_id="{{ $subsection->section->id }}" data-image="{{ $subsection->image }}" title="Edit"
             style="width: 100px; height: 40px;">
             {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
           </a>
+
           <button type="button" class="btn btn-danger delete-subsection" data-id="{{ $subsection->id }}">
             <span class="bi bi-trash me-1">{{ trans('words.delete') }}</span>
           </button>
+
         </div>
       </td>
     </tr>
