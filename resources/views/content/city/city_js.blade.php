@@ -171,7 +171,7 @@ $(document).on("click", ".update_city", function(e) {
             }
         },
         error: function(response) {
-        
+
           $('.errMsgContainer').empty(); // Clear previous error messages
             errors = response.responseJSON.errors;
             $.each(errors, function(index, value) {
@@ -192,10 +192,11 @@ $(document).on("click", ".update_city", function(e) {
          let name_ar= $('#name_ar').val();
         let country_id=$('#country_id').val();
 
+
         $('.errMsgContainer').empty(); // Clear previous error messages
-        // console.log(name_en);
-        // console.log(name_ar);
-        // console.log(country_id);
+        console.log(name_en);
+        console.log(name_ar);
+        console.log(country_id);
         $.ajax({
             url: "{{ route('cities.store') }}",
             method: 'post',
