@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubSection;
-use App\Models\SubSectionTranslation;
+use App\Models\{Subsection, SubsectionTranslation};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -63,7 +62,7 @@ class SubSectionController extends Controller
   {
     $locale = LaravelLocalization::getCurrentLocale();
 
-    $subsections = SubSection::ValidWeb()
+    $subsections = Subsection::ValidWeb()
 
       ->with([
         'section' => function ($query) use ($locale) {
@@ -92,7 +91,7 @@ class SubSectionController extends Controller
 
     $locale = LaravelLocalization::getCurrentLocale();
 
-    $subsections = SubSection::ValidWeb()
+    $subsections = Subsection::ValidWeb()
 
       ->with([
         'section' => function ($query) use ($locale) {
@@ -143,8 +142,8 @@ class SubSectionController extends Controller
     $subsection->save();
 
     // Create translations with the Subsection ID
-    SubSectionTranslation::create(['name' => $request->name_en, 'description' => $request->description_en, 'sub_section_id' => $subsection->id, 'locale' => 'en']);
-    SubSectionTranslation::create(['name' => $request->name_ar, 'description' => $request->description_ar, 'sub_section_id' => $subsection->id, 'locale' => 'ar']);
+    SubsectionTranslation::create(['name' => $request->name_en, 'description' => $request->description_en, 'sub_section_id' => $subsection->id, 'locale' => 'en']);
+    SubsectionTranslation::create(['name' => $request->name_ar, 'description' => $request->description_ar, 'sub_section_id' => $subsection->id, 'locale' => 'ar']);
 
     if ($subsection) {
       return response()->json([
@@ -165,7 +164,7 @@ class SubSectionController extends Controller
    * @param  \App\Models\SubSection  $subSection
    * @return \Illuminate\Http\Response
    */
-  public function show(SubSection $subSection)
+  public function show(Subsection $subSection)
   {
     //
   }
@@ -176,7 +175,7 @@ class SubSectionController extends Controller
    * @param  \App\Models\SubSection  $subSection
    * @return \Illuminate\Http\Response
    */
-  public function edit(SubSection $subSection)
+  public function edit(Subsection $subSection)
   {
     //
   }
@@ -190,7 +189,7 @@ class SubSectionController extends Controller
    */
 
 
-  public function update(Request $request, SubSection $subSection)
+  public function update(Request $request, Subsection $subSection)
   {
     $rules = [
       'up_section_id' => 'required|exists:sections,id',
@@ -259,7 +258,7 @@ class SubSectionController extends Controller
    */
 
 
-  public function destroy(SubSection $subSection)
+  public function destroy(Subsection $subSection)
   {
     try {
       // No translations, proceed with deletion
