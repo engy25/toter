@@ -12,6 +12,7 @@ $i=0;
     </tr>
   </thead>
   <tbody>
+    
     @foreach($cities as $city)
     <tr>
       <td>

@@ -37,8 +37,8 @@ class CityController extends Controller
         'country' => function ($query) {
           $query->select('id', 'country_code');
         },
-        'translations' => function ($query) {
-          $query->select('city_id', 'name');
+        'translations' => function ($query) use ($locale) {
+          $query->select('city_id', 'name')->where("locale",$locale);
         },
       ])
       ->latest()

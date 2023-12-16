@@ -27,37 +27,40 @@ class SubSectionController extends Controller
    * @return \Illuminate\Http\Response
    */
 
-  // public function searchCity(Request $request)
-  // {
-  //   $locale = LaravelLocalization::getCurrentLocale();
-  //   $searchString = '%' . $request->search_string . '%';
+  public function searchSubsection(Request $request)
+  {
+    $locale = LaravelLocalization::getCurrentLocale();
+    $searchString = '%' . $request->search_string . '%';
 
-  //   $cities = City::whereHas('country.translations', function ($query) use ($searchString) {
-  //     $query->where('name', 'like', $searchString);
-  //   })
-  //     ->orWhereHas('translations', function ($query) use ($searchString) {
-  //       $query->where('name', 'like', $searchString);
-  //     })
-  //     ->with([
-  //       'country' => function ($query) {
-  //         $query->select('id', 'country_code');
-  //       },
-  //       'translations' => function ($query) {
-  //         $query->select('city_id', 'name');
-  //       },
-  //     ])
-  //     ->latest()
-  //     ->paginate(PAGINATION_COUNT);
+    $subsections = Subsection::where(function ($query) use ($searchString) {
+      $query->whereHas('section.translations', function ($subQuery) use ($searchString) {
+        $subQuery->where('name', 'like', $searchString);
+      })->orWhereHas('translations', function ($subQuery) use ($searchString) {
+        $subQuery->where('name', 'like', $searchString)
+          ->orWhere('description', 'like', $searchString);
+      });
+    })
+      ->with([
+        'section' => function ($query) {
+          $query->select('id');
+        },
+        'translations' => function ($query) use($locale) {
+          $query->select('sub_section_id', 'name')->where("locale", $locale);
+        },
+      ])
+      ->latest()
+      ->paginate(PAGINATION_COUNT);
 
-  //   if ($cities->count() > 0) {
-  //     // Return the search results as HTML
-  //     return view("content.city.pagination_index", compact("cities"))->render();
-  //   } else {
-  //     return response()->json([
-  //       "status" => 'nothing_found',
-  //     ]);
-  //   }
-  // }
+
+    if ($subsections->count() > 0) {
+      // Return the search results as HTML
+      return view("content.subsection.pagination_index", compact("subsections"))->render();
+    } else {
+      return response()->json([
+        "status" => 'nothing_found',
+      ]);
+    }
+  }
   public function index()
   {
     $locale = LaravelLocalization::getCurrentLocale();

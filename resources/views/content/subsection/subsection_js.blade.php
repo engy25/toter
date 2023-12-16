@@ -374,7 +374,7 @@ function subsection(page) {
 
 
 {{-- /////////////////////////////Search subsection///////////////////////////////////// --}}
-{{-- <script>
+<script>
   $(document).on('keyup',function(e){
   e.preventDefault();
   let search_string=$('#search').val();
@@ -396,7 +396,7 @@ function subsection(page) {
 
 })
 
-</script> --}}
+</script>
 
 
 {{-- /////////////////////////////Search subsection///////////////////////////////////// --}}

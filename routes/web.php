@@ -217,10 +217,15 @@ Route::group(
     Route::get('/search-country', [CountryController::class, 'searchCountry'])->name('search.country');
     Route::get('countries-display', [CountryController::class,"countryIndex"])->name("countries.display");
 
-    
+
     Route::Resource('subsections', SubSectionController::class);
     Route::get("/pagination/paginate-subsection", [SubSectionController::class, "paginationSubsection"]);
+
+    Route::get('/search-subsections', [SubSectionController::class, 'searchSubsection'])->name('search.subsection');
     Route::get('sections-display', [SectionController::class,"sectionIndex"])->name("sections.display");
+
+
+
 
     /***currencies */
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");

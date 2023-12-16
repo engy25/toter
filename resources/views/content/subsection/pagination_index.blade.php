@@ -63,7 +63,7 @@ $i=0;
   </tbody>
 </table>
 {{-- {!! $cities->links() !!} --}}
-<<div class="mt-4">
+<div class="mt-4">
   @if ($subsections->lastPage() > 1)
   {{ $subsections->links('pagination.simple-bootstrap-4') }}
   @endif
