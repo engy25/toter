@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\{SubSection, SubSectionTranslation};
+use App\Models\SubSection;
+use App\Models\SubSectionTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
