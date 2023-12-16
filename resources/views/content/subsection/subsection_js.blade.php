@@ -251,10 +251,10 @@ $.ajax({
       contentType: false,  // Set to false for FormData
       processData: false,  // Set to false for FormData
       headers: {
-        ///
+
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      ///////
+
 
       success: function(data) {
       console.log(data);

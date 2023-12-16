@@ -258,13 +258,13 @@ class SubSectionController extends Controller
    */
 
 
-  public function destroy(Subsection $subSection)
+  public function destroy(Subsection $subsection)
   {
     try {
       // No translations, proceed with deletion
-      $subSection->delete();
+      $subsection->delete();
 
-      return response()->json(['status' => true, 'msg' => 'Subsection Deleted Successfully', 'id' => $subSection->id]);
+      return response()->json(['status' => true, 'msg' => 'Subsection Deleted Successfully', 'id' => $subsection->id]);
     } catch (\Exception $e) {
       if ($e->getMessage() === "Cannot delete Subsection, It is related to other tables") {
         return response()->json(['status' => false, 'msg' => $e->getMessage()], 403);
