@@ -27,37 +27,37 @@ class SubSectionController extends Controller
    * @return \Illuminate\Http\Response
    */
 
-  public function searchCity(Request $request)
-  {
-    $locale = LaravelLocalization::getCurrentLocale();
-    $searchString = '%' . $request->search_string . '%';
+  // public function searchCity(Request $request)
+  // {
+  //   $locale = LaravelLocalization::getCurrentLocale();
+  //   $searchString = '%' . $request->search_string . '%';
 
-    $cities = City::whereHas('country.translations', function ($query) use ($searchString) {
-      $query->where('name', 'like', $searchString);
-    })
-      ->orWhereHas('translations', function ($query) use ($searchString) {
-        $query->where('name', 'like', $searchString);
-      })
-      ->with([
-        'country' => function ($query) {
-          $query->select('id', 'country_code');
-        },
-        'translations' => function ($query) {
-          $query->select('city_id', 'name');
-        },
-      ])
-      ->latest()
-      ->paginate(PAGINATION_COUNT);
+  //   $cities = City::whereHas('country.translations', function ($query) use ($searchString) {
+  //     $query->where('name', 'like', $searchString);
+  //   })
+  //     ->orWhereHas('translations', function ($query) use ($searchString) {
+  //       $query->where('name', 'like', $searchString);
+  //     })
+  //     ->with([
+  //       'country' => function ($query) {
+  //         $query->select('id', 'country_code');
+  //       },
+  //       'translations' => function ($query) {
+  //         $query->select('city_id', 'name');
+  //       },
+  //     ])
+  //     ->latest()
+  //     ->paginate(PAGINATION_COUNT);
 
-    if ($cities->count() > 0) {
-      // Return the search results as HTML
-      return view("content.city.pagination_index", compact("cities"))->render();
-    } else {
-      return response()->json([
-        "status" => 'nothing_found',
-      ]);
-    }
-  }
+  //   if ($cities->count() > 0) {
+  //     // Return the search results as HTML
+  //     return view("content.city.pagination_index", compact("cities"))->render();
+  //   } else {
+  //     return response()->json([
+  //       "status" => 'nothing_found',
+  //     ]);
+  //   }
+  // }
   public function index()
   {
     $locale = LaravelLocalization::getCurrentLocale();
