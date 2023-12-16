@@ -39,6 +39,7 @@ return [
   "update_Country"=>"Update Country",
   "SectionName"=>"SectionName",
   "image"=>"image",
+  "avgRating"=>"Average Rating",
 
 
 

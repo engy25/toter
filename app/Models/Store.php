@@ -20,11 +20,11 @@ class Store extends Model implements TranslatableContract
   protected $guarded = [];
   public $translatedAttributes = ['name', 'description'];
 
-  public $helper;
-  public function __construct()
-  {
-    $this->helper = new Helpers();
-  }
+  // public $helper;
+  // public function __construct()
+  // {
+  //   $this->helper = new Helpers();
+  // }
 
   public function getImageAttribute()
   {

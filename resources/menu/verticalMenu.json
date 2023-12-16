@@ -64,7 +64,7 @@
       ]
     },
 
- 
+
 
 
     {
@@ -84,6 +84,23 @@
       ]
     },
 
+
+    {
+      "menuHeader": "Stores"
+    },
+    {
+      "name":"Stores",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Stores"],
+      "submenu": [
+        {
+          "url": "stores",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
 
     {
       "menuHeader": "Misc"

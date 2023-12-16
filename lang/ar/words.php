@@ -40,6 +40,7 @@ return [
   "SectionName"=>"اسم السكشن",
   "image"=>"الصوره",
 
+  "avgRating"=>"متوسط التقييم",
 
 
 

@@ -23,7 +23,8 @@ use App\Http\Controllers\dashboard\DataEntry\{
   CountryController,
   CurrencyController,
   SubSectionController,
-  SectionController
+  SectionController,
+  StoreController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -218,14 +219,19 @@ Route::group(
     Route::get('countries-display', [CountryController::class,"countryIndex"])->name("countries.display");
 
 
+    /**
+     * subsections
+     */
     Route::Resource('subsections', SubSectionController::class);
     Route::get("/pagination/paginate-subsection", [SubSectionController::class, "paginationSubsection"]);
 
     Route::get('/search-subsections', [SubSectionController::class, 'searchSubsection'])->name('search.subsection');
     Route::get('sections-display', [SectionController::class,"sectionIndex"])->name("sections.display");
 
-
-
+   /**
+     * stores
+     */
+    Route::Resource('stores', StoreController::class);
 
     /***currencies */
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");

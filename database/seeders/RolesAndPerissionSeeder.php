@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+
 class RolesAndPerissionSeeder extends Seeder
 {
   /**
@@ -26,24 +27,32 @@ class RolesAndPerissionSeeder extends Seeder
     //   "guard_name"=>"web"
     // ]);
 
-    $permission=Permission::create([
-      "name"=>"view SubSections",
-      "guard_name"=>"web"
+    $permission = Permission::create([
+      "name" => "view Stores",
+      "guard_name" => "web"
     ]);
 
 
-     $role1 = Role::where('name', 'DataEntry')->where('guard_name', 'web')->first();
+    // $permission = Permission::create([
+    //   "name" => "view SubSections",
+    //   "guard_name" => "web"
+    // ]);
+
+
+    $role1 = Role::where('name', 'DataEntry')->where('guard_name', 'web')->first();
     // $permission1 = Permission::findByName('view Countries');
     // $permission2=Permission::findByName('view Cities');
-    $permission3=Permission::findByName('view SubSections');
+
+    // $permission3 = Permission::findByName('view SubSections');
+    $permission4 = Permission::findByName('view Stores');
 
     // $role1->givePermissionTo($permission1);
     // $role1->givePermissionTo($permission2);
-    $role1->givePermissionTo($permission3);
+    $role1->givePermissionTo($permission4);
 
-    $user=User::whereId(100)->first();
+    $user = User::whereId(100)->first();
     // $user->givePermissionTo('view Cities');
     // $user->givePermissionTo('view Countries');
-  $user->givePermissionTo('view SubSections');
+    $user->givePermissionTo('view Stores');
   }
 }
