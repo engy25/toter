@@ -18,10 +18,9 @@ class CheckUserMiddleware
     {
         if (auth('api')->check()) {
 
-
             return $next($request);
         }
-       
+
 
         return Helpers::responseJson('failed', trans('api.Pleaze_login_first'), 401, null);
 

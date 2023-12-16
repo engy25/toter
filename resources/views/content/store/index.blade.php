@@ -72,6 +72,10 @@ $i=0;
             </td>
 
             <td>
+              <span class="text-dark fs-13 fw-semibold">{{ $i++ }}</span>
+            </td>
+        
+            <td>
               <span class="text-dark fs-13 fw-semibold">
                 @if ($store->translations->isNotEmpty())
                 {{ $store->translations[0]->name }}

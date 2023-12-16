@@ -148,7 +148,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
 Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
 
-      Route::middleware('checkUser')->group(function () {
+      Route::middleware(['checkUser'])->group(function () {
 
         /**update profile by image or fullname */
         Route::post("update-profile", [ProfileController::class, "updateProfile"]);

@@ -78,7 +78,6 @@ protected $routeMiddleware = [
     'scope' => \App\Http\Middleware\CheckRoleScopeMiddleware::class,
     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
 
-    'checkUser'=> \App\Http\Middleware\checkUserMiddleware::class,
     //'checkDelivery'=> \App\Http\Middleware\CheckDeliveryMiddleware::class,
     /**** OTHER MIDDLEWARE ****/
     'localize' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
@@ -89,6 +88,7 @@ protected $routeMiddleware = [
     // REDIRECTION MIDDLEWARE
     'setLocale' => \App\Http\Middleware\setLocale::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'checkUser' => \App\Http\Middleware\CheckUserMiddleware::class,
 ];
 
 

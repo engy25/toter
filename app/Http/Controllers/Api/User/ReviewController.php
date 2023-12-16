@@ -55,9 +55,14 @@ class ReviewController extends Controller
       'rating' => $request->rating,
       'comment' => $request->comment
     ]);
+    $average=round(Review::where('reviewable_type',$reviewableType)->where('reviewable_id',$request->reviewable_id)->avg('rating'),2);
+
+
+    $rate->reviewable()->update(['avg_rating' => $average]);
+
 
     $avg = $this->rate_avg($request->reviewable_id, $request->type);
-   
+
 
     $reviews = Review::where('reviewable_type', $reviewableType)->latest('updated_at')->paginate(15);
     $reviews_count = Review::where('reviewable_type', $reviewableType)->count();
