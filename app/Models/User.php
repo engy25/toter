@@ -146,7 +146,7 @@ class User extends Authenticatable {
 
   public function count_orders_created_this_month() {
 
-    return $this->orders()->where('created_at', '>=', Carbon::now()->month)
+    return $this->userOrders()->where('created_at', '>=', Carbon::now()->month)
       ->count();
 
 
