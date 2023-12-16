@@ -84,7 +84,7 @@ class Subsection extends Model implements TranslatableContract
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
-    return $this->hasMany(SubSectionTranslation::class, "sub_section_id");
+    return $this->hasMany(SubsectionTranslation::class, "sub_section_id");
   }
 
   public function offers()
