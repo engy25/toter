@@ -35,9 +35,6 @@
 
 
 
-
-
-
 <div class="alert alert-success" style="display: none;" id="success1">
 
   SubSection Added Successfully
@@ -98,12 +95,15 @@ $i=0;
               <div class="btn-group">
                 <a href="{{ route('subsections.edit', $subsection->id) }}"
                   class="btn bg-info-transparent d-flex align-items-center justify-content-center">
-                  <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>&nbsp;
+                  <i style="font-size: 20px;" class="fe fe-edit text-info "></i>
+                </a>&nbsp;
                 <a href="{{ LaravelLocalization::localizeURL(route('subsections.edit', $subsection->id)) }}"
                   class="btn btn-info btn-icon py-1 me-2 update_subsection_form" data-bs-toggle="modal"
                   data-bs-target="#updateModal" data-id="{{ $subsection->id }}"
                   data-name_en="{{ optional($subsection->translations()->where('locale', 'en')->first())->name }}"
                   data-name_ar="{{ optional($subsection->translations()->where('locale', 'ar')->first())->name }}"
+                  data-description_en="{{ optional($subsection->translations()->where('locale', 'en')->first())->description }}"
+                  data-description_ar="{{ optional($subsection->translations()->where('locale', 'ar')->first())->description }}"
                   data-section_id="{{ $subsection->section->id }}" data-image="{{ $subsection->image }}"
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
@@ -113,6 +113,7 @@ $i=0;
                 </button>
               </div>
             </td>
+
           </tr>
           @endforeach
         </tbody>
@@ -127,10 +128,8 @@ $i=0;
   </div>
 </div>
 @include('content.subsection.subsection_js')
-@include('content.city.update')
-@include('content.city.add_city_model')
+@include('content.subsection.update')
+@include('content.subsection.add_subsection_model')
 {!! Toastr::message() !!}
-
-
 
 @endsection

@@ -252,46 +252,6 @@ $(document).on("click", ".update_city", function(e) {
     }
 });
 
-// $('.delete-city').on('click', function (e) {
-//     e.preventDefault();
-//     var city_id = $(this).data('id');
-
-//     if (confirm("Are you sure you want to delete this city?")) {
-//         $.ajax({
-//             url: 'cities/' + city_id,
-//             type: 'DELETE',
-//             data: {
-//                 _token: '{{ csrf_token() }}',
-//                 city: city_id
-//             },
-//             success: function (data) {
-//                 if (data.status == true) {
-//                     // City was deleted successfully
-//                     $('#data-table2').load(location.href + ' #data-table2');
-
-//                     $('#success3').show();
-//                     /* hide success message after 4 seconds */
-//                     setTimeout(function () {
-//                         $('#success3').hide();
-//                     }, 2000);
-//                 } else if (data.status == 422) {
-//                     // City could not be deleted due to relationships
-//                     alert('You cannot delete this city as it is related to other tables.');
-//                 } else if (data.status == 403) {
-//                     // City deletion forbidden due to relationships
-//                     alert('Deletion of this city is forbidden as it is related to other tables.');
-//                 }
-//             },
-//             error: function (data) {
-//                 console.log(data);
-//                 if (data.status !== 500) {
-//                     alert('An error occurred while deleting the city.');
-//                 }
-//             }
-//         });
-//     }
-// });
-
 
 // Use document or a container element that is always present on the page
 $(document).on('click', '.delete-city', function (e) {

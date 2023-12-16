@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
 use App\Http\Controllers\ProfileController;
@@ -21,7 +22,8 @@ use App\Http\Controllers\dashboard\DataEntry\{
   CityController,
   CountryController,
   CurrencyController,
-  SubSectionController
+  SubSectionController,
+  SectionController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -218,6 +220,7 @@ Route::group(
 
     Route::Resource('subsections', SubSectionController::class);
     Route::get("/pagination/paginate-subsection", [SubSectionController::class, "paginationSubsection"]);
+    Route::get('sections-display', [SectionController::class,"sectionIndex"])->name("sections.display");
 
     /***currencies */
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");
