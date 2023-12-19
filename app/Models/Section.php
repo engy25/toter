@@ -75,7 +75,7 @@ class Section extends Model implements TranslatableContract
 
   public function scopeValid($query)
   {
-      $query->whereNotIn('id',[15,6,16,4,7]);
+      $query->whereNotIn('id',[1,15,6,16,4,7]);
   }
 
 

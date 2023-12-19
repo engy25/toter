@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Helpers;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -18,13 +20,9 @@ class Offer extends Model implements TranslatableContract
   use SoftDeletes, HasFactory, Translatable;
   public $translatedAttributes = ['name', 'description', 'title'];
   protected $guarded = [];
-  public $helper;
-  public function __construct()
-  {
-    $this->helper = new Helpers();
-  }
-  protected $dates = ['deleted_at'];
 
+
+  protected $dates = ['deleted_at'];
   public function points()
   {
     return $this->morphMany(PointStore::class, 'pointeable');

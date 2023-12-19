@@ -24,7 +24,9 @@ use App\Http\Controllers\dashboard\DataEntry\{
   CurrencyController,
   SubSectionController,
   SectionController,
-  StoreController
+  StoreController,
+  OfferController,
+  ItemController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -232,9 +234,29 @@ Route::group(
      * stores
      */
     Route::Resource('stores', StoreController::class);
+    /***fetch cities  */
+    Route::get('get-cities', [StoreController::class, 'getCities'])->name("getCities");
+    Route::get('/getSubSections/{sectionId}', [StoreController::class, 'getSubSections'])->name('getSubSections');
+    Route::get('cities/districts/{cityId}', [StoreController::class, 'getDistricts'])->name("getDistricts");
+    Route::get('store-items/{store_id}',[StoreController::class,"displayItems"])->name('store.items');
+    Route::get("/pagination/paginate-storeItem/{store_id}", [StoreController::class, "paginationItem"]);
+
+    Route::get("/pagination/paginate-store", [StoreController::class, "paginationStore"]);
+    Route::get('/search-stores', [StoreController::class, 'searchStore'])->name('search.store');
 
     /***currencies */
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");
+
+
+    /**
+     * offer
+     */
+    Route::Resource('offers', OfferController::class);
+
+        /**
+     * offer
+     */
+    Route::Resource('items', ItemController::class);
 
 
   }

@@ -30,7 +30,67 @@
     }
 });
 </script>
-{{-- ///////////////////////////////to delete city ////////////////////////////// --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  $(document).ready(function() {
+    $('#city_id').change(function() {
+      var cityId = $(this).val();
+
+      // Make an AJAX request to fetch districts for the selected city
+      $.ajax({
+        url: '/cities/districts/' + cityId,
+        type: 'GET',
+        success: function (data) {
+          // Populate the district dropdown with the received data
+          var options = '<option value="">Select District</option>';
+
+          $.each(data, function (index, district) {
+            var districtName = district.translations.length > 0 ? district.translations[0].name : district.name;
+            options += '<option value="' + district.id + '">' + districtName + '</option>';
+          });
+          $('#district_id').html(options);
+        },
+        error: function (response) {
+          console.error('Error fetching districts:', response);
+        }
+      });
+    });
+
+    // // Function to fetch districts from the API using Fetch API
+    // function fetchDistricts() {
+    //   fetch('http://your-api-endpoint/cities/districts/18')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       // Assign the fetched districts to the global variable
+    //       apiDistricts = data;
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching districts:', error);
+    //     });
+    // }
+
+    // // Call fetchDistricts to populate apiDistricts
+    // fetchDistricts();
+  });
+
+
+
+</script>
+
+
 
 
 
@@ -243,7 +303,7 @@ $(document).on("click", ".update_city", function(e) {
 
 
 
-{{-- //////////////////////////////DElete City////////////////////////////// --}}
+{{-- //////////////////////////////DElete Store////////////////////////////// --}}
 
 <script>
   $.ajaxSetup({
@@ -252,23 +312,22 @@ $(document).on("click", ".update_city", function(e) {
     }
 });
 
-
 // Use document or a container element that is always present on the page
-$(document).on('click', '.delete-city', function (e) {
+$(document).on('click', '.delete-store', function (e) {
     e.preventDefault();
-    var city_id = $(this).data('id');
+    var store_id = $(this).data('id');
 
-    if (confirm("Are you sure you want to delete this city?")) {
+    if (confirm("Are you sure you want to delete this store?")) {
         $.ajax({
-            url: 'cities/' + city_id,
+            url: 'stores/' + store_id,
             type: 'DELETE',
             data: {
                 _token: '{{ csrf_token() }}',
-                city: city_id
+                store: store_id
             },
             success: function (data) {
                 if (data.status == true) {
-                    // City was deleted successfully
+                    // store was deleted successfully
                     $('#data-table2').load(location.href + ' #data-table2');
 
                     $('#success3').show();
@@ -278,16 +337,16 @@ $(document).on('click', '.delete-city', function (e) {
                     }, 2000);
                 } else if (data.status == 422) {
                     // City could not be deleted due to relationships
-                    alert('You cannot delete this city as it is related to other tables.');
+                    alert('You cannot delete this store as it is related to other tables.');
                 } else if (data.status == 403) {
                     // City deletion forbidden due to relationships
-                    alert('Deletion of this city is forbidden as it is related to other tables.');
+                    alert('Deletion of this store is forbidden as it is related to other tables.');
                 }
             },
             error: function (data) {
                 console.log(data);
                 if (data.status !== 500) {
-                    alert('An error occurred while deleting the city.');
+                    alert('An error occurred while deleting the store.');
                 }
             }
         });
@@ -312,7 +371,7 @@ $(document).on('click', '.delete-city', function (e) {
 
 function city(page) {
     $.ajax({
-      url: "/pagination/paginate-city?page=" + page,
+      url: "/pagination/paginate-store?page=" + page,
         type: 'get',
         success: function(data) {
             $('.table-responsive').html(data);
@@ -331,7 +390,7 @@ function city(page) {
   let search_string=$('#search').val();
   // console.log(search_string);
   $.ajax({
-    url:"{{ route('search.city') }}",
+    url:"{{ route('search.store') }}",
     method:'GET',
     data:{
       search_string:search_string
@@ -351,3 +410,38 @@ function city(page) {
 
 
 {{-- /////////////////////////////Search City///////////////////////////////////// --}}
+
+
+
+{{-- /////////////////////////////Display subsections for the selected section///////////////////////////////////// --}}
+
+
+<script>
+  $(document).ready(function() {
+      $('#section_id').change(function() {
+          var sectionId = $(this).val();
+
+          // Make an AJAX request to fetch subsections for the selected section
+          $.ajax({
+              url: '/getSubSections/' + sectionId,
+              type: 'GET',
+              success: function(data) {
+                  // Populate the subsection dropdown with the received data
+                  var options = '<option value="">Select Subsection</option>';
+
+                  $.each(data, function(index, subSection) {
+                      var subsectionName = subSection.translations ? subSection.translations[0].name : subSection.name;
+                      options += '<option value="' + subSection.id + '">' + subsectionName + '</option>';
+                  });
+                  $('#sub_section_id').html(options);
+              },
+              error: function(response) {
+                  console.error('Error fetching subsections:', response);
+              }
+          });
+      });
+  });
+</script>
+
+{{-- /////////////////////////////Display The subsections for the selected
+section/////////////////////////////////////// --}}

@@ -108,9 +108,15 @@ class Subsection extends Model implements TranslatableContract
   public function scopeValid($query)
   {
 
-    $query->whereHas("stores")->whereNotIn('section_id', [15, 6, 16, 4, 7])->whereHas('translations', function ($subquery) {
+    $query->whereHas("stores")->whereNotIn('section_id', [15, 6, 16, 4, 7,1])->whereHas('translations', function ($subquery) {
       $subquery->whereNotIn("name", ["Main"]);
     });
+  }
+
+  public function scopeValidSection($query)
+  {
+
+    $query->whereNotIn('section_id', [15, 6, 16, 4, 7,1]);
   }
 
   public function scopeValidWeb($query)

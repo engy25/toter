@@ -23,6 +23,7 @@ class ReviewController extends Controller
   public function add(AddToReviewRequest $request)
   {
     $user = auth('api')->user();
+
     $reviewableType = 'App\Models\\' . ucfirst($request->type);
     $type = $request->type;
     $id = $request->reviewable_id;
@@ -55,7 +56,7 @@ class ReviewController extends Controller
       'rating' => $request->rating,
       'comment' => $request->comment
     ]);
-    $average=round(Review::where('reviewable_type',$reviewableType)->where('reviewable_id',$request->reviewable_id)->avg('rating'),2);
+    $average = round(Review::where('reviewable_type', $reviewableType)->where('reviewable_id', $request->reviewable_id)->avg('rating'), 2);
 
 
     $rate->reviewable()->update(['avg_rating' => $average]);

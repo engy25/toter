@@ -40,8 +40,9 @@ return [
   "SectionName"=>"SectionName",
   "image"=>"image",
   "avgRating"=>"Average Rating",
-
-
+  "price"=>'Price',
+  "tag"=>"Tag",
+  "show" => "Show"
 
 
 

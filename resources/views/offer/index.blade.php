@@ -27,10 +27,8 @@
   <div class="d-flex align-items-center">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <a href="{{ route('stores.create') }}" class="btn btn-primary me-2"
-    {{-- data-bs-toggle="modal"
-      data-bs-target="#addModal" --}}
-      title="{{ trans('words.add') }}">
+    <a href="{{ route('stores.create') }}" class="btn btn-primary me-2" data-bs-toggle="modal"
+      data-bs-target="#addModal" title="{{ trans('words.add') }}">
       {{ trans('words.add') }}
     </a>
 
@@ -44,11 +42,6 @@
   </div>
 </div>
 
-
-
-
-
-
 <div class="alert alert-success" style="display: none;" id="success1">
 
   Store Added Successfully
@@ -61,13 +54,6 @@
 <div class="alert alert-danger" style="display: none;" id="success3">
   Store Deleted Successfully
 </div>
-
-@if ($message = Session::get('success'))
-<div class="alert alert-success">
-    <p>{{ $message }}</p>
-</div>
-@endif
-
 
 <?php
 $i=0;
@@ -124,14 +110,14 @@ $i=0;
 
             <td class="center align-middle">
               <div class="btn-group">
-                <a href="{{ route('stores.edit', $store->id) }}"
+                <a href="{{ route('cities.edit', $store->id) }}"
                   class="btn bg-info-transparent d-flex align-items-center justify-content-center">
                   <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
-                <a href="{{ LaravelLocalization::localizeURL(route('stores.edit', $store->id)) }}"
-                  class="btn btn-info btn-icon py-1 me-2 "
-                  data-id="{{ $store->id }}"
-                  data-name_en="{{ $store->name }}"
-                  {{-- data-name_ar="{{$store->translations()->where("locale","ar")->first()->name }}" --}}
+                <a href="{{ LaravelLocalization::localizeURL(route('cities.edit', $store->id)) }}"
+                  class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
+                  data-bs-target="#updateModal" data-id="{{ $store->id }}"
+                  data-name_en="{{ $store->translations()->where("locale","en")->first()->name }}"
+                  data-name_ar="{{$store->translations()->where("locale","ar")->first()->name }}"
                   data-Section_name="{{ $store->section->name }}" data-section_id="{{ $store->section->id }}" title="Edit"
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>

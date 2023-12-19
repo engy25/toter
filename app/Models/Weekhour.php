@@ -10,6 +10,10 @@ class Weekhour extends Model
   use HasFactory;
   protected $guarded = [];
   protected $with = ['day'];
+  protected $casts = [
+    'from' => 'datetime',
+    'to'  => 'datetime'
+];
 
   public function store()
   {

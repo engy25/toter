@@ -52,14 +52,14 @@ $i=0;
 
     <td class="center align-middle">
       <div class="btn-group">
-        <a href="{{ route('stores.edit', $store->id) }}"
+        <a href="{{ route('cities.edit', $store->id) }}"
           class="btn bg-info-transparent d-flex align-items-center justify-content-center">
           <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
-        <a href="{{ LaravelLocalization::localizeURL(route('stores.edit', $store->id)) }}"
-          class="btn btn-info btn-icon py-1 me-2 "
-          data-id="{{ $store->id }}"
-          data-name_en="{{ $store->name }}"
-          {{-- data-name_ar="{{$store->translations()->where("locale","ar")->first()->name }}" --}}
+        <a href="{{ LaravelLocalization::localizeURL(route('cities.edit', $store->id)) }}"
+          class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
+          data-bs-target="#updateModal" data-id="{{ $store->id }}"
+          data-name_en="{{ $store->translations()->where("locale","en")->first()->name }}"
+          data-name_ar="{{$store->translations()->where("locale","ar")->first()->name }}"
           data-Section_name="{{ $store->section->name }}" data-section_id="{{ $store->section->id }}" title="Edit"
           style="width: 100px; height: 40px;">
           {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>

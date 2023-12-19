@@ -84,7 +84,7 @@ $i=0;
             </td>
 
             <td>
-              <img src="{{ asset($subsection->image) }}" alt="Subsection Image" class="img-fluid">
+              <img src="{{ asset($subsection->image) }}" alt="Subsection Image"   style="height: 50% ; width:50%"  class="img-fluid">
             </td>
 
             <td>

@@ -14,14 +14,14 @@ class CreateStoresTable extends Migration {
 			$table->bigInteger('default_currency_id')->unsigned()->default(1);
 			$table->decimal('price', 30,2)->nullable();
       $table->decimal('exchange_rate', 30, 2);
-			$table->bigInteger('to_currency_id')->unsigned();
+			$table->bigInteger('to_currency_id')->unsigned()->nullable();
 			$table->string('image');
 			// $table->time('from_hour');
 			// $table->time('to_hour');
 			$table->text('address')->nullable();
 			$table->double('lat');
 			$table->double('lng');
-			$table->integer('delivery_time');
+			$table->string('delivery_time');
 			$table->float('delivery_fees',30,2);
       $table->decimal('avg_rating', 3, 2)->default('0');
 			$table->tinyInteger('is_offered')->default('0');

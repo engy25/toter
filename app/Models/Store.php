@@ -19,12 +19,29 @@ class Store extends Model implements TranslatableContract
   public $timestamps = true;
   protected $guarded = [];
   public $translatedAttributes = ['name', 'description'];
+  protected static function boot()
+  {
+      parent::boot();
 
-  // public $helper;
-  // public function __construct()
-  // {
-  //   $this->helper = new Helpers();
-  // }
+      static::deleting(function ($store) {
+          /***check if the subsection related to any other table */
+          if ($store->districts()->count() >0|| $store->points()->count() > 0 || $store->tags()->count() > 0
+           || $store->items()->count() > 0  || $store->favourites()->count() > 0
+           || $store->reviews()->count() > 0                 ) {
+              // There are related records in either offers or stores
+              return false;
+          } else {
+              // No related records, proceed with deletion
+              $store->weekHours()->delete();
+               $store->translations()->delete();
+              return true;
+          }
+      });
+
+
+      
+  }
+
 
   public function getImageAttribute()
   {
@@ -52,6 +69,10 @@ class Store extends Model implements TranslatableContract
     return $this->morphMany(PointUser::class, 'pointeable');
   }
 
+  public function pointstore()
+  {
+    return $this->hasOne(PointStore::class);
+  }
   public function admin()
   {
     return $this->belongsTo(User::class);
@@ -186,6 +207,13 @@ class Store extends Model implements TranslatableContract
     $default_currency = Currency::where("default", 1)->first();
     $currency_name = CurrencyTranslation::where("currency_id", $default_currency->id)->first();
     return $currency_name->name;
+
+  }
+  public function getcurrencyIdAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+
+    return $$default_currency->id;
 
   }
 

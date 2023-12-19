@@ -4,7 +4,7 @@
     "creatorName" => "Pixinvent",
     "creatorUrl" => "https://pixinvent.com",
     "templateName" => "Elwadah",
-    "templateSuffix" => "Bootstrap Admin Template",
+    "templateSuffix" => "Elwadah",
     "templateVersion" => "1.0.0",
     "templateFree" => false,
     "templateDescription" => "Start your development with a Dashboard for Bootstrap 5",
