@@ -103,6 +103,23 @@
     },
 
     {
+      "menuHeader": "Items"
+    },
+    {
+      "name":"Items",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Items"],
+      "submenu": [
+        {
+          "url": "items",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+
+    {
       "menuHeader": "Misc"
     },
     {

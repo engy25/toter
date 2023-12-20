@@ -257,8 +257,8 @@ Route::group(
      * offer
      */
     Route::Resource('items', ItemController::class);
-
-
+    Route::get("/pagination/paginate-item", [ItemController::class, "paginationItem"]);
+    Route::get('/search-items', [ItemController::class, 'searchItem'])->name('search.item');
   }
 );
 

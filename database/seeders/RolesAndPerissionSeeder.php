@@ -27,12 +27,15 @@ class RolesAndPerissionSeeder extends Seeder
     //   "guard_name"=>"web"
     // ]);
 
+    // $permission = Permission::create([
+    //   "name" => "view Stores",
+    //   "guard_name" => "web"
+    // ]);
+
     $permission = Permission::create([
-      "name" => "view Stores",
+      "name" => "view Items",
       "guard_name" => "web"
     ]);
-
-
     // $permission = Permission::create([
     //   "name" => "view SubSections",
     //   "guard_name" => "web"
@@ -44,15 +47,15 @@ class RolesAndPerissionSeeder extends Seeder
     // $permission2=Permission::findByName('view Cities');
 
     // $permission3 = Permission::findByName('view SubSections');
-    $permission4 = Permission::findByName('view Stores');
-
+   // $permission4 = Permission::findByName('view Stores');
+   $permission5 = Permission::findByName('view Items');
     // $role1->givePermissionTo($permission1);
     // $role1->givePermissionTo($permission2);
-    $role1->givePermissionTo($permission4);
+    $role1->givePermissionTo($permission5);
 
     $user = User::whereId(100)->first();
     // $user->givePermissionTo('view Cities');
     // $user->givePermissionTo('view Countries');
-    $user->givePermissionTo('view Stores');
+    $user->givePermissionTo('view Items');
   }
 }

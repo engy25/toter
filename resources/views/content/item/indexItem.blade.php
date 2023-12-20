@@ -11,6 +11,38 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- Font Awesome Icon Library -->
 
+
+
+@section('page-script')
+<script>
+  $(document).on('click', '.pagination a', function(e){
+
+  e.preventDefault();
+  let page = $(this).attr('href').split('page=')[1];
+  item(page);
+});
+
+function item(page) {
+    $.ajax({
+      url: "/pagination/paginate-item?page=" + page,
+        type: 'get',
+        success: function(data) {
+            $('.table-responsive').html(data);
+        }
+    });
+}
+
+</script>
+@endsection
+
+
+
+
+
+
+
+
+
 <style>
   .checked {
     color: orange;
@@ -44,33 +76,6 @@
 
 
 
-@section('page-script')
-
-<script>
-  $(document).on('click', '.pagination a', function(e){
-    e.preventDefault();
-    let page = $(this).attr('href').split('page=')[1];
-    let storeId = window.location.pathname.split('/').pop();
-    item(page, storeId);
-  });
-
-  function item(page, storeId) {
-    $.ajax({
-      url: "/pagination/paginate-storeItem/" + storeId + "?page=" + page, // Updated URL
-      type: 'get',
-      success: function(data) {
-
-        $('.table-responsive').html(data);
-      }
-    });
-  }
-</script>
-@endsection
-
-
-
-
-
 
 <div class="alert alert-success" style="display: none;" id="success1">
 
@@ -91,11 +96,11 @@ $i=0;
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      @include('content.item.pagination_index')
+      @include('content.item.paginationItem')
     </div>
   </div>
 </div>
-
+@include('content.item.item_js')
 @include('content.item.update')
 {{-- @include('content.item.add_city_model') --}}
 {!! Toastr::message() !!}

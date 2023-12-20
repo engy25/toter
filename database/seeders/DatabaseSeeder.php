@@ -43,6 +43,6 @@ class DatabaseSeeder extends Seeder
 // $this->call(StatusSeeder::class);
   //  $this->call(DistricSeeder::class);
    // $this->call(DistrictStoreSeeder::class);
-   $this->call(RolesAndPerissionSeeder::class);
+  // $this->call(RolesAndPerissionSeeder::class);
   }
 }

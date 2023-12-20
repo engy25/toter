@@ -24,9 +24,9 @@ class Item extends Model implements TranslatableContract
 
   protected static function boot()
   {
-      parent::boot();
+    parent::boot();
 
-      static::addGlobalScope(new ItemScope());
+    static::addGlobalScope(new ItemScope());
   }
 
 
@@ -178,18 +178,26 @@ class Item extends Model implements TranslatableContract
       ]);
     }
    */
+
   public function getPriceAttribute()
   {
     $added_value = $this->attributes["added_value"];
     $item_price = $this->attributes["price"];
-    $percentage = $added_value / 100;
 
+    // Check if either attribute is NULL
+    if ($added_value === null || $item_price === null) {
+      return null; // or any default value or handle accordingly
+    }
+
+    $percentage = $added_value / 100;
     $item_added_value = $item_price * $percentage;
 
     return $item_price + $item_added_value;
-
-
   }
+
+
+
+
 
   public function getcurrencyAttribute()
   {
