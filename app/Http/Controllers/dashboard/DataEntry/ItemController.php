@@ -80,7 +80,6 @@ class ItemController extends Controller
           });
       })
       ->orWhere('price', 'like', $searchString)
-      ->orWhere("getPriceAttribute()",'like', $searchString)
       ->with([
           'section' => function ($query) {
               $query->select('id');
