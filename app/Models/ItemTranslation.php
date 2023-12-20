@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemTranslation extends Model
 {
   use HasFactory;
-  protected $table = 'Item_translations';
+  protected $table = 'item_translations';
   public $timestamps = false;
   protected $guarded = [];
 }
