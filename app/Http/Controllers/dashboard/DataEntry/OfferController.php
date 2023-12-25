@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\Offer;
+use App\Models\{Offer,Item};
 use Illuminate\Http\Request;
-
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Models\Scopes\ItemScope;
 class OfferController extends Controller
 {
     /**
@@ -15,7 +16,27 @@ class OfferController extends Controller
      */
     public function index()
     {
-        //
+      $locale = LaravelLocalization::getCurrentLocale();
+
+      $offers = Offer::
+        with([
+          'store' => function ($query) use ($locale) {
+            $query->select('id');
+          },
+          // 'item' => function ($query) use ($locale) {
+          //   $query->select('id');
+
+          // },
+          'translations' => function ($query) use ($locale) {
+            $query->select('offer_id', 'name')->where('locale', $locale);
+
+          },
+        ])
+        ->latest()->paginate(2);
+
+
+
+      return view("content.offer.index", compact("offers"));
     }
 
     /**
@@ -45,10 +66,14 @@ class OfferController extends Controller
      * @param  \App\Models\Offer  $offer
      * @return \Illuminate\Http\Response
      */
+
     public function show(Offer $offer)
     {
-        //
+      return view("content.offer.show", compact("offer"));
     }
+
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -83,4 +108,25 @@ class OfferController extends Controller
     {
         //
     }
+
+
+  public function displayItems($store_id)
+  {
+
+    $locale = LaravelLocalization::getCurrentLocale();
+
+    $items = Item::withoutGlobalScope(new ItemScope)->
+      with([
+        'store', 'translations' => function ($query) use ($locale) {
+          $query->where('locale', $locale);
+        },
+      ])
+      ->where("store_id", $store_id)->where("has_offer",1)
+      ->latest()->paginate(2);
+
+
+
+    return view("content.item.index", compact("items"));
+
+  }
 }

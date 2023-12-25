@@ -26,7 +26,21 @@ use App\Http\Controllers\dashboard\DataEntry\{
   SectionController,
   StoreController,
   OfferController,
-  ItemController
+  ItemController,
+  IngredientController,
+  AddonController,
+  DrinkController,
+  SideController,
+  SizeController,
+  GiftController,
+  OptionController,
+  PreferenceController,
+  ServiceController,
+  DistrictController,
+  TagController,
+  WeekhourController,
+  AddController,
+  StoreDistrictController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -248,17 +262,54 @@ Route::group(
     Route::get('currencies-display', [CurrencyController::class,"currencyIndex"])->name("currencies.display");
 
 
+            /****Districts */
+    Route::Resource('storedistricts', StoreDistrictController::class);
     /**
      * offer
      */
     Route::Resource('offers', OfferController::class);
+    Route::get('offer-items/{store_id}',[OfferController::class,"displayItems"])->name('offer.items');
 
         /**
-     * offer
+     * item
      */
     Route::Resource('items', ItemController::class);
     Route::get("/pagination/paginate-item", [ItemController::class, "paginationItem"]);
     Route::get('/search-items', [ItemController::class, 'searchItem'])->name('search.item');
+
+    /***ingredients */
+    Route::Resource('ingredients', IngredientController::class);
+
+        /****Districts */
+    Route::Resource('districts', DistrictController::class);
+
+
+    /****Addons */
+    Route::Resource('addons', AddonController::class);
+    Route::Resource('adds', AddController::class);
+    Route::Delete('addon/{addon}/{item}',[AddonController::class,"delete"])->name('addon.delete');
+
+    /****Drinkks */
+    Route::Resource('drinks', DrinkController::class);
+
+    /****Tags */
+    Route::Resource('tags', TagController::class);
+    /****Sides */
+    Route::Resource('sides', SideController::class);
+        /****Sizes */
+    Route::Resource('sizes', SizeController::class);
+            /****Gifts */
+    Route::Resource('gifts', GiftController::class);
+
+        /****options */
+    Route::Resource('options', OptionController::class);
+        /****preferences */
+    Route::Resource('preferences', PreferenceController::class);
+            /****services */
+    Route::Resource('services', ServiceController::class);
+            /****weekhours */
+    Route::Resource('weekhours', WeekhourController::class);
+    Route::get('weekhours/{weekhour}/edit/{day}', [WeekhourController::class, 'customEdit'])->name('weekhours.customEdit');
   }
 );
 

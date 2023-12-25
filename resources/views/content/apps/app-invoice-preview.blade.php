@@ -12,7 +12,7 @@
 
 @section('page-script')
 <script src="{{asset('assets/js/offcanvas-add-payment.js')}}"></script>
-<script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
+{{-- <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script> --}}
 @endsection
 
 @section('vendor-script')

@@ -25,5 +25,12 @@ class StoreCategory extends Model implements TranslatableContract
   {
     return $this->hasMany(StoreCategoryTranslation::class);
   }
+  public function nameTranslation($locale)
+  {
+    $translation = $this->translations->where('locale', $locale)->first();
+
+    return $translation ? $translation->name : $this->name;
+  }
+
 
 }

@@ -1,7 +1,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateweekhourModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
   <form action="" method="POST" id="updateCityForm">
     @csrf
     <input type="hidden" id="up_id">

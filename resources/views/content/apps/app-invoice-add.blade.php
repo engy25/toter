@@ -18,7 +18,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script>
+{{-- <script src="{{asset('assets/js/offcanvas-send-invoice.js')}}"></script> --}}
 <script src="{{asset('assets/js/app-invoice-add.js')}}"></script>
 @endsection
 

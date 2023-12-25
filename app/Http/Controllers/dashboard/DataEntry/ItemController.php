@@ -19,6 +19,7 @@ class ItemController extends Controller
   {
     $locale = LaravelLocalization::getCurrentLocale();
 
+
     $items = Item::withoutGlobalScope(new ItemScope)->
       with([
         'store' => function ($query) use ($locale) {
@@ -33,7 +34,9 @@ class ItemController extends Controller
 
         },
       ])
-      ->latest()->paginate(2);
+      ->latest()->paginate(10);
+
+
 
 
 
@@ -58,7 +61,7 @@ class ItemController extends Controller
         'translations' => function ($query) use ($locale) {
           $query->select('store_id', 'name')->where('locale', $locale);
         },
-      ])->latest()->paginate(2);
+      ])->latest()->paginate(10);
     return view("content.item.paginationItem", compact("items"))->render();
 
   }
@@ -68,37 +71,37 @@ class ItemController extends Controller
 
   public function searchItem(Request $request)
   {
-      $locale = LaravelLocalization::getCurrentLocale();
-      $searchString = '%' . $request->search_string . '%';
+    $locale = LaravelLocalization::getCurrentLocale();
+    $searchString = '%' . $request->search_string . '%';
 
-      $items = Item::where(function ($query) use ($searchString) {
-          $query->whereHas('category.translations', function ($subQuery) use ($searchString) {
-              $subQuery->where('name', 'like', $searchString);
-          })->orWhereHas('translations', function ($subQuery) use ($searchString) {
-              $subQuery->where('name', 'like', $searchString)
-                  ->orWhere('description', 'like', $searchString);
-          });
-      })
+    $items = Item::where(function ($query) use ($searchString) {
+      $query->whereHas('category.translations', function ($subQuery) use ($searchString) {
+        $subQuery->where('name', 'like', $searchString);
+      })->orWhereHas('translations', function ($subQuery) use ($searchString) {
+        $subQuery->where('name', 'like', $searchString)
+          ->orWhere('description', 'like', $searchString);
+      });
+    })
       ->orWhere('price', 'like', $searchString)
       ->with([
-          'section' => function ($query) {
-              $query->select('id');
-          },
-          'translations' => function ($query) use ($locale) {
-              $query->select('item_id', 'name')->where("locale", $locale);
-          },
+        'section' => function ($query) {
+          $query->select('id');
+        },
+        'translations' => function ($query) use ($locale) {
+          $query->select('item_id', 'name')->where("locale", $locale);
+        },
       ])
       ->latest()
       ->paginate(PAGINATION_COUNT);
 
-      if ($items->count() > 0) {
-          // Return the search results as HTML
-          return view("content.item.paginationItem", compact("items"))->render();
-      } else {
-          return response()->json([
-              "status" => 'nothing_found',
-          ]);
-      }
+    if ($items->count() > 0) {
+      // Return the search results as HTML
+      return view("content.item.paginationItem", compact("items"))->render();
+    } else {
+      return response()->json([
+        "status" => 'nothing_found',
+      ]);
+    }
   }
 
 
@@ -134,9 +137,21 @@ class ItemController extends Controller
    * @param  \App\Models\Item  $item
    * @return \Illuminate\Http\Response
    */
-  public function show(Item $item)
+  public function show($item)
   {
-    //
+    $item=Item::withoutGlobalScope(new ItemScope)->findOrFail($item);
+
+    $added_ingredients = $item->Addingredients()->get();
+    $remove_ingredients = $item->Removeingredients()->get();
+    $addons = $item->addons()->get();
+    $drinks = $item->drinks()->get();
+    $gifts = $item->gifts()->get();
+    $sizes = $item->sizes()->get();
+    $services = $item->services()->get();
+    $preferences = $item->preferences()->get();
+    $options = $item->options()->get();
+    $sides = $item->sides()->get();
+     return view("content.item.show", compact("item", "sides", "options", "preferences", "services", "sizes", "gifts", "added_ingredients", "remove_ingredients", "addons", "drinks"));
   }
 
   /**

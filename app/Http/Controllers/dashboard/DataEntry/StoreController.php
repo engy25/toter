@@ -125,7 +125,7 @@ class StoreController extends Controller
   public function create()
   {
     $sections = Section::valid()->get();
-    $days = Day::get();
+     $days = Day::get();
     $country_iraq = CountryTranslation::where("name", "Iraq")->first();
     $cities = City::whereHas("districts")->where("country_id", $country_iraq->country_id)->get();
     return view("content.store.create", compact("sections", "days", "cities"));
@@ -269,12 +269,22 @@ class StoreController extends Controller
    */
   public function show(Store $store)
   {
-
     $weekhours = Weekhour::where("store_id", $store->id)->get();
+    $days= $weekhours->pluck('day')->unique();
+    $storeDayId=Weekhour::where("store_id",$store->id)->pluck("day_id");
+
+    $daywhereNotInStore=Day::whereNotIn("id",$storeDayId)->get();
+
+    $added_ingredients = $store->Addingredients()->get();
+    $remove_ingredients = $store->Removeingredients()->get();
+    $addons = $store->addons()->get();
+    $drinks = $store->drinks()->get();
     $districts = $store->districts()->get();
+    $country_iraq = CountryTranslation::where("name", "Iraq")->first();
+    $cities = City::whereHas("districts")->where("country_id", $country_iraq->country_id)->get();
 
 
-    return view("content.store.show", compact("store", "weekhours", "districts"));
+   return view("content.store.show", compact("addons","daywhereNotInStore","cities","days","remove_ingredients","drinks","added_ingredients","added_ingredients","store", "weekhours", "districts"));
   }
 
   /**
@@ -362,6 +372,7 @@ class StoreController extends Controller
       ])
       ->where("store_id", $store_id)
       ->latest()->paginate(2);
+
 
 
 

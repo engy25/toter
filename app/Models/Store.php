@@ -39,7 +39,7 @@ class Store extends Model implements TranslatableContract
       });
 
 
-      
+
   }
 
 
@@ -107,6 +107,16 @@ class Store extends Model implements TranslatableContract
     return $this->hasMany(WeekHour::class);
   }
 
+  public function getcurrencyIsoCodeAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+
+    return $default_currency->isocose;
+
+  }
+
+
+
   public function scopeNearest($query, $lat, $lng)
   {
     $lat = (float) $lat;
@@ -148,6 +158,25 @@ class Store extends Model implements TranslatableContract
     return $this->hasMany(Item::class);
   }
 
+  public function drinks()
+  {
+    return $this->hasMany(Drink::class);
+  }
+  public function addons()
+  {
+    return $this->hasMany(Addon::class);
+  }
+
+
+  public function Addingredients()
+  {
+    return $this->hasMany(Ingredient::class)->where("add", 1);
+  }
+
+  public function Removeingredients()
+  {
+    return $this->hasMany(Ingredient::class)->where("add", 0);
+  }
   public function favourites()
   {
     return $this->morphMany(Favourite::class, 'favoriteable');
@@ -219,7 +248,7 @@ class Store extends Model implements TranslatableContract
 
   public function districts()
   {
-    return $this->belongsToMany(District::class,"store_districts","store_id","district_id")->withPivot("delivery_charge");
+    return $this->belongsToMany(District::class,"store_districts","store_id","district_id")->withPivot("delivery_charge","id");
 
   }
 

@@ -18,11 +18,7 @@ class Drink extends Model implements TranslatableContract
   use SoftDeletes, HasFactory, Translatable;
 
   public $translatedAttributes = ['name'];
-  public $helper;
-  public function __construct()
-  {
-    $this->helper = new Helpers();
-  }
+
 
   protected $dates = ['deleted_at'];
   protected $guarded = [];
@@ -31,20 +27,20 @@ class Drink extends Model implements TranslatableContract
   {
     return asset('storage/images/drinks/' . $this->attributes['image']);
   }
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/drinks/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/drinks/' . $this->attributes['image']));
-        }
-      }
-      $image = $this->helper->upload_single_file($value, 'app/public/images/drinks/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/drinks/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/drinks/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $image = $this->helper->upload_single_file($value, 'app/public/images/drinks/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   public function options()
   {

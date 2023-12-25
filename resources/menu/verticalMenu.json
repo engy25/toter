@@ -47,6 +47,7 @@
 
 
 
+
     {
       "menuHeader": "Cities"
     },
@@ -64,7 +65,22 @@
       ]
     },
 
-
+ {
+      "menuHeader": "Districts"
+    },
+    {
+      "name":  "Districts",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Districts"],
+      "submenu": [
+        {
+          "url": "districts",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
 
 
     {
@@ -113,6 +129,23 @@
       "submenu": [
         {
           "url": "items",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+
+    {
+      "menuHeader": "Offers"
+    },
+    {
+      "name":"Offers",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Offers"],
+      "submenu": [
+        {
+          "url": "offers",
           "name": "List",
           "slug": "app-user-list"
         }

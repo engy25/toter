@@ -32,14 +32,23 @@ class RolesAndPerissionSeeder extends Seeder
     //   "guard_name" => "web"
     // ]);
 
-    $permission = Permission::create([
-      "name" => "view Items",
-      "guard_name" => "web"
-    ]);
+    // $permission = Permission::create([
+    //   "name" => "view Items",
+    //   "guard_name" => "web"
+    // ]);
     // $permission = Permission::create([
     //   "name" => "view SubSections",
     //   "guard_name" => "web"
     // ]);
+    // $permission = Permission::create([
+    //   "name" => "view Offers",
+    //   "guard_name" => "web"
+    // ]);
+
+    $permission = Permission::create([
+      "name" => "view Districts",
+      "guard_name" => "web"
+    ]);
 
 
     $role1 = Role::where('name', 'DataEntry')->where('guard_name', 'web')->first();
@@ -48,14 +57,16 @@ class RolesAndPerissionSeeder extends Seeder
 
     // $permission3 = Permission::findByName('view SubSections');
    // $permission4 = Permission::findByName('view Stores');
-   $permission5 = Permission::findByName('view Items');
+   //$permission5 = Permission::findByName('view Items');
+  //  $permission6 = Permission::findByName('view Offers');
     // $role1->givePermissionTo($permission1);
     // $role1->givePermissionTo($permission2);
-    $role1->givePermissionTo($permission5);
+    $permission7 = Permission::findByName('view Districts');
+    $role1->givePermissionTo($permission7);
 
     $user = User::whereId(100)->first();
     // $user->givePermissionTo('view Cities');
     // $user->givePermissionTo('view Countries');
-    $user->givePermissionTo('view Items');
+    $user->givePermissionTo('view Districts');
   }
 }

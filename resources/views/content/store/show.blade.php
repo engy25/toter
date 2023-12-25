@@ -12,7 +12,8 @@
 
 @section('page-script')
 <script src="{{ asset('assets/js/offcanvas-add-payment.js') }}"></script>
-<script src="{{ asset('assets/js/offcanvas-send-invoice.js') }}"></script>
+
+
 @endsection
 
 @section('vendor-script')
@@ -29,7 +30,6 @@
   <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6">
 
     <div class="card invoice-preview-card">
-
       <div class="card-body">
         <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column m-sm-3 m-0">
           <div class="mb-xl-0 mb-4">
@@ -51,11 +51,6 @@
             <p>No offer available for this store.</p>
           </div>
           @endif
-
-
-
-
-
 
 
           <div style="max-width:20 ">
@@ -96,80 +91,78 @@
 
         </div>
       </div>
-
-      <h5 class="my-3 text-center" style="color: black">Week Hours</h5>
-      <div class="table-responsive border-top">
-        <table class="table m-0">
-          <thead>
-            <tr>
-              <th>Day Name</th>
-              <th>From</th>
-              <th>To</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($weekhours as $weekhour)
-            <tr>
-              <td>{{ $weekhour->day->name }}</td>
-              <td>{{ $weekhour->from->format('H:i:s') }}</td>
-              <td>{{ $weekhour->to->format('H:i:s') }}</td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+      <div class="alert alert-success" style="display: none;" id="weekhoursu">
+        WeekHour Added Successfully
       </div>
+      <div class="alert alert-danger" style="display: none;" id="weekdelete">
+        WeekHour Deleted Successfully
+      </div>
+
+      <div class="alert alert-success" style="display: none;" id="weekupdate">
+        WeekHour Updated Successfully
+      </div>
+
+
+      @include('content.store.partials.weekhourTable', ['store'=>$store,'days'=>$days,'weekhours' => $weekhours, 'title'
+      =>
+      'Add WeekHour'])
+      <br><br>
+
+      {{-- @include('content.store.partials.ingredientTable', ['store'=>$store,'ingredients' => $added_ingredients,
+      'title'
+      =>
+      'Add Ingredients',"add"=>1])
+      <br><br>
+      @include('content.store.partials.ingredientTable', ['item'=>$store,'ingredients' => $remove_ingredients, 'title'
+      => 'Remove Ingredients',"add"=>0]) --}}
 
       <br><br>
-      <h5 class="my-3 text-center"  style="color: black">Districts</h5>
-      <div class="table-responsive border-top">
-        <table class="table m-0">
-          <thead>
-            <tr>
-              <th>District Name</th>
-              <th>City Name</th>
-              <th>Delivery Charge</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($districts as $district)
-            <tr>
-              <td>{{ $district->name }}</td>
-              <td>{{ $district->city->name }}</td>
-              <td>{{$district->pivot->delivery_charge }} {{$store->defaultCurrency->isocode }}</td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+      <div class="alert alert-success" style="display: none;" id="successaddon1">
+        Addon Added Successfully
       </div>
-
+      <div class="alert alert-danger" style="display: none;" id="successadd3">
+        Addon Deleted Successfully
+      </div>
+      @include('content.store.partials.addonTable', ['store'=>$store,'addons' => $addons, 'title' => 'Addons'])
 
       <br><br>
-      <h5 class="my-3 text-center" style="color:black">Tags</h5>
-      <div class="table-responsive border-top">
-        <table class="table m-0">
-          <thead>
-            <tr>
-              <th>Tag Name</th>
-              <th>Tag Description</th>
+      <div class="alert alert-danger" style="display: none;" id="drinkdelete">
+        Drink Deleted Successfully
+      </div>
+      <div class="alert alert-success" style="display: none;" id="successdrink1">
+        Drink Added Successfully
+      </div>
+      @include('content.store.partials.drinkTable', ['store'=>$store,'drinks' => $drinks, 'title' => 'Drinks'])
 
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($store->tags()->get() as $tag)
-            <tr>
-              <td>{{ $tag->name }}</td>
-              <td>{{ $tag->description }}</td>
-            </tr>
-            @empty
-            <tr>
-              <td colspan="2" class="text-center">No tags found for this store.</td>
-            </tr>
-            @endforelse
-          </tbody>
-        </table>
+      <div class="alert alert-success" style="display: none;" id="successdistrict">
+        District Added  To This  Store Successfully
+      </div>
+
+      <div class="alert alert-danger" style="display: none;" id="successdistrict253">
+        District Deleted From Store Successfully Successfully
       </div>
 
 
+      @include('content.store.partials.districtTable', ['store'=>$store,'districts' => $districts, 'title'
+      =>
+      'Add District'])
+      <br><br>
+
+      <div class="alert alert-success" style="display: none;" id="tagstore">
+       Tag Added  To This  Store Successfully
+      </div>
+
+      <div class="alert alert-danger" style="display: none;" id="tagdelete">
+        Tag Deleted From Store Successfully Successfully
+      </div>
+      <div class="alert alert-success" style="display: none;" id="tagupdate">
+        Tag Updated Successfully
+      </div>
+      @include('content.store.partials.tagTable', ['store'=>$store,'tags' => $store->tags()->get(), 'title'
+      =>
+      'Add Tag'])
+
+      <br><br>
       <div class="card-body mx-3">
         <div class="row">
           <div class="col-12">
@@ -189,9 +182,15 @@
       </div>
     </div>
   </div>
-  <!-- /Invoice -->
-  <!-- /Invoice -->
+  <!-- /js -->
 
-  <!-- /Offcanvas -->
+  @include('content.store.addons.addon_js')
+  @include('content.store.drinks.drink_js')
+  @include('content.store.districts.district_js')
+  @include('content.store.tags.tag_js')
+  @include('content.store.weekhours.weekhour_js')
+
+ <!-- /js -->
+
 </div>
 @endsection

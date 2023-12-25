@@ -39,15 +39,12 @@ return [
   "update_Country" => "تحديث الدوله",
   "SectionName" => "اسم السكشن",
   "image" => "الصوره",
-
   "avgRating" => "متوسط التقييم",
-
   "show" => "اظهر",
   "price"=>'سعر',
-
   "tag"=>"تاج",
-
-
+  "expire_date" => "تاريخ انتهاء الصلاحيه",
+  "discount_percentage"=>"الخصم بالمئه "
 
 
 

@@ -42,7 +42,9 @@ return [
   "avgRating"=>"Average Rating",
   "price"=>'Price',
   "tag"=>"Tag",
-  "show" => "Show"
+  "show" => "Show",
+  "expire_date" => "Expire Date",
+  "discount_percentage"=>"Discound Percentage"
 
 
 

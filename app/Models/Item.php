@@ -20,7 +20,7 @@ class Item extends Model implements TranslatableContract
   use SoftDeletes, HasFactory, Translatable;
   public $translatedAttributes = ['name', 'description'];
   protected $guarded = [];
-  protected $dates = ['deleted_at'];
+  protected $dates = ['deleted_at','from_date','to_date'];
 
   protected static function boot()
   {
@@ -195,6 +195,14 @@ class Item extends Model implements TranslatableContract
     return $item_price + $item_added_value;
   }
 
+  public function getPriceBeforeTaxAttribute()
+  {
+
+    $item_price = $this->attributes["price"];
+
+    return $item_price ;
+  }
+
 
 
 
@@ -207,5 +215,13 @@ class Item extends Model implements TranslatableContract
 
   }
 
+
+  public function getcurrencyIsoCodeAttribute()
+  {
+    $default_currency = Currency::where("default", 1)->first();
+
+    return $default_currency->isocose;
+
+  }
 
 }

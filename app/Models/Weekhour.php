@@ -22,6 +22,7 @@ class Weekhour extends Model
 
   public function day()
   {
-    return $this->belongsTo(Day::class);
+    return $this->belongsTo(Day::class,"day_id");
   }
+
 }
