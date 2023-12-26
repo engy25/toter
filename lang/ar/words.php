@@ -44,8 +44,8 @@ return [
   "price"=>'سعر',
   "tag"=>"تاج",
   "expire_date" => "تاريخ انتهاء الصلاحيه",
-  "discount_percentage"=>"الخصم بالمئه "
-
+  "discount_percentage"=>"الخصم بالمئه ",
+  "cityname"=>"اسم المدينه",
 
 
 

@@ -44,7 +44,8 @@ return [
   "tag"=>"Tag",
   "show" => "Show",
   "expire_date" => "Expire Date",
-  "discount_percentage"=>"Discound Percentage"
+  "discount_percentage"=>"Discound Percentage",
+  "cityname"=>"City Name",
 
 
 

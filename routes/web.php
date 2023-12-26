@@ -282,7 +282,9 @@ Route::group(
 
         /****Districts */
     Route::Resource('districts', DistrictController::class);
-
+    Route::get("/pagination/paginate-district", [DistrictController::class, "paginationDistrict"]);
+    Route::get('/search-districts', [DistrictController::class, 'searchDistrict'])->name('search.district');
+    Route::get('cities-display', [DistrictController::class,"cityIndex"])->name("cities.display");
 
     /****Addons */
     Route::Resource('addons', AddonController::class);

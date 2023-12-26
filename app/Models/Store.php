@@ -104,7 +104,7 @@ class Store extends Model implements TranslatableContract
   }
   public function weekHours()
   {
-    return $this->hasMany(WeekHour::class);
+    return $this->hasMany(Weekhour::class);
   }
 
   public function getcurrencyIsoCodeAttribute()
@@ -200,7 +200,7 @@ class Store extends Model implements TranslatableContract
     $lang = app()->getLocale();
 
 
-    $weekHourRestaurantToday = WeekHour::where(['weekhours.store_id' => $this->id])
+    $weekHourRestaurantToday = Weekhour::where(['weekhours.store_id' => $this->id])
       ->join('days', 'days.id', 'weekhours.day_id')
       ->join('day_translations as dTrans', 'dTrans.day_id', 'days.id')
       ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])
@@ -218,7 +218,7 @@ class Store extends Model implements TranslatableContract
     $todayName = Carbon::parse(now())->dayName;
     $lang = app()->getLocale();
 
-    $weekHourRestaurantToday = WeekHour::where(['weekhours.store_id' => $this->id])
+    $weekHourRestaurantToday = Weekhour::where(['weekhours.store_id' => $this->id])
       ->join('days', 'days.id', 'weekhours.day_id')
       ->join('day_translations as dTrans', 'dTrans.day_id', 'days.id')
       ->where(['dTrans.locale' => $lang, 'dTrans.name' => $todayName])

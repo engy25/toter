@@ -30,40 +30,8 @@
     }
 });
 </script>
-{{-- ///////////////////////////////to delete city ////////////////////////////// --}}
+{{-- ///////////////////////////////to delete District ////////////////////////////// --}}
 
-
-
-
-
-
-{{-- /** to fetch list of the data of countries and populate the dropdown*/// --}}
-<script>
-  $(document).ready(function(){
-
-    $.ajax({
-  url: "{{ route('countries.display') }}",
-  method: 'GET',
-  dataType: "json",
-  success: function (data) {
-    // populate the dropdown with the received country data
-    var options='<option value=""> Select Country </option>';
-    $.each(data, function (index, country) {
-      var countryName = country.translations ? country.translations[0].name : country.name;
-      options += '<option value="' + country.id + '">' + countryName+ '</option>';
-    });
-    $('#country_id').html(options);
-  },
-  error: function (response) {
-    // Handle error if fetching countries fails
-    console.error('Error fetching countries:', response);
-  }
-});
-
-
-  });
-
-</script>
 
 
 
@@ -77,22 +45,22 @@
   $(document).ready(function(){
 
     $.ajax({
-  url: "{{ route('countries.display') }}",
+  url: "{{ route('cities.display') }}",
   method: 'GET',
   dataType: "json",
   success: function (data) {
     // populate the dropdown with the received country data
-    var options='<option value=""> Select Country </option>';
-    $.each(data, function (index, country) {
-     var countryName = country.translations ? country.translations[0].name : country.name;
+    var options='<option value=""> Select City </option>';
+    $.each(data, function (index, city) {
+     var cityName = city.translations ? city.translations[0].name : city.name;
 
-      options += '<option value="' + country.id + '">' + countryName+ '</option>';
+      options += '<option value="' + city.id + '">' + cityName+ '</option>';
     });
-    $('#up_country_id').html(options);
+    $('#up_city_id').html(options);
   },
   error: function (response) {
     // Handle error if fetching countries fails
-    console.error('Error fetching countries:', response);
+    console.error('Error fetching cities:', response);
   }
 });
 
@@ -105,7 +73,7 @@
 
 
 
-{{-- /***update City*// --}}
+{{-- /***update District*// --}}
 
 <script>
   $(document).on("click", ".close-btn", function(e) {
@@ -113,13 +81,15 @@
 });
 
 
-  $(document).on("click", '.update_city_form', function() {
+  $(document).on("click", '.update_district_form', function() {
     /* To retrieve the data values from the form */
     let id = $(this).data('id');
     let name_en = $(this).data('name_en');
     let name_ar = $(this).data('name_ar');
 
-    let country_id =$(this).data('country_id');
+    let city_id =$(this).data('city_id');
+
+
 
 
 
@@ -127,20 +97,24 @@
     $('#up_id').val(id);
     $('#up_name_en').val(name_en);
     $('#up_name_ar').val(name_ar);
-    $('#up_country_id').val(country_id);
+    $('#up_city_id').val(city_id);
 
 });
 
-$(document).on("click", ".update_city", function(e) {
+$(document).on("click", ".update_district", function(e) {
     e.preventDefault();
     let id = $('#up_id').val();
     let up_name_en = $('#up_name_en').val();
     let up_name_ar = $('#up_name_ar').val();
-    let up_country_id = $('#up_country_id').val();
+    let up_city_id = $('#up_city_id').val();
+    console.log(id);
+    console.log(up_name_en);
+    console.log(up_name_ar);
+    console.log(up_city_id);
     $('.errMsgContainer').empty(); // Clear previous error messages
 
     $.ajax({
-        url: "{{ route('cities.update', ['city' => ':id']) }}".replace(':id', id),
+        url: "{{ route('districts.update', ['district' => ':id']) }}".replace(':id', id),
         method: "put",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -149,7 +123,7 @@ $(document).on("click", ".update_city", function(e) {
             id: id,
             up_name_en: up_name_en,
             up_name_ar: up_name_ar,
-            up_country_id:up_country_id
+            up_city_id:up_city_id
         },
         dataType: "json",
         success: function(data) {
@@ -158,7 +132,7 @@ $(document).on("click", ".update_city", function(e) {
     if (data.status) {
       console.log(data);
         // Update successful
-         $('#updateModal').modal('hide');
+         $('#updateDistrictModal').modal('hide');
          $('#data-table2').load(location.href+' #data-table2');
                 $('#success2').show();
                 /* hide success message after 4 seconds */
@@ -167,10 +141,11 @@ $(document).on("click", ".update_city", function(e) {
                 }, 2000); // 2000 milliseconds = 2 seconds
     } else {
                 // Update failed
-                console.error('Failed to update City');
+                console.error('Failed to update District');
             }
         },
         error: function(response) {
+          console.log(response.responseJSON);
 
           $('.errMsgContainer').empty(); // Clear previous error messages
             errors = response.responseJSON.errors;
@@ -183,27 +158,25 @@ $(document).on("click", ".update_city", function(e) {
 </script>
 
 
-{{-- ////////////////////////////////////////**add city///////////////////////////////////--}}
+{{-- ////////////////////////////////////////**add district///////////////////////////////////--}}
 <script>
   $(document).ready(function(){
-    $(document).on("click", '.add_city', function(e){
+    $(document).on("click", '.add_district', function(e){
         e.preventDefault();
          let name_en = $('#name_en').val();
          let name_ar= $('#name_ar').val();
-        let country_id=$('#country_id').val();
+        let city_id=$('#city_id').val();
 
 
         $('.errMsgContainer').empty(); // Clear previous error messages
-        console.log(name_en);
-        console.log(name_ar);
-        console.log(country_id);
+
         $.ajax({
-            url: "{{ route('cities.store') }}",
+            url: "{{ route('districts.store') }}",
             method: 'post',
             data: {
                 name_en: name_en,
                 name_ar: name_ar,
-                country_id:country_id
+                city_id:city_id
             },
             dataType: "json",
             headers: {
@@ -212,8 +185,8 @@ $(document).on("click", ".update_city", function(e) {
             success: function(data) {
               console.log(data);
               $('.errMsgContainer').empty(); // Clear previous error messages
-              $("#addModal").modal("hide");
-              $('#addCityForm')[0].reset();
+              $("#addDistrictModal").modal("hide");
+              $('#addDistrictForm')[0].reset();
               $('#data-table2').load(location.href+' #data-table2');
               $('#success1').show();
                 /* hide success message after 4 seconds */
@@ -237,7 +210,7 @@ $(document).on("click", ".update_city", function(e) {
 });
 </script>
 
-{{-- ////////////////////////////////////////**add city///////////////////////////////////--}}
+{{-- ////////////////////////////////////////**add district///////////////////////////////////--}}
 
 
 
@@ -254,17 +227,18 @@ $(document).on("click", ".update_city", function(e) {
 
 
 // Use document or a container element that is always present on the page
-$(document).on('click', '.delete-city', function (e) {
+$(document).on('click', '.delete-district', function (e) {
     e.preventDefault();
-    var city_id = $(this).data('id');
+    e.stopPropagation(); 
+    var district_id = $(this).data('id');
 
-    if (confirm("Are you sure you want to delete this city?")) {
+    if (confirm("Are you sure you want to delete this district?")) {
         $.ajax({
-            url: 'cities/' + city_id,
+            url: 'districts/' + district_id,
             type: 'DELETE',
             data: {
                 _token: '{{ csrf_token() }}',
-                city: city_id
+                district: district_id
             },
             success: function (data) {
                 if (data.status == true) {
@@ -276,18 +250,21 @@ $(document).on('click', '.delete-city', function (e) {
                     setTimeout(function () {
                         $('#success3').hide();
                     }, 2000);
-                } else if (data.status == 422) {
+                } else if (data.status == false) {
                     // City could not be deleted due to relationships
-                    alert('You cannot delete this city as it is related to other tables.');
+                    alert('You cannot delete this district as it is related to other tables.');
                 } else if (data.status == 403) {
                     // City deletion forbidden due to relationships
-                    alert('Deletion of this city is forbidden as it is related to other tables.');
+                    alert('Deletion of this district is forbidden as it is related to other tables.');
                 }
             },
             error: function (data) {
                 console.log(data);
+                if(data.status==false){
+                  alert('Deletion of this district is forbidden as it is related to other tables.');
+                }
                 if (data.status !== 500) {
-                    alert('An error occurred while deleting the city.');
+                    alert('An error occurred while deleting the district.');
                 }
             }
         });
@@ -307,12 +284,12 @@ $(document).on('click', '.delete-city', function (e) {
 
   e.preventDefault();
   let page = $(this).attr('href').split('page=')[1];
-  city(page);
+  district(page);
 });
 
-function city(page) {
+function district(page) {
     $.ajax({
-      url: "/pagination/paginate-city?page=" + page,
+      url: "/pagination/paginate-district?page=" + page,
         type: 'get',
         success: function(data) {
             $('.table-responsive').html(data);
@@ -331,7 +308,7 @@ function city(page) {
   let search_string=$('#search').val();
   // console.log(search_string);
   $.ajax({
-    url:"{{ route('search.city') }}",
+    url:"{{ route('search.district') }}",
     method:'GET',
     data:{
       search_string:search_string

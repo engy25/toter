@@ -222,7 +222,7 @@ class CityController extends Controller
   {
     try {
       $city->delete();
-      return response()->json(['status' => true, 'msg' => "City Deleted Successfully", "id" => $city->id]);
+      return response()->json(['status' => true, 'msg' => "City Deleted Successfully"]);
     } catch (\Exception $e) {
       if ($e->getMessage() === "Cannot delete City, It is related to other tables") {
         return response()->json(['status' => false, 'msg' => $e->getMessage()], 403);
