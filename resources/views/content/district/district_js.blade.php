@@ -228,8 +228,10 @@ $(document).on("click", ".update_district", function(e) {
 
 // Use document or a container element that is always present on the page
 $(document).on('click', '.delete-district', function (e) {
+  $('.errMsgContainer').empty(); // Clear previous error messages
     e.preventDefault();
-    e.stopPropagation(); 
+
+    e.stopPropagation();
     var district_id = $(this).data('id');
 
     if (confirm("Are you sure you want to delete this district?")) {
@@ -241,24 +243,24 @@ $(document).on('click', '.delete-district', function (e) {
                 district: district_id
             },
             success: function (data) {
-                if (data.status == true) {
-                    // City was deleted successfully
-                    $('#data-table2').load(location.href + ' #data-table2');
+              ///
+              if (data.status === true) {
+                $('#data-table2').load(location.href + ' #data-table2');
+                $('#success3').show();
+                setTimeout(function () {
+                  $('#success3').hide();
+                }, 2000);
+              } else if (data.status === false) {
+                 // district could not be deleted due to relationships
+                alert(data.msg);
+              } else if (data.status === 403) {
+                 // City deletion forbidden due to relationships
+                alert(data.msg);
 
-                    $('#success3').show();
-                    /* hide success message after 4 seconds */
-                    setTimeout(function () {
-                        $('#success3').hide();
-                    }, 2000);
-                } else if (data.status == false) {
-                    // City could not be deleted due to relationships
-                    alert('You cannot delete this district as it is related to other tables.');
-                } else if (data.status == 403) {
-                    // City deletion forbidden due to relationships
-                    alert('Deletion of this district is forbidden as it is related to other tables.');
-                }
+              }
             },
             error: function (data) {
+              alert('Deletion of this district is forbidden as it is related to other tables.');
                 console.log(data);
                 if(data.status==false){
                   alert('Deletion of this district is forbidden as it is related to other tables.');

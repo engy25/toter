@@ -56,11 +56,11 @@ $i=0;
               </div>
             </td>
           </tr>
-          @include('content.district.update', ["city_id" => $district->city->id])
+          {{-- @include('content.district.update', ["city_id" => $district->city->id]) --}}
           @endforeach
         </tbody>
       </table>
-      @include('content.district.district_js')
+      {{-- @include('content.district.district_js') --}}
       {{-- {!! $cities->links() !!} --}}
       <div class="mt-4">
         @if ($districts->lastPage() > 1)

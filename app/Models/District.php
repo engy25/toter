@@ -15,19 +15,7 @@ class District extends Model implements TranslatableContract
     public $translatedAttributes = ['name'];
 
 
-  protected static function boot()
-  {
-    parent::boot();
-    static::deleting(function ($district) {
-      /***check if the city related to any other table */
-
-      if ($district->stores()->count() > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-  }
+ 
 
   public function stores()
   {
