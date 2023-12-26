@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\{WeekHour,Day};
+use App\Models\{Weekhour,Day};
 use Illuminate\Http\Request;
 use App\Http\Requests\dash\DE\WeekHourRequest;
 class WeekhourController extends Controller
@@ -36,7 +36,7 @@ class WeekhourController extends Controller
      */
     public function store(WeekHourRequest $request)
     {
-      $weekhour = WeekHour::create([
+      $weekhour = Weekhour::create([
         "day_id" => $request->day,
         "store_id"=>$request->store_id,
         "from"=>$request->fromTime,
@@ -61,10 +61,10 @@ class WeekhourController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\WeekHour  $weekHour
+     * @param  \App\Models\Weekhour  $weekhour
      * @return \Illuminate\Http\Response
      */
-    public function show(WeekHour $weekHour)
+    public function show(Weekhour $weekhour)
     {
         //
     }
@@ -72,10 +72,10 @@ class WeekhourController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\WeekHour  $weekHour
+     * @param  \App\Models\WeekHour  $weekhour
      * @return \Illuminate\Http\Response
      */
-    public function edit(WeekHour $weekHour)
+    public function edit(Weekhour $weekhour)
     {
         //
     }
@@ -87,7 +87,7 @@ class WeekhourController extends Controller
      * @param  \App\Models\WeekHour  $weekHour
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, WeekHour $weekhour)
+    public function update(Request $request, Weekhour $weekhour)
     {
       $rules = [
         "up_to_timme"=>"required",
@@ -112,7 +112,7 @@ class WeekhourController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\WeekHour  $weekHour
+     * @param  \App\Models\Weekhour  $weekHour
      * @return \Illuminate\Http\Response
      */
 
@@ -120,7 +120,7 @@ class WeekhourController extends Controller
     public function destroy($weekhour)
     {
       try {
-        $weekhour = WeekHour::findOrFail($weekhour);
+        $weekhour = Weekhour::findOrFail($weekhour);
         $weekhour->delete();
 
         return response()->json(['status' => true, 'msg' => "WeekHour Deleted Successfully"]);
@@ -131,7 +131,7 @@ class WeekhourController extends Controller
 
 
 
-    public function customEdit(WeekHour $weekhour,Day $day)
+    public function customEdit(Weekhour $weekhour,Day $day)
     {
 
     }
