@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -12,11 +12,11 @@ use App\Helpers\Helpers;
 class Size extends Model implements TranslatableContract
 {
 
-  use SoftDeletes, HasFactory, Translatable;
+  use  HasFactory, Translatable;
   protected $table = 'sizes';
   public $timestamps = true;
 
-  protected $dates = ['deleted_at'];
+
   protected $guarded = [];
 
   public $translatedAttributes = ['name'];

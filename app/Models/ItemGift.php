@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Helpers;
 class ItemGift extends Model {
@@ -11,13 +11,9 @@ class ItemGift extends Model {
 	protected $table = 'item_gifts';
 	public $timestamps = true;
 
-	use SoftDeletes,HasFactory;
-  public $helper;
-  public function __construct()
-  {
-      $this->helper= new Helpers();
-  }
-	protected $dates = ['deleted_at'];
+	use HasFactory;
+
+
   protected $guarded = [];
 	public function item()
 	{
@@ -39,7 +35,8 @@ class ItemGift extends Model {
   //         \File::delete(storage_path('app/public/images/gifts/' . $this->attributes['image']));
   //       }
   //     }
-  //     $image = $this->helper->upload_single_file($value, 'app/public/images/gifts/');
+  //     $helpers= new Helpers();
+  //     $image = $helpers->upload_single_file($value, 'app/public/images/gifts/');
   //     $this->attributes['image'] = $image;
   //   }
   // }

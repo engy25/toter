@@ -1,17 +1,6 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- Include your other scripts and stylesheets -->
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-<script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<!-- CSS files -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -19,23 +8,83 @@
 <!-- Toastr JS -->
 <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
-
-
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0&callback=initMap" async
+    defer></script>
 <script>
-  $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).ready(function () {
+        initialize();
+    });
+
+    function initialize() {
+        const input = document.getElementById("address");
+        const latitudeField = document.getElementById("address-latitude");
+        const longitudeField = document.getElementById("address-longitude");
+        console.log(latitudeField);
+        console.log(longitudeField);
+
+        const map = new google.maps.Map(document.getElementById('address-map'), {
+            center: { lat: -33.8688, lng: 151.2195 },
+            zoom: 13
+        });
+
+        const marker = new google.maps.Marker({
+            map: map,
+            position: { lat: -33.8688, lng: 151.2195 },
+            draggable: true
+        });
+
+        const autocomplete = new google.maps.places.Autocomplete(input);
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                toastr.error("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            map.setZoom(17);
+
+            // Update latitude and longitude fields
+            latitudeField.value = place.geometry.location.lat();
+            longitudeField.value = place.geometry.location.lng();
+        });
+
+        // Update marker position on drag
+        google.maps.event.addListener(marker, 'dragend', function () {
+            const position = marker.getPosition();
+            latitudeField.value = position.lat();
+            longitudeField.value = position.lng();
+            console.log(latitudeField.value);
+            console.log(longitudeField.value);
+        });
     }
-});
 </script>
 
+<style>
+    /* Your custom styles for the location input field here */
+    #address {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    #address-map-container {
+        width: 100%;
+        height: 400px;
+    }
+</style>
 
 
-
-
-
+{{-- -------------------------------------------------------------------------------------------------------- --}}
 
 
 

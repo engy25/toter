@@ -46,46 +46,48 @@ $i=0;
 
       <td>
         <div class="d-flex align-items-center border-bottom-0">
-            @if($item->avg_rating==0)
-            <span class="fa fa-star checked">0</span>
-            @else
-            <span class="fa fa-star checked">{{ $item->avg_rating }}</span>
-            @endif
+          @if($item->avg_rating==0)
+          <span class="fa fa-star checked">0</span>
+          @else
+          <span class="fa fa-star checked">{{ $item->avg_rating }}</span>
+          @endif
         </div>
-    </td>
+      </td>
 
 
       <td class="center align-middle">
         <div class="btn-group">
+
           <a href="{{ route('items.edit', $item->id) }}"
             class="btn bg-info-transparent d-flex align-items-center justify-content-center">
             <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
-          {{-- <a href="{{ LaravelLocalization::localizeURL(route('items.edit', $item->id)) }}"
-            class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
-            data-bs-target="#updateModal" data-id="{{ $item->id }}"
-            data-name_en="{{ $item->translations()->where("locale","en")->first()->name }}"
+          <a href="{{ LaravelLocalization::localizeURL(route('items.edit', $item->id)) }}"
+            class="btn btn-info btn-icon py-1 me-2"
+            data-id="{{ $item->id }}" data-name_en="{{ $item->translations()->where(" locale","en")->first()->name }}"
             data-name_ar="{{$item->translations()->where("locale","ar")->first()->name }}"
             data-Section_name="{{ $item->section->name }}" data-section_id="{{ $item->section->id }}" title="Edit"
             style="width: 100px; height: 40px;">
             {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-          </a> --}}
+          </a>
 
-          <a  href="{{ route('items.show', $item->id) }}" class="btn btn-success show-item"  style="width: 100px; height: 40px;">
+          <a href="{{ route('items.show', $item->id) }}" class="btn btn-success show-item"
+            style="width: 100px; height: 40px;">
             <i class="bi bi-eye"></i> {{ trans('words.show') }}
           </a>&nbsp;&nbsp;
 
-        <button type="button" class="btn btn-danger delete-item" data-id="{{ $item->id }}" style="width: 100px; height: 40px;">
+          <button type="button" class="btn btn-danger delete-item" data-id="{{ $item->id }}"
+            style="width: 100px; height: 40px;">
             <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
-        </button>
+          </button>
         </div>
       </td>
     </tr>
     @empty
-      <tr>
-        <td colspan="8" class="text-center">No Items found for this store.</td>
-      </tr>
-      @endforelse
-    </tbody>
+    <tr>
+      <td colspan="8" class="text-center">No Items found for this store.</td>
+    </tr>
+    @endforelse
+  </tbody>
 
 
 </table>

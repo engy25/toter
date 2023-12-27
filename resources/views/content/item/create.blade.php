@@ -1,402 +1,255 @@
-<!-- create.blade.php -->
-
 @extends('layouts.layoutMaster')
 
 @section('title', 'Create Item')
 
 @section('vendor-style')
-<!-- Include your vendor styles here -->
+  <!-- Include your vendor styles here -->
 @endsection
 
 @section('page-style')
-<!-- Include your page-specific styles here -->
+  <!-- Include your page-specific styles here -->
 @endsection
 
 @section('vendor-script')
-<!-- Include your vendor scripts here -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Include your vendor scripts here -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 @endsection
 
 @section('page-script')
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-  function addDistrict() {
-    const container = document.getElementById('districtsContainer');
-
-    // Create a new district div
-    const districtDiv = document.createElement('div');
-    districtDiv.className = 'district mb-3';
-
-    // City select
-
-    const citySelect = document.createElement('select');
-    citySelect.className = 'form-control';
-    citySelect.name = 'city_id[]';
-
-    // Fetch cities from the server
-    fetchCities(function (cities) {
-      // Populate city options
-      cities.forEach(function (city) {
-        const option = document.createElement('option');
-        option.value = city.id;
-        option.textContent = city.translations[0].name;
-        citySelect.appendChild(option);
-      });
-
-      // Now that the city select is populated, fetch districts
-      loadDistricts(citySelect);
-
-      // Set up an event listener to load districts when the city select changes
-      citySelect.addEventListener('change', function () {
-        loadDistricts(citySelect);
-      });
-    });
-
-    districtDiv.appendChild(citySelect);
-
-    // District select
-    const districtSelect = document.createElement('select');
-    districtSelect.className = 'form-control';
-    districtSelect.name = 'district_id[]';
-    // You can leave this empty or fetch districts dynamically based on the selected city if needed
-
-    districtDiv.appendChild(districtSelect);
-
-    // Delivery fees input
-    const deliveryFeesInput = document.createElement('input');
-    deliveryFeesInput.type = 'text';
-    deliveryFeesInput.className = 'form-control';
-    deliveryFeesInput.name = 'delivery_fees[]';
-    deliveryFeesInput.placeholder = 'Delivery Fees';
-    districtDiv.appendChild(deliveryFeesInput);
-
-    // Remove button
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'btn btn-danger';
-    removeButton.textContent = 'Remove District';
-    removeButton.onclick = function () {
-      container.removeChild(districtDiv);
-    };
-    districtDiv.appendChild(removeButton);
-
-    // Append the new district div to the container
-    container.appendChild(districtDiv);
-  }
-
-  function fetchCities(callback) {
-    // Make an Ajax request to fetch cities from the server
-    $.ajax({
-      url: '/get-cities', // Replace with your actual endpoint
-      method: 'GET',
-      success: function (data) {
-        callback(data);
-      },
-      error: function (error) {
-        console.error('Error fetching cities:', error);
-      },
-    });
-  }
-
-  function fetchDistricts(cityId, callback) {
-  // Make an Ajax request to fetch districts from the server based on the selected city
-  $.ajax({
-    url: '/cities/districts/' + cityId,
-    method: 'GET',
-    success: function (data) {
-      callback(data);
-    },
-    error: function (error) {
-      console.error('Error fetching districts:', error);
-    },
-  });
-}
-
-
-function loadDistricts(citySelect) {
-
-  const cityId = citySelect.value;
-  const districtSelect = citySelect.parentElement.querySelector('[name="district_id[]"]');
-  const container = document.getElementById('districtsContainer');
-
-
-  // Clear existing district options
-  districtSelect.innerHTML = '';
-
-
-  // Call the fetchDistricts function to fetch districts based on the selected city
-  fetchDistricts(cityId, function (districts) {
-    // Dynamically populate districts
-    districts.forEach(function (district) {
-      const option = document.createElement('option');
-      option.value = district.id;
-      option.textContent = district.translations[0].name;
-      districtSelect.appendChild(option); // Append options to the districtSelect element
-    });
-  });
-}
-
-
-
-
-
-
-  // Declare the function at the global scope
-  function addStoreCategory() {
-    const container = document.getElementById('storeCategoriesContainer');
-    let categoryId = 1;
-
-    // Create a new category div
-    const categoryDiv = document.createElement('div');
-    categoryDiv.className = 'category mb-3';
-
-    // Function to create input elements
-    function createInput(type, name, placeholder) {
-      const input = document.createElement('input');
-      input.type = type;
-      input.className = 'form-control';
-      input.name = name;
-      input.placeholder = placeholder;
-      return input;
-    }
-
-    // Category Name (English)
-    categoryDiv.appendChild(createInput('text', `store_categories[${categoryId}][name_en]`, 'Category Name (English)'));
-
-    // Add a line break after the "Name (English)" input field
-    categoryDiv.appendChild(document.createElement('br'));
-
-     // Category Name (English)
-    categoryDiv.appendChild(createInput('text', `store_categories[${categoryId}][name_ar]`, 'Category Name (Arabic)'));
-    categoryDiv.appendChild(document.createElement('br'));
-  // Category Name (English)
-    categoryDiv.appendChild(createInput('text', `store_categories[${categoryId}][description_en]`, 'Description Name (English)'));
-
-    categoryDiv.appendChild(document.createElement('br'));
-
-    categoryDiv.appendChild(createInput('text', `store_categories[${categoryId}][description_ar]`, 'Description Name (Arabic)'));
-
-    categoryDiv.appendChild(document.createElement('br'));
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'btn btn-danger';
-    removeButton.textContent = 'Remove Category';
-    removeButton.onclick = function () {
-    container.removeChild(categoryDiv);
-    };
-
-    categoryDiv.appendChild(removeButton);
-
-    // Append the new category div to the container
-    container.appendChild(categoryDiv);
-    categoryId++; // Increment the unique identifier for the next category
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // Loop through each time input field and initialize Flatpickr
-    for (let i = 1; i <= 7; i++) {
-      flatpickr(`#from_time${i}`, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true,
-      });
-
-      flatpickr(`#to_time${i}`, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true,
-      });
-    }
-
-
-
-
-
-  });
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @endsection
 
-
 @section('content')
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title">Add New Store</h4>
-      </div>
-      <div class="card-body">
-        @if($errors->any())
-        <div class="alert alert-danger">
-          <ul>
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-          </ul>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Add New Item</h4>
         </div>
-        @endif
-        <form method="post" action="{{ route('stores.store') }}" enctype="multipart/form-data">
-          @csrf
+        <div class="card-body">
+          @if($errors->any())
+            <div class="alert alert-danger">
+              <ul>
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+          <form method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
+            @csrf
 
-          <div class="mb-3">
-            <label for="name_en" class="form-label">Name (English) </label>
-            <input type="text" class="form-control" id="name_en" name="name_en" required>
-          </div>
+            <!-- Name (English) -->
+            <div class="mb-3">
+              <label for="name_en" class="form-label">Name (English)</label>
+              <input type="text" class="form-control" id="name_en" name="name_en" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="name_ar" class="form-label">Name (Arabic)</label>
-            <input type="text" class="form-control" id="name_ar" name="name_ar" required>
-          </div>
+            <!-- Name (Arabic) -->
+            <div class="mb-3">
+              <label for="name_ar" class="form-label">Name (Arabic)</label>
+              <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="description_en" class="form-label">Descriprion (English)</label>
-            <textarea type="text" class="form-control" id="description_en" name="description_en" style="resize:none;" required></textarea>
-          </div>
+            <!-- Description (English) -->
+            <div class="mb-3">
+              <label for="description_en" class="form-label">Description (English)</label>
+              <textarea type="text" class="form-control" id="description_en" name="description_en" style="resize:none;" required></textarea>
+            </div>
 
-          <div class="mb-3">
-            <label for="description_ar" class="form-label">Descriprion (Arabic)</label>
-            <textarea type="text" class="form-control" id="description_ar" name="description_ar" style="resize:none;" required></textarea>
-          </div>
-          <br>
+            <!-- Description (Arabic) -->
+            <div class="mb-3">
+              <label for="description_ar" class="form-label">Description (Arabic)</label>
+              <textarea type="text" class="form-control" id="description_ar" name="description_ar" style="resize:none;" required></textarea>
+            </div>
 
-          <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <textarea type="text" class="form-control" id="address" name="address" style="resize:none;" required></textarea>
-          </div>
+            <!-- Price -->
+            <div class="mb-3">
+              <label for="price">Price</label>
+              <input type="number" name="price" class="form-control" step="0.01" id="price">
+              <span class="text-danger error-message" id="error_price"></span>
+            </div>
 
+            <!-- Added Value -->
+            <div class="mb-3">
+              <label for="added_value">Added Value</label>
+              <input type="number" name="added_value" class="form-control" step="0.01" id="added_value">
+              <span class="text-danger error-message" id="error_added_value"></span>
+            </div>
 
-          <div class="mb-3">
-            <label for="section_id" class="form-label">Section</label>
-            <select class="form-control" id="section_id" name="section_id" required>
-              <option>Select Section</option>
-              @foreach ($sections as $section)
-              <option value="{{ $section->id }}">{{ $section->name }}</option>
-              @endforeach
-            </select>
-          </div>
+            <!-- Is Restaurant? -->
+            <div class="mb-3">
+              <label for="restaurant_true" class="form-label">Is Restaurant?</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="restaurant_true" id="restaurant_true" value="1" checked>
+                <label class="form-check-label" for="restaurant_true">True</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="restaurant_true" id="restaurant_false" value="0">
+                <label class="form-check-label" for="restaurant_false">False</label>
+              </div>
+            </div>
 
-          <div class="mb-3">
-            <label for="sub_section_id" class="form-label">Subsection</label>
-            <select class="form-control" id="sub_section_id" name="sub_section_id" required>
-              <!-- Options will be dynamically populated using JavaScript -->
-            </select>
-          </div>
+            <!-- Store -->
+            <div class="mb-3">
+              <label for="store_id" class="form-label">Store</label>
+              <select class="form-control" id="store_id" name="store_id" required>
+                <option value="">Select Store</option>
+                @foreach ($stores as $store)
+                  <option value="{{ $store->id }}">{{ $store->name }}</option>
+                @endforeach
+              </select>
+            </div>
 
+            <!-- Tag -->
+            <div class="form-group">
+              <label for="tag_id">Tag</label>
+              <select name="tag_id" class="form-control" id="tag_id" required>
+                <!-- Options will be dynamically populated here using JavaScript -->
+              </select>
+              <span class="text-danger error-message" id="error_tag_id"></span>
+            </div>
 
-          <div class="mb-3">
-            <label for="delivery_time" class="form-label">Delivery Time</label>
-            <input type="text" class="form-control" id="delivery_time" name="delivery_time" required>
-          </div>
+            <!-- Gifts -->
+            <h5 class="my-3">Gifts</h5>
+            <div id="giftsContainer">
+              <!-- Existing store gifts (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addStoreGift()">Add Gift</button>
+            </div>
 
+            <!-- Sizes -->
+            <h5 class="my-3">Sizes</h5>
+            <div id="sizesContainer">
+              <!-- Existing store sizes (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addSize()">Add Size</button>
+            </div>
 
-          <h5 class="my-3">Store Categories</h5>
+            <!-- Add Ingredients -->
+            <h5 class="my-3">Add Ingredients</h5>
+            <div id="ingredientsContainer">
+              <!-- Existing store Add Ingredients (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addIngredient()"> Ingredient</button>
+            </div>
 
-          <div id="storeCategoriesContainer">
-            <!-- Existing store categories (if any) will be added here dynamically -->
-          </div>
+            <!-- Add Services -->
+            <h5 class="my-3">Add Services</h5>
+            <div id="servicesContainer">
+              <!-- Existing store Add Ingredients (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addSerivice()">Add Service</button>
+            </div>
 
-          <div class="mb-3">
-            <button type="button" class="btn btn-success" onclick="addStoreCategory()">Add Category</button>
-          </div>
+            <!-- Add Preference -->
+            <h5 class="my-3">Add Preference</h5>
+            <div id="preferencesContainer">
+              <!-- Existing store Add Ingredients (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addPreference()">Add Preference</button>
+            </div>
 
+            <!-- Add Option -->
+            <h5 class="my-3">Add Option</h5>
+            <div id="optionsContainer">
+              <!-- Existing store Add Ingredients (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addOption()">Add Option</button>
+            </div>
 
-          <h5 class="my-3">Week Hours</h5>
+            <!-- Add Side -->
+            <h5 class="my-3">Add Side</h5>
+            <div id="sidesContainer">
+              <!-- Existing store Add Ingredients (if any) will be added here dynamically -->
+            </div>
+            <div class="mb-3">
+              <button type="button" class="btn btn-success" onclick="addSide()">Add Side</button>
+            </div>
 
-          @for($i = 1; $i <= 7; $i++) <div class="mb-3">
-            <label for="day{{ $i }}" class="form-label">Day {{ $i }}</label>
-            <select class="form-control" id="day{{ $i }}" name="weekhours[{{ $i }}][day_id]" required>
-              <option>Select Day</option>
-              @foreach ($days as $day)
-              <option value="{{ $day->id }}">{{ $day->name }}</option>
-              @endforeach
-            </select>
-      </div>
+            <!-- Drinks -->
+            <div class="form-group">
+              <label for="drinks">Drinks</label>
+              <select name="drinks[]" class="form-control" id="drinks" multiple="multiple">
+                <!-- Options will be dynamically populated here using JavaScript -->
+              </select>
+              <span class="text-danger error-message" id="error_drinks"></span>
+              <br>
+            </div>
 
-      <div class="mb-3">
-        <label for="from_time{{ $i }}" class="form-label">From Time</label>
-        <input type="text" class="form-control" id="from_time{{ $i }}" name="weekhours[{{ $i }}][from_time]" required>
-      </div>
+            <!-- Addons -->
+            <div class="form-group">
+              <label for="addons">Addons</label>
+              <select name="addons[]" class="form-control" id="addons" multiple="multiple">
+                <!-- Options will be dynamically populated here using JavaScript -->
+              </select>
+              <span class="text-danger error-message" id="error_addons"></span>
+              <br>
+            </div>
 
-      <div class="mb-3">
-        <label for="to_time{{ $i }}" class="form-label">To Time</label>
-        <input type="text" class="form-control" id="to_time{{ $i }}" name="weekhours[{{ $i }}][to_time]" required>
-      </div>
+            <!-- Main Image -->
+            <div class="row mb-3">
+              <label class="col-md-2 form-label mb-4">Main Image:</label>
+              <div class="col-md-10">
+                <input required name="image" id="demo" type="file" accept=".jpg, .png, image/jpeg, image/png" placeholder="Image" onchange="previewImage(event)">
+                <br><br><br>
+                <img id="preview" style="display:none">
+                @error('image')
+                  <div>{{ $message }}</div>
+                @enderror
+              </div>
+            </div>
 
-      @endfor
+            <script>
+              $(document).ready(function() {
+                var fileInput = $('#demo');
+                var previewImage = $('#preview-image');
 
-      <h5 class="my-3">Cities</h5>
-      <div id="districtsContainer">
-        <!-- Districts and delivery fees will be added here dynamically -->
-      </div>
-      <button type="button" class="btn btn-success" onclick="addDistrict()">Add District</button>
+                // Listen for changes to the file input field
+                fileInput.on('change', function() {
+                  // Get the selected file
+                  var file = fileInput.get(0).files[0];
 
+                  // Create a new FileReader object
+                  var reader = new FileReader();
 
-      <br><br>
+                  // Set the image source when the file is loaded
+                  reader.onload = function(event) {
+                    previewImage.attr('src', event.target.result);
+                  };
 
+                  // Read the selected file as a data URL
+                  reader.readAsDataURL(file);
+                });
+              });
 
-      <div class="row mb-3">
-        <label class="col-md-2 form-label mb-4">Main Image:</label>
-        <div class="col-md-10">
-          <input required name="image" id="demo" type="file" accept=".jpg, .png, image/jpeg, image/png"
-            placeholder="Image" onchange="previewImage(event)">
-          <br><br><br>
-          <img id="preview" style="display:none">
-          @error('image')
-          <div>{{ $message }}</div>
-          @enderror
+              function previewImage(event) {
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function() {
+                  var dataURL = reader.result;
+                  var img = document.getElementById('preview');
+                  img.src = dataURL;
+                  img.style.display = 'block';
+                  img.style.maxWidth = '200px'; // Set a maximum width of 200 pixels for the image
+                };
+                reader.readAsDataURL(input.files[0]);
+              }
+            </script>
+
+            <button type="submit" class="btn btn-primary">Add Item</button>
+          </form>
         </div>
       </div>
-
-
-      <script>
-        $(document).ready(function() {
-var fileInput = $('#demo');
-var previewImage = $('#preview-image');
-
-// Listen for changes to the file input field
-fileInput.on('change', function() {
-  // Get the selected file
-  var file = fileInput.get(0).files[0];
-
-  // Create a new FileReader object
-  var reader = new FileReader();
-
-  // Set the image source when the file is loaded
-  reader.onload = function(event) {
-    previewImage.attr('src', event.target.result);
-  };
-
-  // Read the selected file as a data URL
-  reader.readAsDataURL(file);
-});
-});
-
-function previewImage(event) {
-var input = event.target;
-var reader = new FileReader();
-reader.onload = function(){
-    var dataURL = reader.result;
-    var img = document.getElementById('preview');
-    img.src = dataURL;
-    img.style.display = 'block';
-    img.style.maxWidth = '200px'; // Set a maximum width of 200 pixels for the image
-};
-reader.readAsDataURL(input.files[0]);
-}
-      </script>
-
-
-
-
-
-      <button type="submit" class="btn btn-primary">Add Item</button>
-      </form>
     </div>
   </div>
-</div>
-</div>
-@include('content.store.store_js')
+  @include('content.item.item_js')
 @endsection

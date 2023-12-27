@@ -4,7 +4,7 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -18,33 +18,33 @@ class Side extends Model implements TranslatableContract
 
   protected $guarded = [];
 
-  use SoftDeletes, HasFactory, Translatable;
+  use  HasFactory, Translatable;
   public $translatedAttributes = ['name'];
 
   public $helper;
-  public function __construct()
-  {
-    $this->helper = new Helpers();
-  }
+  // public function __construct()
+  // {
+  //   $this->helper = new Helpers();
+  // }
 
   public function getImageAttribute()
   {
     return asset('storage/images/sides/' . $this->attributes['image']);
   }
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/sides/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/sides/' . $this->attributes['image']));
-        }
-      }
-      $image = $this->helper->upload_single_file($value, 'app/public/images/sides/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/sides/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/sides/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $image = $this->helper->upload_single_file($value, 'app/public/images/sides/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   protected $dates = ['deleted_at'];
 

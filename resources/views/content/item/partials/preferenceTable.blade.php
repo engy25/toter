@@ -9,7 +9,6 @@
     <thead>
       <tr>
         <th> Name</th>
-        <th>Image</th>
         <th>Price</th>
         <th>Actions</th>
       </tr>
@@ -18,10 +17,7 @@
       @forelse ($preferences as $preference)
         <tr>
           <td>{{ $preference->name }}</td>
-          <td>
-            <img src="{{ asset($preference->image) }}" alt="Preference Image" style="height: 20%; width:20%"
-              class="img-fluid">
-          </td>
+
           <td>{{ $preference->price }} {{ $item->currencyIsoCode }}</td>
 
           <td class="center align-middle">

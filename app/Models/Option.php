@@ -15,7 +15,7 @@ class Option extends Model implements TranslatableContract
   protected $table = 'options';
   public $timestamps = true;
 
-  use SoftDeletes, HasFactory, Translatable;
+  use  HasFactory, Translatable;
   public $translatedAttributes = ['name'];
   protected $guarded = [];
   public $helper;
@@ -26,7 +26,7 @@ class Option extends Model implements TranslatableContract
 
 
 
-  protected $dates = ['deleted_at'];
+
 
 
 
@@ -37,20 +37,20 @@ class Option extends Model implements TranslatableContract
   }
 
 
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/options/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/options/' . $this->attributes['image']));
-        }
-      }
-      $image = $this->helper->upload_single_file($value, 'app/public/images/options/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/options/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/options/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $image = $this->helper->upload_single_file($value, 'app/public/images/options/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {

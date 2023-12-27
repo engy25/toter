@@ -9,7 +9,7 @@
     <thead>
       <tr>
         <th> Name</th>
-        <th>Image</th>
+    
         <th>Price</th>
         <th>Actions</th>
       </tr>
@@ -18,10 +18,7 @@
       @forelse ($services as $service)
         <tr>
           <td>{{ $service->name }}</td>
-          <td>
-            <img src="{{ asset($service->image) }}" alt="Service Image" style="height: 20%; width:20%"
-              class="img-fluid">
-          </td>
+
           <td>{{ $service->price }} {{ $item->currencyIsoCode }}</td>
 
           <td class="center align-middle">

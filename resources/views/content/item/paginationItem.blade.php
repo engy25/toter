@@ -60,15 +60,16 @@ $i=0;
           <a href="{{ route('items.edit', $item->id) }}"
             class="btn bg-info-transparent d-flex align-items-center justify-content-center">
             <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
-          {{-- <a href="{{ LaravelLocalization::localizeURL(route('items.edit', $item->id)) }}"
-            class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
-            data-bs-target="#updateModal" data-id="{{ $item->id }}"
+
+          <a href="{{ LaravelLocalization::localizeURL(route('items.edit', $item->id)) }}"
+            class="btn btn-info btn-icon py-1 me-2"
+            data-id="{{ $item->id }}"
             data-name_en="{{ $item->translations()->where("locale","en")->first()->name }}"
             data-name_ar="{{$item->translations()->where("locale","ar")->first()->name }}"
-            data-Section_name="{{ $item->section->name }}" data-section_id="{{ $item->section->id }}" title="Edit"
+           title="Edit"
             style="width: 100px; height: 40px;">
             {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-          </a> --}}
+          </a>
 
           <a  href="{{ route('items.show', $item->id) }}" class="btn btn-success show-item"  style="width: 100px; height: 40px;">
             <i class="bi bi-eye"></i> {{ trans('words.show') }}

@@ -34,8 +34,9 @@ class StoreRequest extends FormRequest
       'section_id' => 'required|exists:sections,id',
       'sub_section_id' => 'required|exists:subsections,id',
       'delivery_time' => 'required|string|max:255',
+      // 'latitude'=>'required',
+      // 'longitude'=>'required',
       'weekhours' => ['required', 'array', new UniqueDayIds],
-
       'store_categories.*.name_en' => 'required|string|max:250',
       'store_categories.*.description_en' =>'required|string|max:500',
       'store_categories.*.name_ar' => 'required|string|max:250',

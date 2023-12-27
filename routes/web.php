@@ -276,6 +276,13 @@ Route::group(
     Route::Resource('items', ItemController::class);
     Route::get("/pagination/paginate-item", [ItemController::class, "paginationItem"]);
     Route::get('/search-items', [ItemController::class, 'searchItem'])->name('search.item');
+     /***display the tags of the  store */
+    Route::get('store-tags/{store_id}',[ItemController::class,"displayTags"])->name('store.tags');
+    /***display the drinks of the  store */
+    Route::get('store-drinks/{store_id}',[ItemController::class,"displayDrinks"])->name('store.drinks');
+
+        /***display the addons of the  store */
+    Route::get('store-addons/{store_id}',[ItemController::class,"displayAddons"])->name('store.addons');
 
     /***ingredients */
     Route::Resource('ingredients', IngredientController::class);

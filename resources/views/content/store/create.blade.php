@@ -9,7 +9,9 @@
 @endsection
 
 @section('page-style')
-<!-- Include your page-specific styles here -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0&callback=initMap" async
+    defer></script>
+<script src="/js/mapInput.js"></script>
 @endsection
 
 @section('vendor-script')
@@ -143,6 +145,7 @@ function loadDistricts(citySelect) {
 
 
 
+
   // Declare the function at the global scope
   function addStoreCategory() {
     const container = document.getElementById('storeCategoriesContainer');
@@ -253,19 +256,17 @@ function loadDistricts(citySelect) {
 
           <div class="mb-3">
             <label for="description_en" class="form-label">Descriprion (English)</label>
-            <textarea type="text" class="form-control" id="description_en" name="description_en" style="resize:none;" required></textarea>
+            <textarea type="text" class="form-control" id="description_en" name="description_en" style="resize:none;"
+              required></textarea>
           </div>
 
           <div class="mb-3">
             <label for="description_ar" class="form-label">Descriprion (Arabic)</label>
-            <textarea type="text" class="form-control" id="description_ar" name="description_ar" style="resize:none;" required></textarea>
+            <textarea type="text" class="form-control" id="description_ar" name="description_ar" style="resize:none;"
+              required></textarea>
           </div>
           <br>
 
-          <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <textarea type="text" class="form-control" id="address" name="address" style="resize:none;" required></textarea>
-          </div>
 
 
           <div class="mb-3">
@@ -292,7 +293,7 @@ function loadDistricts(citySelect) {
           </div>
 
 
-          <h5 class="my-3">Store Categories</h5>
+          <h5 class="my-3">Tags</h5>
 
           <div id="storeCategoriesContainer">
             <!-- Existing store categories (if any) will be added here dynamically -->
@@ -349,6 +350,20 @@ function loadDistricts(citySelect) {
           @enderror
         </div>
       </div>
+      <br>
+
+
+
+
+      <div  class="mb-3">
+        <label for="address_address">Address</label>
+        <textarea type="text" name="address"  id="address" name="address_address" class="form-control map-input" style="resize:none;" required> </textarea>
+        <input type="hidden" name="address_latitude" id="address-latitude" value="0" />
+        <input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+    </div>
+    <div id="address-map-container" style="width:100%;height:400px; ">
+        <div style="width: 100%; height: 100%" id="address-map"></div>
+    </div>
 
 
       <script>
@@ -392,7 +407,12 @@ reader.readAsDataURL(input.files[0]);
 
 
 
-      <button type="submit" class="btn btn-primary">Add Item</button>
+
+
+
+
+
+      <button type="submit" class="btn btn-primary">Add New Store</button>
       </form>
     </div>
   </div>

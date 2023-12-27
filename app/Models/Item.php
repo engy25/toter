@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use App\Helpers\Helpers;
@@ -17,10 +17,10 @@ class Item extends Model implements TranslatableContract
   protected $table = 'items';
   public $timestamps = true;
 
-  use SoftDeletes, HasFactory, Translatable;
+  use  HasFactory, Translatable;
   public $translatedAttributes = ['name', 'description'];
   protected $guarded = [];
-  protected $dates = ['deleted_at','from_date','to_date'];
+  protected $dates = ['from_date','to_date'];
 
   protected static function boot()
   {
@@ -37,28 +37,26 @@ class Item extends Model implements TranslatableContract
   {
     return asset('storage/images/items/' . $this->attributes['image']);
   }
-  public function setImageAttribute($value)
-  {
-    if ($value && $value->isValid()) {
-      if (isset($this->attributes['image']) && $this->attributes['image']) {
+  // public function setImageAttribute($value)
+  // {
+  //   if ($value && $value->isValid()) {
+  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if (file_exists(storage_path('app/public/images/items/' . $this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/items/' . $this->attributes['image']));
-        }
-      }
-      $helpers = new Helpers(); // Instantiate the Helpers class
-      $image = $helpers->upload_single_file($value, 'app/public/images/items/');
-      $this->attributes['image'] = $image;
-    }
-  }
+  //       if (file_exists(storage_path('app/public/images/items/' . $this->attributes['image']))) {
+  //         \File::delete(storage_path('app/public/images/items/' . $this->attributes['image']));
+  //       }
+  //     }
+  //     $helpers = new Helpers(); // Instantiate the Helpers class
+  //     $image = $helpers->upload_single_file($value, 'app/public/images/items/');
+  //     $this->attributes['image'] = $image;
+  //   }
+  // }
 
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
     return $this->hasMany(ItemTranslation::class);
   }
-
-
 
 
 
@@ -202,9 +200,6 @@ class Item extends Model implements TranslatableContract
 
     return $item_price ;
   }
-
-
-
 
 
   public function getcurrencyAttribute()
