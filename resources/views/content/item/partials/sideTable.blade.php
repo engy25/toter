@@ -2,9 +2,9 @@
 <!-- Add button to create a new drink -->
 <div class="text-center mb-3">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <a href="{{ route('drinks.create') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Add New Side </a>
+  <a href="{{ route('itemsides.create') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSideModal">Add New Side </a>
 </div>
-<div class="table-responsive border-top">
+<div class="table-responsive border-top" id="table-side">
   <table class="table m-0">
     <thead>
       <tr>
@@ -39,10 +39,7 @@
                 style="width: 100px; height: 40px;">
                 {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
               </a>
-              <a href="{{ route('sides.show', $side->id) }}" class="btn btn-success show-item"
-                style="width: 100px; height: 40px;">
-                <i class="bi bi-eye"></i> {{ trans('words.show') }}
-              </a>&nbsp;&nbsp;
+             
               <button type="button" class="btn btn-danger delete-side" data-id="{{ $side->id }}"
                 style="width: 100px; height: 40px;">
                 <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
@@ -57,4 +54,5 @@
       @endforelse
     </tbody>
   </table>
+  @include('content.side.add_side_model')
 </div>

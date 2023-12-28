@@ -2,9 +2,9 @@
 <!-- Add button to create a new drink -->
 <div class="text-center mb-3">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <a href="{{ route('drinks.create') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Add New Drink </a>
+  <a href="{{ route('drinks.create') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDrinkModal">Add New Drink </a>
 </div>
-<div class="table-responsive border-top">
+<div class="table-responsive border-top" id="data-tabledrink2">
   <table class="table m-0">
     <thead>
       <tr>
@@ -57,4 +57,5 @@
       @endforelse
     </tbody>
   </table>
+  @include('content.drink.add_drink_model',["drinks"=>$item->store->drinks()->get()])
 </div>

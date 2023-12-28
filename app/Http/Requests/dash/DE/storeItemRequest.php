@@ -30,7 +30,7 @@ class storeItemRequest extends FormRequest
           'description_ar' => 'required|string|max:500',
           'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           'price'=>'numeric|max:9999999999999999999999999999.99|required',
-          'integer|digits:1|max:11',
+          'added_value'=>'integer|digits:1|max:11',
           'restaurant_true'=>'required',
           'store_id'=>'required|exists:stores,id',
           'tag_id'=>'required|exists:store_categories,id',
@@ -54,7 +54,7 @@ class storeItemRequest extends FormRequest
           'preferences.*.name_en' => 'required|string|max:50',
           'preferences.*.name_ar' => 'required|string|max:50',
           'preferences.*.price' => 'numeric|max:9999999999999999999999999999.99',
-         
+
 
 
           'options.*.name_en' => 'required|string|max:50',

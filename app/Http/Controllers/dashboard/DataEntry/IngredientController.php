@@ -114,48 +114,49 @@ class IngredientController extends Controller
   public function update(Request $request, Ingredient $ingredient)
   {
 
-    // $rules = [
-    //   'up_image' => 'required|max:10000',
-    //   'up_price' => 'numeric|max:9999999999999999999999999999.99|required',
-    //   'up_name_en' => [
-    //     'required',
-    //     'string',
-    //     'max:30',
-    //     'min:3',
-    //     Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
-    //       // Check if the English name is different
-    //       return $request->has('up_name_en') && $request->up_name_en !== $ingredient->nameTranslation('en');
-    //     }),
-    //   ],
-    //   'up_name_ar' => [
-    //     'required',
-    //     'string',
-    //     'max:30',
-    //     'min:3',
-    //     Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
-    //       // Check if the Arabic name is different
-    //       return $request->up_name_ar !== $ingredient->nameTranslation('ar');
-    //     }),
-    //   ],
-    // ];
+    $rules = [
+      "up_add" => "required_in:1,0",
+      'upimage' => 'max:10000',
+      'upprice' => 'numeric|max:9999999999999999999999999999.99|required',
+      'upnameen' => [
+        'required',
+        'string',
+        'max:30',
+        'min:3',
+        Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
+          // Check if the English name is different
+          return $request->upnameen !== $ingredient->nameTranslation('en');
+        }),
+      ],
+      'upnamear' => [
+        'required',
+        'string',
+        'max:30',
+        'min:3',
+        Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
+          // Check if the Arabic name is different
+          return $request->upnamear !== $ingredient->nameTranslation('ar');
+        }),
+      ],
+    ];
 
 
-    // $validator = \Validator::make($request->all(), $rules);
+    $validator = \Validator::make($request->all(), $rules);
 
-    // if ($validator->fails()) {
-    //   return response()->json(['errors' => $validator->errors()], 422);
-    // }
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
+    }
 
     $ingredient->update([
-      "item_id"=>1,
-      "store_id"=>1,
-      "price" => $request->up_price,
+      "item_id" => 1,
+      "store_id" => 1,
+      "price" => $request->upprice,
       'add' => $request->up_add,
-      'image' => $request->up_image, // assuming 'image' is a valid column in your table
-  ]);
+      'image' => $request->upimage, // assuming 'image' is a valid column in your table
+    ]);
 
-    IngredientTranslation::where(['ingredient_id' => $ingredient->id, "locale" => "en"])->update(['name' => $request->up_name_en]);
-    IngredientTranslation::where(['ingredient_id' => $ingredient->id, "locale" => "ar"])->update(['name' => $request->up_name_ar]);
+    IngredientTranslation::where(['ingredient_id' => $ingredient->id, "locale" => "en"])->update(['name' => $request->upnameen]);
+    IngredientTranslation::where(['ingredient_id' => $ingredient->id, "locale" => "ar"])->update(['name' => $request->upnamear]);
 
     return response()->json([
       "status" => true,

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Models\Scopes\ItemScope;
-use App\Http\Requests\dash\DE\storeItemRequest;
+use App\Http\Requests\dash\DE\{storeItemRequest, updateItemRequest};
 use App\Helpers\Helpers;
 
 class ItemController extends Controller
@@ -417,8 +417,8 @@ class ItemController extends Controller
 
   public function edit($item)
   {
-    $item=Item::withoutGlobalScope(new ItemScope)->findOrFail($item);
-    
+    $item = Item::withoutGlobalScope(new ItemScope)->findOrFail($item);
+
 
     return view("content.item.update", compact("item"));
   }
@@ -431,9 +431,32 @@ class ItemController extends Controller
    * @param  \App\Models\Item  $item
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, Item $item)
+  public function update(updateItemRequest $request, Item $item)
   {
-    //
+
+    $item->price = $request->upprice;
+    $item->added_value = $request->upadded_value;
+
+
+    if ($request->hasFile('upimage')) {
+      $image = $request->file('upimage');
+      $imagePath = $this->helper->upload_single_file($image, 'app/public/images/items/');
+      $item->image = $imagePath;
+
+    }
+    $item->save();
+
+    $itemTranslation_en = $item->translate("en");
+    $itemTranslation_en->name = $request->upname_en;
+    $itemTranslation_en->description = $request->updescription_en;
+    $itemTranslation_en->save();
+
+    $itemTranslation_ar = $item->translate("ar");
+    $itemTranslation_ar->name = $request->upname_ar;
+    $itemTranslation_ar->description = $request->updescription_ar;
+    $itemTranslation_ar->save();
+
+    return redirect()->route('items.index')->with('success', 'Item has been updated successfully.');
   }
 
   /**

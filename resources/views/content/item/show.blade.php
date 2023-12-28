@@ -27,22 +27,6 @@
 <div class="row justify-content-center">
   <!-- Invoice -->
   <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6">
-    <div class="alert alert-success" style="display: none;" id="successingredient1">
-
-      Ingredient Added Successfully
-    </div>
-    <div class="alert alert-success" style="display: none;" id="successing2">
-      Ingredient Updated Successfully
-    </div>
-
-    <div class="alert alert-danger" style="display: none;" id="successing3">
-      Ingredient Deleted Successfully
-    </div>
-
-    <div class="alert alert-success" style="display: none;" id="successaddon1">
-
-      Addon Added Successfully
-    </div>
 
 
 
@@ -117,6 +101,18 @@
       <br><br>
       @if($item->is_restaurant==1)
 
+      <div class="alert alert-success" style="display: none;" id="successingredient1">
+
+        Ingredient Added Successfully
+      </div>
+      <div class="alert alert-success" style="display: none;" id="successing2">
+        Ingredient Updated Successfully
+      </div>
+
+      <div class="alert alert-danger" style="display: none;" id="successing3">
+        Ingredient Deleted Successfully
+      </div>
+
       @include('content.item.partials.ingredientTable', ['item'=>$item,'ingredients' => $added_ingredients, 'title'
       =>'Add Ingredients', 'title_Add'=> $title])
 
@@ -126,13 +122,34 @@
       => 'Remove Ingredients','title_Add'=>$title])
 
 
+
       <br><br>
+
+      <div class="alert alert-success" style="display: none;" id="successaddon1">
+
+        Addon Added Successfully
+      </div>
+
       @include('content.item.partials.addonTable', ['item'=>$item,'addons' => $addons, 'title' => 'Addons'])
 
       <br><br>
+      <div class="alert alert-success" style="display: none;" id="drinkadd">
+
+        Drink Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="drinkdelete">
+        Drink Deleted Successfully
+      </div>
       @include('content.item.partials.drinkTable', ['item'=>$item,'drinks' => $drinks, 'title' => 'Drinks'])
 
       <br><br>
+      <div class="alert alert-success" style="display: none;" id="sideadd">
+
+        Side Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="sidedelete">
+        Side Deleted Successfully
+      </div>
       @include('content.item.partials.sideTable', ['item'=>$item,'sides' => $sides, 'title' => 'Sides'])
 
 
@@ -168,12 +185,17 @@
       </div>
     </div>
   </div>
-
+{{-- js  --}}
   @include('content.ingredient.add_ingredient_model', ['add' => $add])
   @include('content.ingredient.ingredient_js',['item_id'=>$item->id])
 
   @include('content.addon.addon_js',['item_id'=>$item->id])
 
+  @include('content.drink.add_drink_model')
+  @include('content.drink.drink_js',['item_id'=>$item->id])
+
+  @include('content.side.add_side_model')
+  @include('content.side.side_js',['item_id'=>$item->id])
 
 </div>
 @endsection

@@ -31,7 +31,7 @@
                 <i style="font-size: 20px;" class="fe fe-edit text-info "></i>
               </a>
               <a href="{{ LaravelLocalization::localizeURL(route('addons.edit', $addon->id)) }}"
-                class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
+                class="btn btn-info btn-icon py-1 me-2 update_addon_form" data-bs-toggle="modal"
                 data-bs-target="#updateModal" data-id="{{ $addon->id }}" data-item={{ $item->id }}
                 {{-- data-name_en="{{ $addon->translations()->where("locale","en")->first()->name }}"
                 data-name_ar="{{$addon->translations()->where("locale","ar")->first()->name }}" --}}
@@ -39,10 +39,7 @@
                 style="width: 100px; height: 40px;">
                 {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
               </a>
-              <a href="{{ route('addons.show', $addon->id,$item->id) }}" class="btn btn-success show-item"
-                style="width: 100px; height: 40px;">
-                <i class="bi bi-eye"></i> {{ trans('words.show') }}
-              </a>&nbsp;&nbsp;
+
               <button type="button" class="btn btn-danger delete-addon" data-id="{{ $addon->id }}" data-item={{ $item->id }}
                 style="width: 100px; height: 40px;">
                 <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
@@ -59,4 +56,5 @@
   </table>
 
   @include('content.addon.add_addon_model',["addons"=>$item->store->addons()->get()])
+  
 </div>

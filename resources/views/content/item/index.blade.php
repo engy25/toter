@@ -97,7 +97,7 @@ $i=0;
   </div>
 </div>
 
-@include('content.item.update')
+{{-- @include('content.item.update') --}}
 {{-- @include('content.item.add_city_model') --}}
 {!! Toastr::message() !!}
 

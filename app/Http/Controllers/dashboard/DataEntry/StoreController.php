@@ -371,7 +371,7 @@ class StoreController extends Controller
         },
       ])
       ->where("store_id", $store_id)
-      ->latest()->paginate(2);
+      ->latest()->paginate(PAGINATION_COUNT);
 
 
 
@@ -394,7 +394,7 @@ class StoreController extends Controller
       ])
       ->where("store_id", $store_id)
       ->latest()
-      ->paginate(2);
+      ->paginate(PAGINATION_COUNT);
 
 
 

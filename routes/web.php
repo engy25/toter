@@ -40,7 +40,9 @@ use App\Http\Controllers\dashboard\DataEntry\{
   TagController,
   WeekhourController,
   AddController,
-  StoreDistrictController
+  StoreDistrictController,
+  ItemDrinkController,
+  ItemSideController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -280,6 +282,13 @@ Route::group(
     Route::get('store-tags/{store_id}',[ItemController::class,"displayTags"])->name('store.tags');
     /***display the drinks of the  store */
     Route::get('store-drinks/{store_id}',[ItemController::class,"displayDrinks"])->name('store.drinks');
+
+        /****item drinks */
+    Route::Resource('itemdrinks', ItemDrinkController::class);
+    Route::delete('/itemdrink/{item_id}/{drink_id}', [ItemDrinkController::class,"delete"])->name('itemdrinks.delete');
+
+    /**item sides */
+    Route::Resource('itemsides', ItemSideController::class);
 
         /***display the addons of the  store */
     Route::get('store-addons/{store_id}',[ItemController::class,"displayAddons"])->name('store.addons');

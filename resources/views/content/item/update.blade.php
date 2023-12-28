@@ -32,54 +32,90 @@
         <h4 class="card-title">Update Item</h4>
       </div>
       <div class="card-body">
-        @if($errors->any())
-        <div class="alert alert-danger">
-          <ul>
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-          </ul>
-        </div>
-        @endif
+
         <form method="post" action="{{ route('items.update', $item->id) }}" enctype="multipart/form-data">
           @csrf
 
           @method('PUT')
 
           <div class="mb-3">
-            <label for="name_en" class="form-label">Name (English) </label>
-            <input type="text" value="{{ $item->name }}" class="form-control" id="name_en" name="name_en" required>
+            <label for="upname_en" class="form-label">Name (English) </label>
+            <input type="text" value="{{ $item->name }}" class="form-control" id="upname_en" name="upname_en" required>
+            @error('upname_en')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
           </div>
 
           <div class="mb-3">
-            <label for="name_ar" class="form-label">Name (Arabic)</label>
+            <label for="upname_ar" class="form-label">Name (Arabic)</label>
             <input type="text" value="{{ $item->translations->where("locale","ar")->first()->name }}"
-            class="form-control" id="name_ar" name="name_ar" required>
+            class="form-control" id="upname_ar" name="upname_ar" required>
+            @error('upname_ar')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
           </div>
 
           <div class="mb-3">
-            <label for="description_en" class="form-label">Descriprion (English)</label>
-            <textarea name="description_en" class="form-control" required id="description_en"
+            <label for="updescription_en" class="form-label">Descriprion (English)</label>
+            <textarea name="updescription_en" class="form-control" required id="updescription_en"
               style="resize:none;">{{ $item->translations->where("locale","en")->first()->description }}</textarea>
+            @error('updescription_en')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
           </div>
 
           <div class="mb-3">
-            <label for="description_en" class="form-label">Descriprion (Arabic)</label>
-            <textarea name="description_ar" class="form-control" required id="description_ar"
+            <label for="updescription_ar" class="form-label">Descriprion (Arabic)</label>
+            <textarea name="updescription_ar" class="form-control" required id="updescription_ar"
               style="resize:none;">{{ $item->translations->where("locale","ar")->first()->description }}</textarea>
+            @error('updescription_ar')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
           </div>
 
 
 
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="price">Price</label>
+            <input type="number" name="upprice" value="{{ $item->PriceBeforeTax }}" class="form-control" step="0.01"
+              id="upprice">
+            @error('upprice')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
 
+          <!-- Added Value -->
+          <div class="mb-3">
+            <label for="upadded_value">Added Value</label>
+            <input type="number" name="upadded_value" value="{{ $item->added_value }}" class="form-control" step="0.01"
+              id="upadded_value">
+            @error('upadded_value')
+            <div class="alert alert-danger" role="alert">
+              {{ $message }}
+            </div>
+            @enderror
+          </div>
 
 
           <div class="row mb-3">
             <label class="col-md-2 form-label mb-4">Main Image:</label>
             <div class="col-md-10">
-              <input name="image" id="demo" type="file" accept=".jpg, .png, image/jpeg, image/png" placeholder="Image">
-              @error('image')
-              <div>{{ $message }}</div>
+              <input name="upimage" id="demo"  type="file" accept=".jpg, .png, image/jpeg, image/png" placeholder="Image">
+              @error('upimage')
+              <div class="alert alert-danger" role="alert">
+                {{ $message }}
+              </div>
               @enderror
               <br><br><br>
               @if($item->image)
@@ -117,23 +153,6 @@
 
           </script>
 
-          {{-- <div class="mb-3">
-            <label for="section_id" class="form-label">Section</label>
-            <select class="form-control" id="section_id" name="section_id" required>
-              <option>Select Section</option>
-              @foreach ($sections as $section)
-              <option value="{{ $section->id }}" {{ $section->id ==
-                $store->section_id ? 'selected' : '' }}>{{ $section->name }}</option>
-              @endforeach
-            </select>
-          </div> --}}
-
-          {{-- <div class="mb-3">
-            <label for="sub_section_id" class="form-label">Subsection</label>
-            <select class="form-control" id="sub_section_id" name="sub_section_id" required>
-              <!-- Options will be dynamically populated using JavaScript -->
-            </select>
-          </div> --}}
 
 
 

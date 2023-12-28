@@ -27,16 +27,13 @@
           <td class="center align-middle">
             <div class="btn-group">
 
-              <a href="{{ LaravelLocalization::localizeURL(route('ingredients.edit', $ingredient->id)) }}"
+              {{-- <a href="{{ LaravelLocalization::localizeURL(route('ingredients.edit', $ingredient->id)) }}"
                 class="btn btn-info btn-icon py-1 me-2 update_ingredient_form" data-bs-toggle="modal"
                 data-bs-target="#updateIngredientModal" data-id="{{ $ingredient->id }}"
                 data-name_en="{{ $ingredient->translations()->where("locale","en")->first()->name }}" data-name_ar="{{ $ingredient->translations()->where("locale","ar")->first()->name }}"  data-image="{{ $ingredient->image }}" data-price={{ $ingredient->price }}  data-add= {{ $ingredient->add }}   title="Edit" style="width: 100px; height: 40px;">
                 {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-              </a>
-              <a href="{{ route('ingredients.show', $ingredient->id) }}" class="btn btn-success show-item"
-                style="width: 100px; height: 40px;">
-                <i class="bi bi-eye"></i> {{ trans('words.show') }}
-              </a>&nbsp;&nbsp;
+              </a> --}}
+
 
               <button type="button" class="btn btn-danger delete-ingredient" data-id="{{ $ingredient->id }}"
                 style="width: 100px; height: 40px;">
