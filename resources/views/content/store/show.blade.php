@@ -24,10 +24,10 @@
 @endsection
 
 @section('content')
-<div class="row justify-content-center">
+{{-- <div class="row justify-content-center">
 
   <!-- Invoice -->
-  <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6">
+  <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6"> --}}
 
     <div class="card invoice-preview-card">
       <div class="card-body">

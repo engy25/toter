@@ -4,7 +4,7 @@ namespace App\Http\Requests\dash\DE;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SideStoreRequest extends FormRequest
+class SizeStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,9 @@ class SideStoreRequest extends FormRequest
     public function rules()
     {
         return [
-          "name_en" => 'required|string|max:30|min:3|unique:side_translations,name',
-          "name_ar" => 'required|string|max:30|min:3|unique:side_translations,name',
-          'sideImage'=>'required|max:10000',
+          "name_en" => 'required|string|max:30|min:3|unique:size_translations,name',
+          "name_ar" => 'required|string|max:30|min:3|unique:size_translations,name',
           'price'=>'numeric|max:9999999999999999999999999999.99|required',
-
 
         ];
     }

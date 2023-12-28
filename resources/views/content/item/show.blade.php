@@ -24,9 +24,9 @@
 
 
 @section('content')
-<div class="row justify-content-center">
+{{-- <div class="row justify-content-center">
   <!-- Invoice -->
-  <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6">
+  <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6"> --}}
 
 
 
@@ -152,16 +152,50 @@
       </div>
       @include('content.item.partials.sideTable', ['item'=>$item,'sides' => $sides, 'title' => 'Sides'])
 
-
       @endif
 
 
       <br><br>
+      <div class="alert alert-success" style="display: none;" id="sizeadd">
+
+        Size Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="sizedelete">
+        Size Deleted Successfully
+      </div>
       @include('content.item.partials.sizeTable', ['item'=>$item,'sizes' => $sizes, 'title' => 'Sizes'])
+      <div class="alert alert-success" style="display: none;" id="giftadd">
+
+        Gift Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="giftdelete">
+        Gift Deleted Successfully
+      </div>
       @include('content.item.partials.giftTable', ['item'=>$item,'gifts' => $gifts, 'title' => 'Gifts'])
+      <div class="alert alert-success" style="display: none;" id="serviceadd">
+
+        Service Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="servicedelete">
+        Service Deleted Successfully
+      </div>
       @include('content.item.partials.serviceTable', ['item'=>$item,'services' => $services, 'title' => 'Service'])
+      <div class="alert alert-success" style="display: none;" id="preferenceadd">
+
+        Preference Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="preferencedelete">
+        Preference Deleted Successfully
+      </div>
       @include('content.item.partials.preferenceTable', ['item'=>$item,'preferences' => $preferences, 'title' =>
       'Preference'])
+      <div class="alert alert-success" style="display: none;" id="optionadd">
+
+        Option Added Successfully
+      </div>
+      <div class="alert alert-danger" style="display: none;" id="optiondelete">
+        Option Deleted Successfully
+      </div>
       @include('content.item.partials.optionTable', ['item'=>$item,'options' => $options, 'title' => 'Option'])
 
       <div class="card-body mx-3">
@@ -185,7 +219,7 @@
       </div>
     </div>
   </div>
-{{-- js  --}}
+  {{-- js --}}
   @include('content.ingredient.add_ingredient_model', ['add' => $add])
   @include('content.ingredient.ingredient_js',['item_id'=>$item->id])
 
@@ -197,5 +231,19 @@
   @include('content.side.add_side_model')
   @include('content.side.side_js',['item_id'=>$item->id])
 
+  @include('content.size.add_size_model')
+  @include('content.size.size_js',['item_id'=>$item->id])
+
+  @include('content.gift.add_gift_model')
+  @include('content.gift.gift_js',['item_id'=>$item->id])
+
+  @include('content.service.add_service_model')
+  @include('content.service.service_js',['item_id'=>$item->id])
+
+  @include('content.preference.add_preference_model')
+  @include('content.preference.preference_js',['item_id'=>$item->id])
+
+  @include('content.option.add_option_model')
+  @include('content.option.option_js',['item_id'=>$item->id])
 </div>
 @endsection

@@ -183,6 +183,7 @@ to make the dropdoown store searchable
     const imagePreview = document.createElement('img');
     imagePreview.id = `imagePreview${giftId}`;
     imagePreview.style.display = 'none';
+    imagePreview.style.maxWidth = '200px';
 
     imageInput.addEventListener('change', function (event) {
       displayImagePreview(event, imagePreview);
@@ -344,6 +345,7 @@ to make the dropdoown store searchable
 
     imagePreview.id = `imagePreview${ingredientId}`;
     imagePreview.style.display = 'none';
+    imagePreview.style.maxWidth = '200px';
 
     imageInput.addEventListener('change', function (event) {
       displayImagePreview(event, imagePreview);
@@ -539,6 +541,8 @@ to make the dropdoown store searchable
 
     imagePreview.id = `imagePreview${optionId}`;
     imagePreview.style.display = 'none';
+    imagePreview.style.maxWidth = '200px';
+
 
     imageInput.addEventListener('change', function (event) {
       displayImagePreview(event, imagePreview);
@@ -620,6 +624,7 @@ to make the dropdoown store searchable
 
     imagePreview.id = `imagePreview${sideId}`;
     imagePreview.style.display = 'none';
+    imagePreview.style.maxWidth = '200px';
 
     imageInput.addEventListener('change', function (event) {
       displayImagePreview(event, imagePreview);

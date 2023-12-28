@@ -42,7 +42,12 @@ use App\Http\Controllers\dashboard\DataEntry\{
   AddController,
   StoreDistrictController,
   ItemDrinkController,
-  ItemSideController
+  ItemSideController,
+  ItemSizeController,
+  ItemGiftController,
+  ItemServiceController,
+  ItemPreferenceController,
+  ItemOptionController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -287,8 +292,24 @@ Route::group(
     Route::Resource('itemdrinks', ItemDrinkController::class);
     Route::delete('/itemdrink/{item_id}/{drink_id}', [ItemDrinkController::class,"delete"])->name('itemdrinks.delete');
 
+    /**item gifts */
+    Route::Resource('itemgifts', ItemGiftController::class);
+
     /**item sides */
     Route::Resource('itemsides', ItemSideController::class);
+
+        /**item sizes */
+    Route::Resource('itemsizes', ItemSizeController::class);
+
+
+            /**item service */
+    Route::Resource('itemservices', ItemServiceController::class);
+
+                /**item preference */
+    Route::Resource('itempreferences', ItemPreferenceController::class);
+
+                /**item option */
+    Route::Resource('itemoptions', ItemOptionController::class);
 
         /***display the addons of the  store */
     Route::get('store-addons/{store_id}',[ItemController::class,"displayAddons"])->name('store.addons');
