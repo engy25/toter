@@ -156,7 +156,7 @@ class Item extends Model implements TranslatableContract
 
   public function subsection()
   {
-    return $this->belongsto(SubSection::class);
+    return $this->belongsto(Subsection::class);
   }
 
 
