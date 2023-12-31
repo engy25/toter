@@ -86,11 +86,11 @@ class Subsection extends Model implements TranslatableContract
     return $this->hasMany(Offer::class,"subsection_id");
   }
 
-  public function getDescriptionAttribute($value)
-  {
-    $helper=new Helpers();
-    return $this->helper->stripText($value);
-  }
+  // public function getDescriptionAttribute($value)
+  // {
+  //   $helper=new Helpers();
+  //   return $this->helper->stripText($value);
+  // }
 
   public function getNameAttribute()
   {
