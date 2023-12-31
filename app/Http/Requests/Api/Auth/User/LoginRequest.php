@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
             'password'=>'required',
             'device_token' => 'required',
             'type' => 'required|in:ios,android',
-            'email'=>'required'
+            // 'email'=>'required'
 
         ];
     }

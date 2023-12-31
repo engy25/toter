@@ -1,6 +1,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+<div class="modal fade" id="addsubsectionModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
   <form action="" method="POST" id="addSubsectionForm">
     @csrf
     <div class="modal-dialog">
@@ -40,24 +40,24 @@
 
           <label for="description_ar">Description (Arabic)</label>
           <textarea name="description_ar" class="form-control" id="description_ar" style="resize:none;"></textarea>
-          <span class="text-danger error-message" id="error_description_ar" ></span>
+          <span class="text-danger error-message" id="error_description_ar"></span>
           <br>
 
-            <div class="form-group">
-              <label for="image">Image</label>
-              <input type="file" name="image" id="image" accept="image/*">
-              <span class="text-danger error-message" id="error_image"></span>
-            </div>
-<br>
-            <!-- Preview the selected image -->
-            <div class="form-group">
-              {{-- <label for="image-preview">Image Preview</label> --}}
-              <img src=""  id="image-preview" style="max-width: 90%; height: 50%; display: block;">
-            </div>
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image" accept="image/*">
+            <span class="text-danger error-message" id="error_image"></span>
+          </div>
+          <br>
+          <!-- Preview the selected image -->
+          <div class="form-group">
+            {{-- <label for="image-preview">Image Preview</label> --}}
+            <img src="" id="image-preview" style="max-width: 90%; height: 50%; display: block;">
+          </div>
 
-            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-            <script>
-              $(document).ready(function () {
+          {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+          <script>
+            $(document).ready(function () {
         // Update image preview when a file is selected
         $('#image').change(function () {
             var input = this;
@@ -70,14 +70,14 @@
             reader.readAsDataURL(input.files[0]);
         });
     });
-            </script>
+          </script> --}}
 
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary add_subsection">Save changes</button>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary add_subsection">Save changes</button>
           </div>
         </div>
+      </div>
   </form>
 </div>

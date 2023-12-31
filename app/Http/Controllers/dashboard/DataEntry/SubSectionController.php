@@ -44,7 +44,7 @@ class SubSectionController extends Controller
         'section' => function ($query) {
           $query->select('id');
         },
-        'translations' => function ($query) use($locale) {
+        'translations' => function ($query) use ($locale) {
           $query->select('sub_section_id', 'name')->where("locale", $locale);
         },
       ])
@@ -167,7 +167,7 @@ class SubSectionController extends Controller
    * @param  \App\Models\SubSection  $subSection
    * @return \Illuminate\Http\Response
    */
-  public function show(Subsection $subSection)
+  public function show(Subsection $subsection)
   {
     //
   }
@@ -178,7 +178,7 @@ class SubSectionController extends Controller
    * @param  \App\Models\SubSection  $subSection
    * @return \Illuminate\Http\Response
    */
-  public function edit(Subsection $subSection)
+  public function edit(Subsection $subsection)
   {
     //
   }
@@ -192,7 +192,7 @@ class SubSectionController extends Controller
    */
 
 
-  public function update(Request $request, Subsection $subSection)
+  public function update(Request $request, Subsection $subsection)
   {
     $rules = [
       'up_section_id' => 'required|exists:sections,id',
@@ -201,9 +201,9 @@ class SubSectionController extends Controller
         'string',
         'max:30',
         'min:3',
-        Rule::unique('subsection_translations', 'name')->ignore($subSection->id, 'city_id')->where(function ($query) use ($request, $subSection) {
+        Rule::unique('subsection_translations', 'name')->ignore($subsection->id, 'city_id')->where(function ($query) use ($request, $subsection) {
           // Check if the English name is different
-          return $request->up_name_en !== $subSection->nameTranslation('en');
+          return $request->up_name_en !== $subsection->nameTranslation('en');
         }),
       ],
       'up_name_ar' => [
@@ -211,9 +211,9 @@ class SubSectionController extends Controller
         'string',
         'max:30',
         'min:3',
-        Rule::unique('subsection_translations', 'name')->ignore($subSection->id, 'city_id')->where(function ($query) use ($request, $subSection) {
+        Rule::unique('subsection_translations', 'name')->ignore($subsection->id, 'city_id')->where(function ($query) use ($request, $subsection) {
           // Check if the Arabic name is different
-          return $request->up_name_ar !== $subSection->nameTranslation('ar');
+          return $request->up_name_ar !== $subsection->nameTranslation('ar');
         }),
         'up_description_en' => 'nullable|string|min:3|max:500', // Adjust max length as needed
         'up_description_ar' => 'nullable|required|string|min:3|max:500',
@@ -229,19 +229,19 @@ class SubSectionController extends Controller
     }
 
 
-    $subSection->section_id = $request->up_section_id;
+    $subsection->section_id = $request->up_section_id;
 
 
 
     if ($request->hasFile('up_image')) {
       $image = $request->file('up_image');
       $imagePath = $this->helper->upload_single_file($image, 'app/public/images/subSections/');
-      $subSection->image = $imagePath;
+      $subsection->image = $imagePath;
     }
 
-    $subSection->save();
-    SubsectionTranslation::where(['sub_section_id' => $subSection->id, "locale" => "en"])->update(['name' => $request->up_name_en, 'description' => $request->up_description_en]);
-    SubsectionTranslation::where(['sub_section_id' => $subSection->id, "locale" => "ar"])->update(['name' => $request->up_name_ar, 'description' => $request->up_description_ar]);
+    $subsection->save();
+    SubsectionTranslation::where(['sub_section_id' => $subsection->id, "locale" => "en"])->update(['name' => $request->up_name_en, 'description' => $request->up_description_en]);
+    SubsectionTranslation::where(['sub_section_id' => $subsection->id, "locale" => "ar"])->update(['name' => $request->up_name_ar, 'description' => $request->up_description_ar]);
 
     return response()->json([
       "status" => true,
@@ -261,18 +261,20 @@ class SubSectionController extends Controller
    */
 
 
-  public function destroy(Subsection $subsection)
+
+
+
+  public function destroy($subsection)
   {
     try {
-      // No translations, proceed with deletion
-      $subsection->delete();
-
-      return response()->json(['status' => true, 'msg' => 'Subsection Deleted Successfully', 'id' => $subsection->id]);
+      $Thesubsection = Subsection::where("id", $subsection)->first();
+      $Thesubsection->translations()->delete();
+      $Thesubsection->delete();
+      return response()->json(['status' => true, 'msg' => "Subsection Deleted Successfully"]);
     } catch (\Exception $e) {
-      if ($e->getMessage() === "Cannot delete Subsection, It is related to other tables") {
-        return response()->json(['status' => false, 'msg' => $e->getMessage()], 403);
-      }
-      return response()->json(['status' => false, 'msg' => 'An error occurred while deleting the Subsection.'], 500);
+      return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
     }
+
   }
 }
+

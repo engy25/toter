@@ -21,6 +21,7 @@
 
 
 
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
@@ -32,10 +33,27 @@
 </script>
 
 
+{{-- to dispay the image when i add --}}
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+   $(document).ready(function () {
+      // Update image preview when a file is selected
+      $('#image').change(function () {
+         var input = this;
+         var reader = new FileReader();
 
+         reader.onload = function (e) {
+            $('#image-preview').attr('src', e.target.result);
+         };
 
-{{-- ///////////////////////////////to delete subsection ////////////////////////////// --}}
+         reader.readAsDataURL(input.files[0]);
+      });
+   });
+</script>
+</body>
+
+{{-- ----------- --}}
 
 
 
@@ -122,7 +140,7 @@
 
 
 {{-- /***update Subsection*// --}}
-<script>
+{{-- <script>
   $(document).on("click", ".close-btn", function (e) {
       $('.errMsgContainer').empty(); // Clear error messages when the form is closed
   });
@@ -214,7 +232,7 @@ $.ajax({
       });
   });
 
-</script>
+</script> --}}
 
 
 {{-- ////////////////////////////////////////**add Subsection///////////////////////////////////--}}
@@ -259,7 +277,7 @@ $.ajax({
       success: function(data) {
       console.log(data);
       $('.errMsgContainer').empty(); // Clear previous error messages
-      $("#addModal").modal("hide");
+      $("#addsubsectionModal").modal("hide");
       $('#addSubsectionForm')[0].reset();
       $('#data-table2').load(location.href+' #data-table2');
       $('#success1').show();
@@ -302,41 +320,49 @@ $.ajax({
     }
 });
 
-$(document).on('click', '.delete-subsection', function (e) {
+  $(document).on('click', '.delete-subsection', function (e) {
+  $('.errMsgContainer').empty(); // Clear previous error messages
     e.preventDefault();
+
+    e.stopPropagation();
     var subsection_id = $(this).data('id');
 
-    if (confirm("Are you sure you want to delete this subsection?")) {
+
+
+    if (confirm("Are you sure you want to delete this Subsection?")) {
         $.ajax({
-            url: 'subsections/' + subsection_id,
+            url: '/subsections/' + subsection_id,
             type: 'DELETE',
             data: {
                 _token: '{{ csrf_token() }}',
-                subsection: subsection_id
+                subsection: subsection_id,
+
             },
             success: function (data) {
-              console.log(data);
-                if (data.status == true) {
-                    // subsection was deleted successfully
-                    $('#data-table2').load(location.href + ' #data-table2');
+              ///
+              if (data.status === true) {
+                $('#data-table2').load(location.href + ' #data-table2');
+                $('#success3').show();
+                setTimeout(function () {
+                  $('#success3').hide();
+                }, 2000);
+              } else if (data.status === false) {
+                 // side could not be deleted due to relationships
+                alert(data.msg);
+              } else if (data.status === 403) {
+                 // side deletion forbidden due to relationships
+                alert(data.msg);
 
-                    $('#success3').show();
-                    /* hide success message after 4 seconds */
-                    setTimeout(function () {
-                        $('#success3').hide();
-                    }, 2000);
-                } else if (data.status == 422) {
-                    // subsection could not be deleted due to relationships
-                    alert('You cannot delete this subsection as it is related to other tables.');
-                } else if (data.status == 403) {
-                    // subsection deletion forbidden due to relationships
-                    alert('Deletion of this subsection is forbidden as it is related to other tables.');
-                }
+              }
             },
             error: function (data) {
+              alert('Deletion of this Subsection is forbidden as it is related to other tables.');
                 console.log(data);
+                if(data.status==false){
+                  alert('Deletion of this Subsection is forbidden as it is related to other tables.');
+                }
                 if (data.status !== 500) {
-                    alert('An error occurred while deleting the subsection.');
+                    alert('An error occurred while deleting the Subsection.');
                 }
             }
         });
@@ -346,7 +372,10 @@ $(document).on('click', '.delete-subsection', function (e) {
 
 </script>
 
-{{-- //////////////////////////////DElete subsection////////////////////////////// --}}
+
+{{-- //////////////////////////////////////////////////////////// --}}
+
+
 
 
 
@@ -370,7 +399,7 @@ function subsection(page) {
 }
 
 </script>
-{{-- /////////////////////////////Pagination subsection///////////////////////////////////// --}}
+{{-- ////////////////////////////////////////////////////////////////// --}}
 
 
 {{-- /////////////////////////////Search subsection///////////////////////////////////// --}}
@@ -399,4 +428,4 @@ function subsection(page) {
 </script>
 
 
-{{-- /////////////////////////////Search subsection///////////////////////////////////// --}}
+{{-- ////////////////////////////////////////////////////////////////// --}}

@@ -62,9 +62,13 @@ $i=0;
     @endforeach
   </tbody>
 </table>
+
 {{-- {!! $cities->links() !!} --}}
 <div class="mt-4">
   @if ($subsections->lastPage() > 1)
   {{ $subsections->links('pagination.simple-bootstrap-4') }}
   @endif
-  </div>
+
+  @include('content.subsection.subsection_js')
+  @include('content.subsection.update')
+</div>

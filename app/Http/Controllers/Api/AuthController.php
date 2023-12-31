@@ -155,7 +155,7 @@ class AuthController extends Controller
     // $decrypted_password=Crypt::decrypt(base64_decode($encrypted_password,false));
     $credentials = [
       'phone' => $request->phone,
-      'email' => $request->email,
+      //'email' => $request->email,
       'password' => $request->password,
       'country_code' => $request->country_code,
       'role_id' => 3,
