@@ -19,33 +19,17 @@
 <!-- Toastr JS -->
 <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
+
+
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-
-</script>
-
-
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-  $(document).ready(function () {
-        // Update image preview when a file is selected
-        $('#subimage').change(function () {
-            var input = this;
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#image-preview').attr('src', e.target.result);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-        });
-    });
+  $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 </script>
 
 
@@ -84,19 +68,14 @@
 
 </script>
 
-{{-- ----------------------------------- --}}
 
 
 
 
 
-{{-- to fetch the list of the section when  update subsection --}}
 
 
-
-
-
-{{-- /** to fetch list of the data of countries and populate the dropdown in update */// --}}
+{{-- /** to fetch list of the data of sections and populate the dropdown in update */// --}}
 <script>
   $(document).ready(function(){
 
@@ -105,17 +84,19 @@
   method: 'GET',
   dataType: "json",
   success: function (data) {
-    // populate the dropdown with the received country data
+    // populate the dropdown with the received section data
     var options='<option value=""> Select Section </option>';
     $.each(data, function (index, section) {
      var sectionName = section.translations ? section.translations[0].name : section.name;
 
+
       options += '<option value="' + section.id + '">' + sectionName+ '</option>';
     });
     $('#up_section_id').html(options);
+
   },
   error: function (response) {
-    // Handle error if fetching countries fails
+    // Handle error if fetching sections fails
     console.error('Error fetching sections:', response);
   }
 });
@@ -131,17 +112,104 @@
 
 
 
+{{-- /***update Subsection*// --}}
+{{-- <script>
+  $(document).on("click", ".close-btn", function (e) {
+      $('.errMsgContainer').empty(); // Clear error messages when the form is closed
+  });
+</script>
+<script>
+  $(document).on("click", '.update_subsection_form', function () {
+      /* To retrieve the data values from the form */
+      let id = $(this).data('id');
+      let name_en = $(this).data('name_en');
+      let name_ar = $(this).data('name_ar');
+      let description_en = $(this).data('description_en');
+      let description_ar = $(this).data('description_ar');
+      let section_id = $(this).data('section_id');
+      let image = $(this).data('image');
+      // console.log(description_en);
+
+      /** To set the values for each input **/
+      $('#up_id').val(id);
+      $('#up_name_en').val(name_en);
+      $('#up_name_ar').val(name_ar);
+      $('#up_description_en').val(description_en);
+      $('#up_description_ar').val(description_ar);
+      $('#up_section_id').val(section_id);
+      $('#image-preview').attr('src', image);
+
+      // $('#up_image').val(image);
+  });
+
+  $(document).on("click", ".update_subsection", function (e) {
+      e.preventDefault();
+
+      let id = $('#up_id').val();
+      let up_name_en = $('#up_name_en').val();
+      let up_name_ar = $('#up_name_ar').val();
+      let up_description_en = $('#up_description_en').val();
+      let up_description_ar = $('#up_description_ar').val();
+      let up_section_id = $('#up_section_id').val();
+
+      var formData= new FormData();
+      formData.append('up_image', $('#up_image')[0].files[0]);
+      formData.append('up_name_en',up_name_en);
+      formData.append('up_name_ar',up_name_ar);
+      formData.append('up_description_en',up_description_en);
+      formData.append('up_description_ar',up_description_ar);
+      formData.append('up_section_id',up_section_id);
+
+      console.log(formData);
 
 
 
+      $('.errMsgContainer').empty(); // Clear previous error messages
 
+$.ajax({
+    url: "{{ route('subsections.update', ['subsection' => ':id']) }}".replace(':id', id),
+    method: "put",
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    data: formData,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function (data) {
+              console.log('AJAX request successful:', data);
 
+              if (data.status) {
+                  console.log(data);
+                  // Update successful
+                  $('#updateModal').modal('hide');
+                  $('#data-table2').load(location.href + ' #data-table2');
+                  $('#success2').show();
+                  /* hide success message after 4 seconds */
+                  setTimeout(function () {
+                      $('#success2').hide();
+                  }, 2000); // 2000 milliseconds = 2 seconds
+              } else {
+                  // Update failed
+                  console.error('Failed to update Subsection');
+              }
+          },
+          error: function (response) {
+            console.log(response);
+              $('.errMsgContainer').empty(); // Clear previous error messages
+              errors = response.responseJSON.errors;
+              $.each(errors, function (index, value) {
+                  $('.errMsgContainer').append('<span class="text-danger">' + value + '</span></br>');
+              });
+          }
+      });
+  });
 
-
-
+</script> --}}
 
 
 {{-- ////////////////////////////////////////**add Subsection///////////////////////////////////--}}
+
 
 <script>
   $(document).ready(function(){
@@ -153,7 +221,7 @@
     let description_en = $('#description_en').val();
     let description_ar= $('#description_ar').val();
     let section_id=$('#section_id').val();
-    let image = $('#subimage')[0].files[0];
+    let image = $('#image')[0].files[0];
 
     var formData = new FormData();
     formData.append('name_en', name_en);
@@ -178,10 +246,11 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
 
+
       success: function(data) {
       console.log(data);
       $('.errMsgContainer').empty(); // Clear previous error messages
-      $("#addSubsectionModal").modal("hide");
+      $("#addsubsectionModal").modal("hide");
       $('#addSubsectionForm')[0].reset();
       $('#data-table2').load(location.href+' #data-table2');
       $('#success1').show();
@@ -207,15 +276,15 @@
 
 </script>
 
-{{-- ///////////////////////////////////////////////////////////////////////////--}}
+
+
+{{-- ////////////////////////////////////////**add subsection///////////////////////////////////--}}
 
 
 
 
 
-{{-- //////////////////////////////DElete Store////////////////////////////// --}}
-
-
+{{-- //////////////////////////////DElete subsection////////////////////////////// --}}
 
 <script>
   $.ajaxSetup({
@@ -276,11 +345,14 @@
 
 </script>
 
-{{-- //////////////////////////////DElete City////////////////////////////// --}}
+
+{{-- //////////////////////////////////////////////////////////// --}}
 
 
 
-{{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
+
+
+{{-- /////////////////////////////Pagination subsection///////////////////////////////////// --}}
 <script>
   $(document).on('click', '.pagination a', function(e){
 
@@ -300,10 +372,10 @@ function subsection(page) {
 }
 
 </script>
-{{-- /////////////////////////////Pagination City///////////////////////////////////// --}}
+{{-- ////////////////////////////////////////////////////////////////// --}}
 
 
-{{-- /////////////////////////////Search City///////////////////////////////////// --}}
+{{-- /////////////////////////////Search subsection///////////////////////////////////// --}}
 <script>
   $(document).on('keyup',function(e){
   e.preventDefault();
@@ -329,9 +401,4 @@ function subsection(page) {
 </script>
 
 
-{{-- ///////////////////////////////////////////////////////////////// --}}
-
-{{-- update subsection --}}
-
-
-
+{{-- ////////////////////////////////////////////////////////////////// --}}

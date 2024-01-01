@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Subsection, SubsectionTranslation};
+use App\Http\Requests\dash\DE\updateSubsectionRequest;
+use App\Models\{Subsection, SubsectionTranslation,Section};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -180,7 +181,9 @@ class SubSectionController extends Controller
    */
   public function edit(Subsection $subsection)
   {
-    //
+    // You may need to load additional data if required for the edit view
+    $sections = Section::valid()->get();
+    return view("content.subsection.update", compact("subsection","sections"));
   }
 
   /**
@@ -192,61 +195,29 @@ class SubSectionController extends Controller
    */
 
 
-  public function update(Request $request, Subsection $subsection)
+  public function update(updateSubsectionRequest $request, Subsection $subsection)
   {
-    $rules = [
-      'up_section_id' => 'required|exists:sections,id',
-      'up_name_en' => [
-        'required',
-        'string',
-        'max:30',
-        'min:3',
-        Rule::unique('subsection_translations', 'name')->ignore($subsection->id, 'city_id')->where(function ($query) use ($request, $subsection) {
-          // Check if the English name is different
-          return $request->up_name_en !== $subsection->nameTranslation('en');
-        }),
-      ],
-      'up_name_ar' => [
-        'required',
-        'string',
-        'max:30',
-        'min:3',
-        Rule::unique('subsection_translations', 'name')->ignore($subsection->id, 'city_id')->where(function ($query) use ($request, $subsection) {
-          // Check if the Arabic name is different
-          return $request->up_name_ar !== $subsection->nameTranslation('ar');
-        }),
-        'up_description_en' => 'nullable|string|min:3|max:500', // Adjust max length as needed
-        'up_description_ar' => 'nullable|required|string|min:3|max:500',
-        'image' => 'required|max:10000',
-      ],
-    ];
 
+    $subsection->section_id=$request->section_id;
 
-    $validator = \Validator::make($request->all(), $rules);
-
-    if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()], 422);
-    }
-
-
-    $subsection->section_id = $request->up_section_id;
-
-
-
-    if ($request->hasFile('up_image')) {
-      $image = $request->file('up_image');
-      $imagePath = $this->helper->upload_single_file($image, 'app/public/images/subSections/');
+    if ($request->hasFile('image')) {
+      $image = $request->file('image');
+      $imagePath = $this->helper->upload_single_file($image, 'app/public/images/subsections/');
       $subsection->image = $imagePath;
+
     }
-
     $subsection->save();
-    SubsectionTranslation::where(['sub_section_id' => $subsection->id, "locale" => "en"])->update(['name' => $request->up_name_en, 'description' => $request->up_description_en]);
-    SubsectionTranslation::where(['sub_section_id' => $subsection->id, "locale" => "ar"])->update(['name' => $request->up_name_ar, 'description' => $request->up_description_ar]);
 
-    return response()->json([
-      "status" => true,
-      "message" => "Subsection updated successfully"
-    ]);
+    $subsectionTranslation_en=$subsection->translate("en");
+    $subsectionTranslation_en->name=$request->name_en;
+    $subsectionTranslation_en->description=$request->description_en;
+    $subsectionTranslation_en->save();
+
+    $subsectionTranslation_ar=$subsection->translate("ar");
+    $subsectionTranslation_ar->name=$request->name_ar;
+    $subsectionTranslation_ar->description=$request->description_ar;
+    $subsectionTranslation_ar->save();
+    return redirect()->route('subsections.index')->with('success', 'Subsection has been updated successfully.');
   }
 
 
