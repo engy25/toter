@@ -119,7 +119,7 @@ $i=0;
                     <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
                   <a href="{{ LaravelLocalization::localizeURL(route('subsections.edit', $subsection->id)) }}"
                     class="btn btn-info btn-icon py-1 me-2 "
-                     title="Edit"
+                    title="Edit"
                     style="width: 100px; height: 40px;">
                     {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                   </a>
