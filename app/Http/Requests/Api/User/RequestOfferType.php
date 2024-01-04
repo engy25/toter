@@ -3,7 +3,8 @@
 namespace App\Http\Requests\Api\User;
 
 use App\Http\Requests\Api\ApiMasterRequest;
-use App\Models\{Section, SubSection};
+use App\Models\Section;
+use App\Models\SubSection;
 use Illuminate\Validation\Rule;
 class RequestOfferType extends ApiMasterRequest
 {
