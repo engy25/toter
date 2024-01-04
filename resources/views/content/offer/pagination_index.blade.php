@@ -28,7 +28,7 @@
                             </td>
                             <td><img src="{{ asset($offer->image) }}" alt="offer Image" style="height: 50% ; width:50%" class="img-fluid"></td>
                             <td><span class="text-dark fs-13 fw-semibold">{{ $offer->discount_percentage }}</span></td>
-                            <td><span class="text-dark fs-13 fw-semibold">{{ $offer->from_date }}</span></td>
+                            <td><span class="text-dark fs-13 fw-semibold">{{ $offer->to_date }}</span></td>
                             <td class="center align-middle">
                                 <div class="btn-group">
                                     <a href="{{ route('offers.edit', $offer->id) }}" class="btn bg-info-transparent d-flex align-items-center justify-content-center">

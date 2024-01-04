@@ -47,120 +47,9 @@
 
 
 
-{{-- ////////////////////////////////////////**add offer///////////////////////////////////--}}
-{{-- <script>
-  $(document).ready(function(){
-    $(document).on("click", '.add_city', function(e){
-        e.preventDefault();
-         let name_en = $('#name_en').val();
-         let name_ar= $('#name_ar').val();
-        let country_id=$('#country_id').val();
-
-
-        $('.errMsgContainer').empty(); // Clear previous error messages
-        console.log(name_en);
-        console.log(name_ar);
-        console.log(country_id);
-        $.ajax({
-            url: "{{ route('cities.store') }}",
-            method: 'post',
-            data: {
-                name_en: name_en,
-                name_ar: name_ar,
-                country_id:country_id
-            },
-            dataType: "json",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              console.log(data);
-              $('.errMsgContainer').empty(); // Clear previous error messages
-              $("#addModal").modal("hide");
-              $('#addCityForm')[0].reset();
-              $('#data-table2').load(location.href+' #data-table2');
-              $('#success1').show();
-                /* hide success message after 4 seconds */
-                setTimeout(function() {
-                    $('#success1').hide();
-                }, 2000); // 2000 milliseconds = 2 seconds
-              $('.errMsgContainer').empty(); // Clear previous error messages
-
-            },
-            error: function(response) {
-              console.log(response.responseJSON);
-
-                $('.errMsgContainer').empty(); // Clear previous error messages
-                errors = response.responseJSON.errors;
-                $.each(errors, function(index, value){
-                    $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br/>');
-                });
-            }
-        });
-    });
-});
-</script> --}}
-
-{{-- ///////////////////////////////////////////////////////////////////////////--}}
 
 
 
-
-
-{{-- //////////////////////////////DElete offer////////////////////////////// --}}
-
-{{-- <script>
-  $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-
-// Use document or a container element that is always present on the page
-$(document).on('click', '.delete-store', function (e) {
-    e.preventDefault();
-    var store_id = $(this).data('id');
-
-    if (confirm("Are you sure you want to delete this store?")) {
-        $.ajax({
-            url: 'stores/' + store_id,
-            type: 'DELETE',
-            data: {
-                _token: '{{ csrf_token() }}',
-                store: store_id
-            },
-            success: function (data) {
-                if (data.status == true) {
-                    // store was deleted successfully
-                    $('#data-table2').load(location.href + ' #data-table2');
-
-                    $('#success3').show();
-                    /* hide success message after 4 seconds */
-                    setTimeout(function () {
-                        $('#success3').hide();
-                    }, 2000);
-                } else if (data.status == 422) {
-                    // City could not be deleted due to relationships
-                    alert('You cannot delete this store as it is related to other tables.');
-                } else if (data.status == 403) {
-                    // City deletion forbidden due to relationships
-                    alert('Deletion of this store is forbidden as it is related to other tables.');
-                }
-            },
-            error: function (data) {
-                console.log(data);
-                if (data.status !== 500) {
-                    alert('An error occurred while deleting the store.');
-                }
-            }
-        });
-    }
-});
-
-
-</script> --}}
-
-{{-- //////////////////////////////DElete City////////////////////////////// --}}
 
 
 
@@ -215,3 +104,54 @@ function offer(page) {
 
 {{-- ///////////////////////////// ///////////////////////////////////// --}}
 
+{{-- Delete Offer --}}
+<script>
+  $(document).on('click', '.delete-offer', function (e) {
+  $('.errMsgContainer').empty(); // Clear previous error messages
+    e.preventDefault();
+
+    e.stopPropagation();
+    var offer_id = $(this).data('id');
+
+    if (confirm("Are you sure you want to delete this Offer?")) {
+        $.ajax({
+            url: 'offers/' + offer_id,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}',
+                offer: offer_id
+            },
+            success: function (data) {
+              ///
+              if (data.status === true) {
+                $('#data-table2').load(location.href + ' #data-table2');
+                $('#success3').show();
+                setTimeout(function () {
+                  $('#success3').hide();
+                }, 2000);
+              } else if (data.status === false) {
+                 // district could not be deleted due to relationships
+                alert(data.msg);
+              } else if (data.status === 403) {
+                 // City deletion forbidden due to relationships
+                alert(data.msg);
+
+              }
+            },
+            error: function (data) {
+              alert('Deletion of this Offer is forbidden as it is related to other tables.');
+                console.log(data);
+                if(data.status==false){
+                  alert('Deletion of this Offer is forbidden as it is related to other tables.');
+                }
+                if (data.status !== 500) {
+                    alert('An error occurred while deleting the Offer.');
+                }
+            }
+        });
+    }
+});
+
+
+</script>
+{{-- ----------------------------------------------- --}}

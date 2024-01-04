@@ -4,7 +4,7 @@ namespace App\Http\Requests\dash\DE;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OfferStoreRequest extends FormRequest
+class OfferUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,15 @@ class OfferStoreRequest extends FormRequest
      */
     public function rules()
     {
+      $offerId = $this->route()->parameter('offer')->id;
         return [
-          'name_en' => 'required|string|max:30|unique:offer_tanslations,name',
-          'name_ar' => 'required|string|max:30|unique:offer_tanslations,name',
+          'name_en' => 'required|string|max:30|unique:offer_tanslations,name,' . $offerId,
+          'name_ar' => 'required|string|max:30|unique:offer_tanslations,name,' . $offerId,
           'description_en' => 'required|string|max:500',
           'description_ar' => 'required|string|max:500',
           'title_en' => 'required|string|max:500',
           'title_ar' => 'required|string|max:500',
-          'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           'store_id'=>'required|exists:stores,id',
           'tier_id'=>'required|exists:tiers,id',
           'from_date' => 'required|date|after_or_equal:today',
@@ -41,9 +42,6 @@ class OfferStoreRequest extends FormRequest
           'required_points' => 'numeric|integer|required|min:1|max:9223372036854775807',
           'earned_points' => 'numeric|integer|required|min:1|max:9223372036854775807',
          'featured'=>'nullable'
-
-
-
         ];
     }
 }

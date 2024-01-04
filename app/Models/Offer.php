@@ -15,7 +15,7 @@ class Offer extends Model implements TranslatableContract
 {
 
   protected $table = 'offers';
-  public $timestamps = true;
+  public $timestamps = false;
 
   use SoftDeletes, HasFactory, Translatable;
   public $translatedAttributes = ['name', 'description', 'title'];
@@ -25,7 +25,7 @@ class Offer extends Model implements TranslatableContract
   protected $dates = ['deleted_at'];
   public function points()
   {
-    return $this->morphMany(PointStore::class, 'pointeable');
+    return $this->morphMany(PointUser::class, 'pointeable');
   }
 
 

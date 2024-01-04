@@ -2,7 +2,7 @@
 
 @extends('layouts.layoutMaster')
 
-@section('title', 'Update Store')
+@section('title', 'Update Offer')
 
 @section('vendor-style')
 <!-- Include your vendor styles here -->
@@ -21,104 +21,15 @@
 @section('page-script')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-  $(document).ready(function() {
-      // Get the existing sub_section_id value from your view (replace 'existingValue' with the actual variable)
-      var existingSubSectionId = {{ $store->sub_section_id ?? null }};
-
-      // Trigger the change event when the document is ready to populate the subsection dropdown initially
-      $('#section_id').change();
-
-      // Set the data-existing-value attribute on the sub_section_id dropdown
-      $('#sub_section_id').data('existing-value', existingSubSectionId);
-
-      // Set the selected attribute for the existingSubSectionId in the subsection dropdown
-      $('#sub_section_id').val(existingSubSectionId).change();
-
-      $('#section_id').change(function() {
-          var sectionId = $(this).val();
-
-          // Make an AJAX request to fetch subsections for the selected section
-          $.ajax({
-              url: '/getSubSections/' + sectionId,
-              type: 'GET',
-              success: function(data) {
-                  // Populate the subsection dropdown with the received data
-                  var options = '<option value="">Select Subsection</option>';
-
-                  $.each(data, function(index, subSection) {
-                      var subsectionName = subSection.translations ? subSection.translations[0].name : subSection.name;
-                      options += '<option value="' + subSection.id + '">' + subsectionName + '</option>';
-                  });
-                  $('#sub_section_id').html(options);
-
-                  // Set the selected attribute based on the data-existing-value attribute
-                  var existingValue = $('#sub_section_id').data('existing-value');
-                  $('#sub_section_id').val(existingValue).change();
-              },
-              error: function(response) {
-                  console.error('Error fetching subsections:', response);
-              }
-          });
-      });
-  });
-
-  $(document).ready(function() {
-  // Get the existing sub_section_id value from your view (replace 'existingValue' with the actual variable)
-  var existingSubSectionId = {{ $store->sub_section_id ?? null }};
-
-  // Trigger the change event when the document is ready to populate the subsection dropdown initially
-  $('#section_id').change();
-
-  // Set the data-existing-value attribute on the sub_section_id dropdown
-  $('#sub_section_id').data('existing-value', existingSubSectionId);
-
-  // Set the selected attribute for the existingSubSectionId in the subsection dropdown
-  $('#sub_section_id').val(existingSubSectionId).change();
-  // console.log($('#sub_section_id').val())
-
-  $('#section_id').change(function() {
-      var sectionId = $(this).val();
-      // console.log(sectionId);
-
-      $.ajax({
-    url: '/getSubSections/' + sectionId,
-    type: 'GET',
-    success: function(data) {
-
-        var options ='<option value="">Select Subsection</option>';
-        $.each(data, function(index, subSection) {
-            var subsectionName = subSection.translations ? subSection.translations[0].name : subSection.name;
-
-            var selected = subSection.id === existingSubSectionId ? 'selected' : '';
-
-
-            options += '<option value="' + subSection.id + '" ' + selected + '>' + subsectionName + '</option>';
-        });
-
-         console.log(options);
-        $('#sub_section_id').html(options);
-    },
-    error: function(response) {
-        console.error('Error fetching subsections:', response);
-    }
-  });
-    });
-});
-
-</script>
-
-
 
 @endsection
 
 
 @section('content')
-<div class="row justify-content-center">
-  <div class="col-md-8">
+
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title">Update Store</h4>
+        <h4 class="card-title">Update Offer</h4>
       </div>
       <div class="card-body">
         @if($errors->any())
@@ -130,47 +41,132 @@
           </ul>
         </div>
         @endif
-        <form method="post" action="{{ route('stores.update', $store->id) }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('offers.update', $offer->id) }}" enctype="multipart/form-data">
           @csrf
           @method('PUT')
 
+
+          <div class="mb-3">
+            <label for="store_id" class="form-label">Store</label>
+            <select class="form-control" id="store_id" name="store_id" required>
+              <option>Select Store</option>
+              @foreach ($stores as $store)
+              <option value="{{ $store->id }}" {{ $store->id ==
+                $offer->store_id ? 'selected' : '' }}>{{ $store->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+
+          <div class="mb-3">
+            <label for="tier_id" class="form-label">Tier</label>
+            <select class="form-control" id="tier_id" name="tier_id" required>
+              <option>Select Tier</option>
+              @foreach ($tiers as $tier)
+              <option value="{{ $tier->id }}" {{ $tier->id ==
+                $offer->tier_id ? 'selected' : '' }}>{{ $tier->name }}</option>
+              @endforeach
+            </select>
+          </div>
+
+
           <div class="mb-3">
             <label for="name_en" class="form-label">Name (English) </label>
-            <input type="text" value="{{ $store->name }}" class="form-control" id="name_en" name="name_en" required>
+            <input type="text" value="{{ $offer->name }}" class="form-control" id="name_en" name="name_en" required>
           </div>
 
           <div class="mb-3">
             <label for="name_ar" class="form-label">Name (Arabic)</label>
-            <input type="text" value="{{ $store->translations->where("locale","ar")->first()->name }}"
+            <input type="text" value="{{ $offer->translations->where("locale","ar")->first()->name }}"
             class="form-control" id="name_ar" name="name_ar" required>
           </div>
 
           <div class="mb-3">
             <label for="description_en" class="form-label">Descriprion (English)</label>
             <textarea name="description_en" class="form-control" required id="description_en"
-              style="resize:none;">{{ $store->translations->where("locale","en")->first()->description }}</textarea>
+              style="resize:none;">{{ $offer->translations->where("locale","en")->first()->description }}</textarea>
           </div>
 
           <div class="mb-3">
             <label for="description_en" class="form-label">Descriprion (Arabic)</label>
             <textarea name="description_ar" class="form-control" required id="description_ar"
-              style="resize:none;">{{ $store->translations->where("locale","ar")->first()->description }}</textarea>
-          </div>
-
-
-
-
-          <div class="mb-3">
-            <label for="address" class="form-label">Address </label>
-            <textarea name="address" class="form-control" required id="address"
-              style="resize:none;">{{ $store->address }}</textarea>
+              style="resize:none;">{{ $offer->translations->where("locale","ar")->first()->description }}</textarea>
           </div>
 
           <div class="mb-3">
-            <label for="delivery_time" class="form-label">Delivery Time</label>
-            <input type="text" class="form-control" value="{{ $store->delivery_time }}" id="delivery_time"
-              name="delivery_time" required>
+            <label for="title_en" class="form-label">Title (English)</label>
+            <textarea name="title_en" class="form-control" required id="title_en"
+              style="resize:none;">{{ $offer->translations->where("locale","en")->first()->title }}</textarea>
           </div>
+
+          <div class="mb-3">
+            <label for="title_ar" class="form-label">Title (Arabic)</label>
+            <textarea name="title_ar" class="form-control" required id="title_ar"
+              style="resize:none;">{{ $offer->translations->where("locale","ar")->first()->title }}</textarea>
+          </div>
+
+
+
+      <!-- Price -->
+      <div class="mb-3">
+        <label for="discount_percentage">Discount Percenrtage</label>
+        <input type="number" value="{{ $offer->discount_percentage }}"  name="discount_percentage" class="form-control" step="0.01" id="discount_percentage"
+          required>
+        <span class="text-danger error-message" id="error_discount_percentage"></span>
+      </div>
+
+
+      <!-- Price -->
+      <div class="mb-3">
+        <label for="min_price">Minimum Price</label>
+        <input type="number" name="min_price"  value="{{ $offer->min_price }}" class="form-control" step="0.01" id="min_price" required>
+        <span class="text-danger error-message" id="error_min_price"></span>
+      </div>
+
+
+      <!-- Save Up Price -->
+      <div class="mb-3">
+        <label for="saveup_price">SaveUp Price</label>
+        <input type="number" name="saveup_price" class="form-control" value="{{ $offer->saveup_price }}" step="0.01" id="saveup_price" required>
+        <span class="text-danger error-message" id="error_saveup_price"></span>
+      </div>
+
+
+      <div class="mb-3">
+        <label for="order_counts">Order Counts </label>
+        <input type="number" name="order_counts" class="form-control" value="{{ $offer->order_counts }}" step="0.01" id="order_counts" required>
+        <span class="text-danger error-message" id="error_order_counts"></span>
+      </div>
+
+      <div class="mb-3">
+        <label for="required_points">Required Points </label>
+        <input type="number" name="required_points" class="form-control"  value="{{ $offer->required_points }}" step="0.01" id="required_points" required>
+        <span class="text-danger error-message" id="error_required_points"></span>
+      </div>
+
+      <div class="mb-3">
+        <label for="earned_points">Earned Points </label>
+        <input type="number" name="earned_points" class="form-control"  value="{{ $offer->earned_points }}" step="0.01" id="earned_points" required>
+        <span class="text-danger error-message" id="error_earned_points"></span>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="featured" name="featured" value="1" {{ $offer->free_delivery ? 'checked' : '' }}>
+        <label class="form-check-label" for="featured">Free Delivery?</label>
+      </div>
+
+      <div class="mb-3">
+        <label for="from_date" class="form-label">From Date</label>
+        <input type="date" class="form-control" value="{{ $offer->from_date }}" id="from_date" name="from_date" value="{{ now()->format('Y-m-d') }}"
+          required>
+      </div>
+
+      <div class="mb-3">
+        <label for="from_date" class="form-label">To Date</label>
+        <input type="date" class="form-control" id="to_date" value="{{ $offer->to_date }}" name="to_date" value="{{ now()->format('Y-m-d') }}"
+          required>
+      </div>
+
 
           <div class="row mb-3">
             <label class="col-md-2 form-label mb-4">Main Image:</label>
@@ -182,7 +178,7 @@
               <br><br><br>
               @if($store->image)
               <div>
-                <img id="image-preview" src="{{ asset($store->image) }}" alt="Store Image" style="max-width: 200px;">
+                <img id="image-preview" src="{{ asset($offer->image) }}" alt="Store Image" style="max-width: 200px;">
               </div>
               @else
               <div>
@@ -215,36 +211,17 @@
 
           </script>
 
-          <div class="mb-3">
-            <label for="section_id" class="form-label">Section</label>
-            <select class="form-control" id="section_id" name="section_id" required>
-              <option>Select Section</option>
-              @foreach ($sections as $section)
-              <option value="{{ $section->id }}" {{ $section->id ==
-                $store->section_id ? 'selected' : '' }}>{{ $section->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="sub_section_id" class="form-label">Subsection</label>
-            <select class="form-control" id="sub_section_id" name="sub_section_id" required>
-              <!-- Options will be dynamically populated using JavaScript -->
-            </select>
-          </div>
-
-
 
 
 
           <br><br>
           <div class="text-center my-3">
-            <button type="submit" class="btn btn-primary">Update Store</button>
+            <button type="submit" class="btn btn-primary">Update Offer</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-@include('content.store.store_js')
+
 @endsection

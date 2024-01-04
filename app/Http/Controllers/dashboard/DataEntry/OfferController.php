@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Offer, Item, Store, Tier};
+use App\Models\{Offer, Item, Store, Tier, OfferTranslation};
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Models\Scopes\ItemScope;
 use App\Http\Requests\dash\DE\OfferStoreRequest;
+use App\Helpers\Helpers;
+
 class OfferController extends Controller
 {
 
+  public $helper;
+  public function __construct()
+  {
+    $this->helper = new Helpers();
+  }
 
   public function searchOffer(Request $request)
   {
@@ -124,12 +131,6 @@ class OfferController extends Controller
 
 
 
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
   public function create()
   {
     $stores = Store::all();
@@ -137,52 +138,76 @@ class OfferController extends Controller
     return view("content.offer.create", compact('stores', "tiers"));
   }
 
+  private function storeTranslations(Offer $offer, Request $request)
+  {
+    $locales = ['en', 'ar'];
+
+    foreach ($locales as $locale) {
+      OfferTranslation::create([
+        'name' => $request->get("name_$locale"),
+        'description' => $request->get("description_$locale"),
+        'title' => $request->get("title_$locale"),
+        'offer_id' => $offer->id,
+        'locale' => $locale,
+      ]);
+    }
+  }
+
+
   /**
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
+
+
   public function store(OfferStoreRequest $request)
   {
-    $storeId = $request->input('store_id');
-    $store = Store::findOrFail($storeId);
+    \DB::beginTransaction();
+
+    try {
+      $storeId = $request->input('store_id');
+      $store = Store::findOrFail($storeId);
 
 
-    $offer = new Offer;
-    $offer->fill([
-      'subsection_id' => $store->sub_section_id,
-      'store_id' => $storeId,
-      'tier_id'=>$request->tier_id,
-      'discount_percentage'=>$request->discount_percentage,
-      'min_price'=>$request->min_price,
-      'saveup_price'=>$request->saveup_price,
-      'order_counts'=>$request->order_counts,
-      'required_points'=>$request->required_points,
-      'earned_points'=>$request->earned_points,
-      'from_date'=>$request->from_date,
+      $offer = new Offer;
+      $offer->fill([
+        'subsection_id' => $store->sub_section_id,
+        'store_id' => $storeId,
+        'tier_id' => $request->tier_id,
+        'discount_percentage' => $request->discount_percentage,
+        'min_price' => $request->min_price,
+        'saveup_price' => $request->saveup_price,
+        'order_counts' => $request->order_counts,
+        'required_points' => $request->required_points,
+        'earned_points' => $request->earned_points,
+        'from_date' => $request->from_date,
+        'to_date' => $request->to_date,
+
+      ]);
+
+      // Handle image upload
+      if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imagePath = $this->helper->upload_single_file($image, 'app/public/images/offers/');
+        $offer->image = $imagePath;
+      }
+
+      $offer->save();
+
+      // Create translations with the Offer ID
+      $this->storeTranslations($offer, $request);
 
 
-    ]);
+      \DB::commit();
 
-    // Handle image upload
-    if ($request->hasFile('image')) {
-      $image = $request->file('image');
-      //$imagePath = $this->helper->upload_single_file($image, 'app/public/images/items/');
-     // $offer->image = $imagePath;
+      return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
+    } catch (\Exception $e) {
+      \DB::rollBack();
+      return back()->withErrors(['error' => $e->getMessage()])->withInput();
     }
-
-    $offer->save();
-
-    // Create translations with the Subsection ID
-    //$this->storeTranslations($item, $request);
-
-    // Store related models
-
-
-    \DB::commit();
   }
-
   /**
    * Display the specified resource.
    *
@@ -207,6 +232,9 @@ class OfferController extends Controller
   public function edit(Offer $offer)
   {
     //
+    $stores = Store::all();
+    $tiers = Tier::all();
+    return view("content.offer.update", compact('stores', "tiers", "offer"));
   }
 
   /**
@@ -216,9 +244,59 @@ class OfferController extends Controller
    * @param  \App\Models\Offer  $offer
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, Offer $offer)
+  public function update(Request $request, $offer)
   {
-    //
+    \DB::beginTransaction();
+
+    try {
+      $offer = Offer::findOrFail($offer);
+
+      $storeId = $request->input('store_id');
+      $store = Store::findOrFail($storeId);
+
+      $offer->fill([
+        'tier_id' => $request->tier_id,
+        'store_id' => $storeId,
+        'subsection_id' => $store->sub_section_id,
+        'discount_percentage' => $request->discount_percentage,
+        'min_price' => $request->min_price,
+        'saveup_price' => $request->saveup_price,
+        'order_counts' => $request->order_counts,
+        'required_points' => $request->required_points,
+        'earned_points' => $request->earned_points,
+        'from_date' => $request->from_date,
+        'to_date' => $request->to_date,
+        'free_delivery' => $request->featured
+      ]);
+
+      // Handle image update
+      if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imagePath = $this->helper->upload_single_file($image, 'app/public/images/offers/');
+        $offer->image = $imagePath;
+      }
+
+      $offer->save();
+
+      // Update translations with the Offer ID
+      $offerTranslation_en = $offer->translate("en");
+      $offerTranslation_en->name = $request->name_en;
+      $offerTranslation_en->title = $request->title_en;
+      $offerTranslation_en->description = $request->description_en;
+      $offerTranslation_en->save();
+
+      $offerTranslation_ar = $offer->translate("ar");
+      $offerTranslation_ar->name = $request->name_ar;
+      $offerTranslation_ar->title = $request->title_ar;
+      $offerTranslation_ar->description = $request->description_ar;
+      $offerTranslation_ar->save();
+      \DB::commit();
+
+      return redirect()->route('offers.index')->with('success', 'Offer Updated successfully.');
+    } catch (\Exception $e) {
+      \DB::rollBack();
+      return back()->withErrors(['error' => $e->getMessage()])->withInput();
+    }
   }
 
   /**
@@ -227,11 +305,18 @@ class OfferController extends Controller
    * @param  \App\Models\Offer  $offer
    * @return \Illuminate\Http\Response
    */
-  public function destroy(Offer $offer)
+  public function destroy($offer)
   {
-    //
-  }
+    $theOffer = Offer::findOrFail($offer);
 
+     $theOffer->points()->delete();
+
+    $theOffer->translations()->delete();
+    $theOffer->delete();
+
+
+    return response()->json(['status' => true, 'msg' => "Offer Deleted Successfully"]);
+  }
 
   public function displayItems($store_id)
   {

@@ -23,14 +23,9 @@
 @endsection
 
 @section('content')
-<div class="row justify-content-center">
 
-  <!-- Invoice -->
-  <div class="col-xl-10 col-md-10 col-14 mb-md-0 mb-6">
-
-    <div class="card invoice-preview-card">
-
-      <div class="card-body">
+<div class="card invoice-preview-card">
+  <div class="card-body">
         <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column m-sm-3 m-0">
           <div class="mb-xl-0 mb-4">
             <div class="d-flex svg-illustration mb-4 gap-2 align-items-center">

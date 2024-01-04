@@ -77,7 +77,7 @@
                             </td>
                             <td><img src="{{ asset($offer->image) }}" alt="offer Image" style="height: 50% ; width:50%" class="img-fluid"></td>
                             <td><span class="text-dark fs-13 fw-semibold">{{ $offer->discount_percentage }}</span></td>
-                            <td><span class="text-dark fs-13 fw-semibold">{{ $offer->from_date }}</span></td>
+                            <td><span class="text-dark fs-13 fw-semibold">{{ $offer->to_date }}</span></td>
                             <td class="center align-middle">
                                 <div class="btn-group">
                                     <a href="{{ route('offers.edit', $offer->id) }}" class="btn bg-info-transparent d-flex align-items-center justify-content-center">
@@ -89,7 +89,7 @@
                                     <a href="{{ route('offers.show', $offer->id) }}" class="btn btn-success show-offer" style="width: 100px; height: 40px;">
                                         <i class="bi bi-eye"></i> {{ trans('words.show') }}
                                     </a>&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-danger delete-store" data-id="{{ $offer->id }}" style="width: 100px; height: 40px;">
+                                    <button type="button" class="btn btn-danger delete-offer" data-id="{{ $offer->id }}" style="width: 100px; height: 40px;">
                                         <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
                                     </button>
                                 </div>
