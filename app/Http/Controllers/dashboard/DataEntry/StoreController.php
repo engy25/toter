@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\DataEntry;
+namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
 use App\Models\{Store, Item, Offer, StoreTranslation, District, Weekhour, Currency, Section, City, Subsection, Day};

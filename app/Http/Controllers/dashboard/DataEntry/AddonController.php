@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\DataEntry;
+namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
 use App\Models\Addon;
@@ -102,7 +102,7 @@ class AddonController extends Controller
   public function delete(Addon $addon, $item)
   {
     try {
-    
+
       $item = ItemAddon::where("addon_id", $addon->id)->where("item_id", $item)->first();
       $item->delete();
 

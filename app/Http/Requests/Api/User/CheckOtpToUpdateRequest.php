@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\User;
 
+use App\Http\Requests\Api\ApiMasterRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CheckOtpToUpdateRequest extends FormRequest
+class CheckOtpToUpdateRequest extends ApiMasterRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,11 +32,11 @@ class CheckOtpToUpdateRequest extends FormRequest
 
     public function messages()
     {
-     
+
         return[
-            
+
             'phone.regex'=>trans('api.phone.regex'),
-        
+
         ];
     }
 }

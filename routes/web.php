@@ -275,6 +275,8 @@ Route::group(
      * offer
      */
     Route::Resource('offers', OfferController::class);
+    Route::get("/pagination/paginate-offers", [OfferController::class, "paginationOffer"]);
+    Route::get('/search-offers', [OfferController::class, 'searchOffer'])->name('search.offer');
     Route::get('offer-items/{store_id}',[OfferController::class,"displayItems"])->name('offer.items');
 
         /**

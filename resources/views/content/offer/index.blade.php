@@ -106,8 +106,7 @@
         </div>
     </div>
 </div>
-@include('content.store.store_js')
-@include('content.city.update')
-@include('content.city.add_city_model')
+@include('content.offer.offer_js')
+
 {!! Toastr::message() !!}
 @endsection

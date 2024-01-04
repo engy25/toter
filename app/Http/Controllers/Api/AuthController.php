@@ -49,6 +49,8 @@ class AuthController extends Controller
 
   }
 
+
+
   /***
    *
    * Register By Phone But Not Activate Until Confirmation

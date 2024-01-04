@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\DataEntry;
+namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
 use App\Models\{Item, Store, Drink, StoreCategory, Addon, Currency, ItemTranslation, Size, SizeTranslation, Ingredient, IngredientTranslation, Option, OptionTranslation, Preference, PreferenceTranslation, Service, ServiceTranslation, Side, SideTranslation, ItemAddon};

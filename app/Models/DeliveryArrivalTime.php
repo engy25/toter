@@ -10,7 +10,7 @@ class DeliveryArrivalTime extends Model
 {
   use HasFactory;
 
-  public function booted()
+  public static function booted()
   {
     static::creating(function (DeliveryArrivalTime $deliveryArrivalTime) {
       $cancelTime = Carbon::parse($deliveryArrivalTime->cancel_time);

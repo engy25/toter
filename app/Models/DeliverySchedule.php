@@ -11,11 +11,11 @@ class DeliverySchedule extends Model
   use HasFactory;
   protected $guarded = [];
 
-  public function booted()
+  public  static function booted()
   {
     static::updating(function (DeliverySchedule $deliverySchedule) {
       if ($deliverySchedule->to_time != null) {
-        
+
         $from_time = Carbon::parse($deliverySchedule->from_time);
         $to_time = Carbon::parse($deliverySchedule->to_time);
         $working_houres = $from_time->diffInHours($to_time);

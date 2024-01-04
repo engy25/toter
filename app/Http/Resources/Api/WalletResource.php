@@ -12,7 +12,7 @@ class WalletResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         $default_currency=Currency::where("default",1)->first();
         return [
