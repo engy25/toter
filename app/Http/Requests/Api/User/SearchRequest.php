@@ -26,13 +26,13 @@ class SearchRequest extends ApiMasterRequest
   {
     return [
       'keyword' => 'nullable|string',
-      //'category_id'=>'required|exists:categories,id',
+
       'min_price' => 'nullable|integer',
-      //'max_price'=>'required_with:min_price|integer',
       'max_price' => 'nullable:min_price|integer',
       'rate' => 'nullable',
-      'color_id' => 'nullable|array',
-      'color_id.*' => 'integer',
+      'subsection_id' => 'nullable|exists:subsections,id',
+      'tag_id'=> 'nullable|exists:store_categories,id',
+
       'type' => 'nullable|string'
     ];
   }
