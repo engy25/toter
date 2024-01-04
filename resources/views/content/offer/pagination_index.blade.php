@@ -40,7 +40,7 @@
                                     <a href="{{ route('offers.show', $offer->id) }}" class="btn btn-success show-offer" style="width: 100px; height: 40px;">
                                         <i class="bi bi-eye"></i> {{ trans('words.show') }}
                                     </a>&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-danger delete-store" data-id="{{ $offer->id }}" style="width: 100px; height: 40px;">
+                                    <button type="button" class="btn btn-danger delete-offer" data-id="{{ $offer->id }}" style="width: 100px; height: 40px;">
                                         <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
                                     </button>
                                 </div>
