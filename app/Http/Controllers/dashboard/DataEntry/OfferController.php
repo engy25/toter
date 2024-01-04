@@ -184,6 +184,7 @@ class OfferController extends Controller
         'earned_points' => $request->earned_points,
         'from_date' => $request->from_date,
         'to_date' => $request->to_date,
+        'free_delivery'=>$request->featured
 
       ]);
 
