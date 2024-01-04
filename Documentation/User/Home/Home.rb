@@ -1,7 +1,7 @@
 # User
-## Profile
+## Home
 
-### Show Profile  2: Show Profile
+### Home  2:  Home
 
 Endpoint :/home
 Headers :
@@ -246,16 +246,16 @@ in case of the user auth
     "status": 200,
     "data": {
         "home": {
-            "tier": { 
+            "tier": { الفئه الخضراء
                 "id": 1,
                 "image": "https://elwadah.easyoneclick.com/storage/images/tiers/tier1.jpeg",
                 "name": "Green Tier",
                 "description": "Use your reward points to enjoy a huge range of benefits, such as exclusive offers, discounts, and free meals",
-                "orders_make_This_month": 0,
+                "orders_make_This_month": 0,  ---- عدد الاوردرات للي اليوزر عملها الشهر دا
                 "text": "There are 10 additional orders remaining to upgrade to the golden tier until January 31",
-                "points": 0
+                "points": 0 عدد النقاط التي يمتلكها اليوزر
             },
-            "Offers": [
+            "Offers": [   // Offers created recently
                 {
                     "id": 2,
                     "image": "https://elwadah.easyoneclick.com/storage/images/offers/offer.jpeg",
@@ -285,7 +285,7 @@ in case of the user auth
                     "to_date": "2024-11-22"
                 }
             ],
-            "sections": [
+            "sections": [// Sections  that have surrounded stores
                 {
                     "id": 2,
                     "name": "Fresh toters",
@@ -337,7 +337,7 @@ in case of the user auth
                     "image": "https://elwadah.easyoneclick.com/storage/images/subSections/13.svg"
                 }
             ],
-            "Fresh toters _ 5% off on 5 orders": [
+            "Fresh toters _ 5% off on 5 orders": [  // Offers in sections that are in the surrounded area and the icon from the first  offer_icon
                 {
                     "offer_id": 2,
                     "offer_icon": "https://elwadah.easyoneclick.com/storage/images/subSections/1.png",
@@ -359,7 +359,8 @@ in case of the user auth
                     "favourite": 0
                 }
             ],
-            "Pizza _ 5% off on 5 orders and free delivery": [
+            Pizza is the name that must pass to display in show all
+            "Pizza _ 5% off on 5 orders and free delivery": [  // Offers in sections that are in the surrounded area
                 {
                     "offer_id": 3,
                     "offer_icon": "https://elwadah.easyoneclick.com/storage/images/subSections/13.svg",
@@ -401,6 +402,7 @@ in case of the user auth
                     "favourite": 0
                 }
             ],
+            the stores that neare from you
             "nearest_stores": [
                 {
                     "id": 1,

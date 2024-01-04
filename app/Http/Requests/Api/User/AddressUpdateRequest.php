@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests\Api\User;
 
+use App\Http\Requests\Api\ApiMasterRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddressUpdateRequest extends FormRequest
+class AddressUpdateRequest extends ApiMasterRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize():bool
     {
         return true;
     }
