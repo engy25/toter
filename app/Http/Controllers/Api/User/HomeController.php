@@ -46,20 +46,20 @@ class HomeController extends Controller
       }
 
       // Offers created recently
-      $recentOffers = Offer::valid()->whereNull("item_id")->latest('created_at')->take(5)->get();
+      $recentOffers = Offer::valid()->whereNull("item_id")->latest('created_at')->take(PAGINATION_COUNT)->get();
       if ($recentOffers->isNotEmpty()) {
         $response['Offers'] = OfferResource::collection($recentOffers);
       }
 
       // Sections with surrounded stores
       $surroundedSections = Section::SectionsWithSurroundedStores($request->header("lat"), $request->header("lng"));
-      $sections = $surroundedSections->take(8)->get();
+      $sections = $surroundedSections->take(PAGINATION_COUNT)->get();
 
 
       if ($sections->isNotEmpty()) {
         $response['sections'] = SectionResource::collection($sections);
         $surroundedSectionIds = $surroundedSections->pluck('id')->toArray();
-        $response['sub_sections'] = SubSectionResource::collection(Subsection::Valid()->whereIn('section_id', $surroundedSectionIds)->take(15)->get());
+        $response['sub_sections'] = SubSectionResource::collection(Subsection::Valid()->whereIn('section_id', $surroundedSectionIds)->take(PAGINATION_COUNT)->get());
       }
 
       // Offers in sections that are in the surrounded area
@@ -84,7 +84,7 @@ class HomeController extends Controller
         }
       }
 
-      $response['nearest_stores'] = SimpleStoreResource::collection(Store::nearest($request->lat, $request->lng)->take(10)->get());
+      $response['nearest_stores'] = SimpleStoreResource::collection(Store::nearest($request->lat, $request->lng)->take(PAGINATION_COUNT)->get());
 
       return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, (object) ["home" => (object) $response]);
     }
@@ -98,12 +98,12 @@ class HomeController extends Controller
   {
     if ($type == "new") {
       $offer_store_ids = Offer::valid()->where("discount_percentage", 50)->pluck("store_id")->toArray();
-      $stores = Store::whereIn("id", $offer_store_ids)->paginate(10);
+      $stores = Store::whereIn("id", $offer_store_ids)->paginate(PAGINATION_COUNT);
 
       return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, ['up_to_50' => SimpleStoreResource::collection($stores)->response()->getData(true)]);
 
     } elseif ($type == "up_to_50") {
-      $stores = Store::Surrounded($request->lat, $request->lng)->where("created_at", '>=', Carbon::now()->subMonths(3))->paginate(10);
+      $stores = Store::Surrounded($request->lat, $request->lng)->where("created_at", '>=', Carbon::now()->subMonths(3))->paginate(PAGINATION_COUNT);
 
       return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, ['new' => SimpleStoreResource::collection($stores)->response()->getData(true)]);
 
@@ -130,7 +130,7 @@ class HomeController extends Controller
 
     $subsectionName = $requestedType;
 
-    $discounts = Offer::valid()->where("subsection_id", $subsectionId)->paginate(15);
+    $discounts = Offer::valid()->where("subsection_id", $subsectionId)->paginate(PAGINATION_COUNT);
 
     if ($discounts->count() > 0) {
 
