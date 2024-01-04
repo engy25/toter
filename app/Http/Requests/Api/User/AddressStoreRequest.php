@@ -25,7 +25,7 @@ class AddressStoreRequest extends ApiMasterRequest
   public function rules()
   {
     return [
-      'title' => 'required|in:المنزل ,عمل,امي,غير',
+      'title' => 'required|in:المنزل,عمل,امي,غير',
       'building' => 'required|min:3,max:200',
       'street' => 'required|min:3,max:200',
       'apartment' => 'required|min:3,max:200',

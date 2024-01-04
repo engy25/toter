@@ -25,7 +25,7 @@ class AddressUpdateRequest extends ApiMasterRequest
     public function rules()
     {
         return [
-          'title' => 'nullable|in:المنزل ,عمل,امي,غير',
+          'title' => 'nullable|in:المنزل,عمل,امي,غير',
           'building' => 'nullable|min:3,max:200',
           'street' => 'nullable|min:3,max:200',
           'apartment' => 'nullable|min:3,max:200',
