@@ -49,5 +49,8 @@ return [
   "active"=>"active",
   "email"=>"email",
   "fname"=> "first Name",
-  "offers"=>"العروض"
+  "offers"=>"العروض",
+  "storename"=>"store Name",
+  "code"=>"Code",
+  "isActive"=>"Is Active"
 ];

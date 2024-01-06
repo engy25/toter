@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('coupons', function (Blueprint $table) {
             //
             $table->integer("max_user_used_code")->default(10);
-            $table->integer("user_used_code_count");
+            $table->integer("user_used_code_count")->default(0);
         });
     }
 

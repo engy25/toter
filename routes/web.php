@@ -291,9 +291,16 @@ Route::group(
     Route::get("/pagination/paginate-offers", [OfferController::class, "paginationOffer"]);
     Route::get('/search-offers', [OfferController::class, 'searchOffer'])->name('search.offer');
     Route::get('offer-items/{store_id}',[OfferController::class,"displayItems"])->name('offer.items');
+           // --------------------------------------------------------------------------------------------//
 
+    /**
+     * coupons
+     */
     Route::Resource('coupons', CouponController::class);
-
+    Route::get("/pagination/paginate-coupon", [CouponController::class, "paginationCoupon"]);
+    Route::get('/search-coupon', [CouponController::class, 'searchCoupon'])->name('search.coupon');
+    Route::get('stores-display', [CouponController::class,"StoreIndex"])->name("stores.display");
+           // --------------------------------------------------------------------------------------------//
         /**
      * item
      */

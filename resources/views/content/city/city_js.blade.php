@@ -286,9 +286,9 @@ $(document).on('click', '.delete-city', function (e) {
             },
             error: function (data) {
                 console.log(data);
-                if (data.status !== 500) {
-                    alert('An error occurred while deleting the city.');
-                }
+
+                alert('An error occurred while deleting the city.');
+
             }
         });
     }

@@ -36,7 +36,7 @@ class OfferUpdateRequest extends FormRequest
           'tier_id'=>'required|exists:tiers,id',
           'from_date' => 'required|date|after_or_equal:today',
           'to_date' => 'required|date|after:from_date',
-          'discount_percentage' => 'numeric|required|integer|digits_between:1,100',
+          'discount_percentage' => 'numeric|required|integer|max:100',
           'saveup_price' => 'numeric|required|max:9999999999999999999999999999.99',
           'order_counts' => 'numeric|integer|required|digits_between:1,11|max:99999999999',
           'required_points' => 'numeric|integer|required|min:1|max:9223372036854775807',

@@ -8,7 +8,7 @@ $i=0;
         <thead class="tabel-row-heading text-dark">
           <tr style="background:#f4f5f7">
             <th class="fw-semibold border-bottom">ID</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.name') }}</th>
+            <th class="fw-semibold border-bottom">{{ trans('words.fname') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.image') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.email') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.phone') }}</th>
@@ -32,7 +32,8 @@ $i=0;
             </td>
 
             <td>
-              <img src="{{ asset($delivery->image) }}" alt="Delivery Image" style="height: 50% ; width:50%" class="img-fluid">
+              <img src="{{ asset($delivery->image) }}" alt="Delivery Image" style="height: 50% ; width:50%"
+                class="img-fluid">
             </td>
 
             <td>
@@ -54,20 +55,19 @@ $i=0;
                   class="btn bg-info-transparent d-flex align-items-center justify-content-center">
                   <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
                 <a href="{{ LaravelLocalization::localizeURL(route('deliveries.edit', $delivery->id)) }}"
-                  class="btn btn-info btn-icon py-1 me-2 update_city_form" data-bs-toggle="modal"
-                  data-bs-target="#updateModal" data-id="{{ $delivery->id }}"
-                  title="Edit"
+                  class="btn btn-info btn-icon py-1 me-2 "
+                  data-id="{{ $delivery->id }}" title="Edit"
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
-
-                <a  href="{{ route('deliveries.show', $delivery->id) }}" class="btn btn-success show-delivery"  style="width: 100px; height: 40px;">
+                @can('show Delivery', $delivery)
+                <a href="{{ route('deliveries.show', $delivery->id) }}" class="btn btn-success show-delivery"
+                  style="width: 100px; height: 40px;">
                   <i class="bi bi-eye"></i> {{ trans('words.show') }}
                 </a>&nbsp;&nbsp;
+                @endcan
 
-              <button type="button" class="btn btn-danger delete-delivery" data-id="{{ $delivery->id }}" style="width: 100px; height: 40px;">
-                  <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
-              </button>
+
               </div>
             </td>
           </tr>

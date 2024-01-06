@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class Coupon extends Model {
 
 	protected $table = 'coupons';
-	public $timestamps = true;
+	public $timestamps = false;
 
-	use SoftDeletes,HasFactory;
+	use HasFactory;
 
   protected $guarded = [];
 
-	protected $dates = ['deleted_at'];
+
 
   public function scopeLive($query)
   {
