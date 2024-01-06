@@ -23,9 +23,13 @@ class Day extends Model implements TranslatableContract
   {
     return $this->morphMany(CartItemOption::class, 'optionable');
   }
-  
+
     public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
       return $this->hasMany(DayTranslation::class);
+    }
+    public function deliverySchedules()
+    {
+        return $this->hasMany(DeliverySchedule::class, 'day_id');
     }
 }

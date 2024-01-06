@@ -445,7 +445,7 @@
             </div>
           </li>
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/fr.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <img src="{{asset('assets/svg/flags/ir.svg')}}" alt="User" class="rounded-circle me-3" width="34">
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">

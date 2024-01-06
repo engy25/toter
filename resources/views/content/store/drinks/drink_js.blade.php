@@ -199,14 +199,14 @@ $(document).on('click', '.delete-drink', function (e) {
                 }
             },
             error: function (data) {
-                console.log(data);
-                if (data.status !== 500) {
-                    alert('An error occurred while deleting the Drink.');
-                }
+              console.log(data);
+              alert('Deletion of this Drink is forbidden as it is related to other tables.');
+              
             }
         });
     }
 });
+
 
 
 </script>

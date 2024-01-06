@@ -5,7 +5,7 @@ namespace App\Http\Controllers\dashboard\DataEntry;
 use App\Http\Controllers\Controller;
 use App\Models\{Weekhour,Day};
 use Illuminate\Http\Request;
-use App\Http\Requests\dash\DE\WeekHourRequest;
+use App\Http\Requests\dash\DE\{WeekHourRequest};
 class WeekhourController extends Controller
 {
     /**

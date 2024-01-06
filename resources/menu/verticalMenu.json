@@ -27,7 +27,22 @@
       "slug": "app-email"
     },
 
-
+    {
+      "menuHeader": "Deliveries"
+    },
+    {
+      "name":  "Deliveries",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Deliveries"],
+      "submenu": [
+        {
+          "url": "deliveries",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
     {
       "menuHeader": "Countries"
     },
@@ -151,6 +166,27 @@
         }
       ]
     },
+
+
+
+    {
+      "menuHeader": "coupons"
+    },
+    {
+      "name":"coupons",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "app-user-view",
+      "permissions": ["view Coupon"],
+      "submenu": [
+        {
+          "url": "coupons",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+
+
 
     {
       "menuHeader": "Misc"

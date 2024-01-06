@@ -27,7 +27,6 @@ return [
   "delete" => "حذف",
   "Region" => "منطقه",
   "localName" => "الاسم المحلي",
-  "Population" => "السكان",
   "CurrencyName" => " اسم العمله",
   "Code" => "الكود",
   "List" => "قائمة",
@@ -41,12 +40,15 @@ return [
   "image" => "الصوره",
   "avgRating" => "متوسط التقييم",
   "show" => "اظهر",
-  "price"=>'سعر',
-  "tag"=>"تاج",
+  "price" => 'سعر',
+  "tag" => "تاج",
   "expire_date" => "تاريخ انتهاء الصلاحيه",
-  "discount_percentage"=>"الخصم بالمئه ",
-  "cityname"=>"اسم المدينه",
-
-
+  "discount_percentage" => "الخصم بالمئه ",
+  "cityname" => "اسم المدينه",
+  "phone" => "رقم التليفون",
+  "active"=>"نشط",
+  "fname"=>"الاسم الاول",
+  "email"=>"البريد الالكتروني",
+  "offers"=>"العروض"
 
 ];

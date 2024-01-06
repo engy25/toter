@@ -41,14 +41,6 @@
         </div>
         <span class="text-danger error-message" id="error_name_ar"></span>
 
-
-
-
-
-
-
-
-
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary update_city">Update changes</button>

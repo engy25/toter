@@ -120,10 +120,13 @@ class DrinkController extends Controller
    */
 
 
-  public function destroy($drink)
+  public function destroy(Drink $drink)
   {
     try {
-      $drink = Drink::findOrFail($drink);
+      if ($drink->options->count() > 0 || $drink->items->count()) {
+        return response()->json(['status' => false, 'message' => "Cannot Delete Or This Drink, It Is Used"], 422);
+      }
+      $drink->translations()->delete();
       $drink->delete();
 
       return response()->json(['status' => true, 'msg' => "Drink Deleted Successfully"]);

@@ -10,7 +10,7 @@ use App\Http\Controllers\Web\{
   OrderController,
   StatusController,
 
-  DeliveryController,
+
   AdminController,
   UserController,
   AboutController,
@@ -47,7 +47,9 @@ use App\Http\Controllers\dashboard\DataEntry\{
   ItemGiftController,
   ItemServiceController,
   ItemPreferenceController,
-  ItemOptionController
+  ItemOptionController,
+  DeliveryController,
+  CouponController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -240,6 +242,17 @@ Route::group(
     Route::get("/pagination/paginate-country", [CountryController::class, "paginationCountry"]);
     Route::get('/search-country', [CountryController::class, 'searchCountry'])->name('search.country');
     Route::get('countries-display', [CountryController::class,"countryIndex"])->name("countries.display");
+        /**Deliveries */
+
+    Route::Resource('deliveries', DeliveryController::class);
+    Route::get('/getDaysNotInSchedule/{deliveryId}', [DeliveryController::class, 'getDaysNotInSchedule'])->name('getDaysNotInSchedule');
+    Route::put("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleUpdate"])->name('deliveryschedules.update');
+    Route::post("deliveryschedules", [DeliveryController::class, "deliveryScheduleStore"])->name('deliveryschedules.store');
+    Route::delete("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleDestroy"])->name('deliveryschedules.destroy');
+    Route::get("/pagination/paginate-delivery", [DeliveryController::class, "paginationDelivery"]);
+    Route::get('/search-delivery', [DeliveryController::class, 'searchDelivery'])->name('search.delivery');
+    Route::get('/get-days', [DeliveryController::class,'getDays']);
+
 
 
     /**
@@ -278,6 +291,8 @@ Route::group(
     Route::get("/pagination/paginate-offers", [OfferController::class, "paginationOffer"]);
     Route::get('/search-offers', [OfferController::class, 'searchOffer'])->name('search.offer');
     Route::get('offer-items/{store_id}',[OfferController::class,"displayItems"])->name('offer.items');
+
+    Route::Resource('coupons', CouponController::class);
 
         /**
      * item

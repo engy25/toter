@@ -137,5 +137,17 @@
   "User Management": "User Management",
   "Laravel Example": "Laravel Example",
   "Support": "Support",
-  "Documentation": "Documentation"
+  "Documentation": "Documentation",
+  "Offers": "Offers",
+  "coupons": "coupons",
+  "Deliveries": "Deliveries",
+  "Countries": "Countries",
+  "Cities": "Cities",
+  "Districts": "Districts",
+  "SubSections": "SubSections",
+  "Stores": "Stores",
+
+  "Items": "Items"
+
+
 }

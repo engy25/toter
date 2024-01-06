@@ -44,29 +44,54 @@ class RolesAndPerissionSeeder extends Seeder
     //   "name" => "view Offers",
     //   "guard_name" => "web"
     // ]);
+    //     $permission=Permission::create([
+    //   "name"=>"view Deliveries",
+    //   "guard_name"=>"web"
+    // ]);
+
+    // $permission = Permission::create([
+    //   "name" => "view Districts",
+    //   "guard_name" => "web"
+    // ]);
+
+    // $permission = Permission::create([
+    //   "name" => "show Delivery",
+    //   "guard_name" => "web"
+    // ]);
+
 
     $permission = Permission::create([
-      "name" => "view Districts",
+      "name" => "view Coupon",
       "guard_name" => "web"
     ]);
-
 
     $role1 = Role::where('name', 'DataEntry')->where('guard_name', 'web')->first();
     // $permission1 = Permission::findByName('view Countries');
     // $permission2=Permission::findByName('view Cities');
 
     // $permission3 = Permission::findByName('view SubSections');
-   // $permission4 = Permission::findByName('view Stores');
-   //$permission5 = Permission::findByName('view Items');
-  //  $permission6 = Permission::findByName('view Offers');
+    // $permission4 = Permission::findByName('view Stores');
+    //$permission5 = Permission::findByName('view Items');
+    //  $permission6 = Permission::findByName('view Offers');
     // $role1->givePermissionTo($permission1);
     // $role1->givePermissionTo($permission2);
-    $permission7 = Permission::findByName('view Districts');
-    $role1->givePermissionTo($permission7);
+    // $permission7 = Permission::findByName('view Districts');
+    // $role1->givePermissionTo($permission7);
+
+    // $permission8 = Permission::findByName('view Deliveries');
+    // $role1->givePermissionTo($permission8);
+
+    // $permission9 = Permission::findByName('show Delivery');
+    // $role1->givePermissionTo($permission9);
+    $permission10 = Permission::findByName('view Coupon');
+    $role1->givePermissionTo($permission10);
 
     $user = User::whereId(100)->first();
     // $user->givePermissionTo('view Cities');
     // $user->givePermissionTo('view Countries');
-    $user->givePermissionTo('view Districts');
+    // $user->givePermissionTo('view Districts');
+    // $user->givePermissionTo('view Deliveries');
+   // $user->givePermissionTo('show Delivery');
+    $user->givePermissionTo('view Coupon');
   }
 }

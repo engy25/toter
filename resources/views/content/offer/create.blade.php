@@ -103,9 +103,6 @@
       <br>
 
 
-
-
-
       <!-- Price -->
       <div class="mb-3">
         <label for="discount_percentage">Discount Percenrtage</label>

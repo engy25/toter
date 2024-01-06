@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger("delivery_id")->unsigned();
             $table->foreign("delivery_id")->references("id")->on("users")->onDelete("cascade");
 
-            $table->integer("working_hours");
+            $table->decimal("working_hours",10,3);
             $table->time("from_time");
             $table->time("to_time")->nullable();
 
