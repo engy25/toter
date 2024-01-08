@@ -27,12 +27,29 @@
       "slug": "app-email"
     },
 
+
     {
-      "menuHeader": "Deliveries"
+      "name": "Roles & Permissions",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "slug": "app-access",
+      "submenu": [
+        {
+          "url": "roles",
+          "name": "Roles",
+          "slug": "app-access-roles"
+        },
+        {
+          "url": "permissions",
+          "name": "Permission",
+          "slug": "app-access-permission"
+        }
+      ]
     },
+
+
     {
       "name":  "Deliveries",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "icon": "menu-icon tf-icons ti ti-users",
       "slug": "app-user-view",
       "permissions": ["view Deliveries"],
       "submenu": [
@@ -43,9 +60,7 @@
         }
       ]
     },
-    {
-      "menuHeader": "Countries"
-    },
+
     {
       "name":  "Countries",
       "icon": "menu-icon tf-icons ti ti-smart-home",
@@ -60,12 +75,6 @@
       ]
     },
 
-
-
-
-    {
-      "menuHeader": "Cities"
-    },
     {
       "name":"Cities",
       "icon": "menu-icon tf-icons ti ti-smart-home",
@@ -80,9 +89,6 @@
       ]
     },
 
- {
-      "menuHeader": "Districts"
-    },
     {
       "name":  "Districts",
       "icon": "menu-icon tf-icons ti ti-smart-home",
@@ -99,9 +105,6 @@
 
 
     {
-      "menuHeader": "SubSections"
-    },
-    {
       "name":"SubSections",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "app-user-view",
@@ -115,10 +118,6 @@
       ]
     },
 
-
-    {
-      "menuHeader": "Stores"
-    },
     {
       "name":"Stores",
       "icon": "menu-icon tf-icons ti ti-smart-home",
@@ -134,9 +133,6 @@
     },
 
     {
-      "menuHeader": "Items"
-    },
-    {
       "name":"Items",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "app-user-view",
@@ -151,9 +147,6 @@
     },
 
     {
-      "menuHeader": "Offers"
-    },
-    {
       "name":"Offers",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "app-user-view",
@@ -167,11 +160,6 @@
       ]
     },
 
-
-
-    {
-      "menuHeader": "coupons"
-    },
     {
       "name":"coupons",
       "icon": "menu-icon tf-icons ti ti-smart-home",

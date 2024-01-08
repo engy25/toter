@@ -8,7 +8,11 @@
   "SubSections": "الأقسام الفرعية",
   "Stores": "متاجر",
 
-  "Items": "المنتجات"
+  "Items": "المنتجات",
 
+  "Roles & Permissions":"الادوار والاذونات",
+  "assignedto":"مخصص ل",
+  "created_date":"تاريخ الإنشاء",
+  "guard":"اسم الجارد"
 
 }

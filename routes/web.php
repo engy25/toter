@@ -49,7 +49,9 @@ use App\Http\Controllers\dashboard\DataEntry\{
   ItemPreferenceController,
   ItemOptionController,
   DeliveryController,
-  CouponController
+  CouponController,
+  RoleController,
+  PermissionController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -230,6 +232,21 @@ Route::group(
       return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
+    /**
+     * Roles
+     */
+    Route::Resource('roles', RoleController::class);
+    Route::get("/pagination/paginate-role", [RoleController::class, "paginationRole"]);
+    Route::get('/search-role', [RoleController::class, 'searchRole'])->name('search.role');
+    /*------------------------------------------------------------------------- */
+
+        /**
+     * Permissions
+     */
+    Route::Resource('permissions', PermissionController::class);
+    Route::get("/pagination/paginate-permission", [PermissionController::class, "paginationPermission"]);
+    Route::get('/search-permission', [PermissionController::class, 'searchPermission'])->name('search.permission');
+    /*------------------------------------------------------------------------- */
 
     /**Cities */
     Route::Resource('cities', CityController::class);

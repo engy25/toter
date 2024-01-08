@@ -23,7 +23,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center">
   <h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">Store /</span> List
+    <span class="text-muted fw-light">Coupon /</span> List
     <br>
   </h4>
 
@@ -140,17 +140,12 @@ $i=0;
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
 
-                {{-- <a href="{{ route('coupons.show', $coupon->id) }}" class="btn btn-info btn-icon py-1 me-2"
-                  data-bs-toggle="modal" data-bs-target="#showCouponModal" data-id="{{ $coupon->id }}" title="Edit"
+                <a href="{{ route('coupons.show', $coupon->id) }}" class="btn btn-success show-offer"
                   style="width: 100px; height: 40px;">
-                  {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-                </a> --}}
+                  <i class="bi bi-eye"></i> {{ trans('words.show') }}
+                </a>&nbsp;&nbsp;
 
-                <a href="{{ route('coupons.show', $coupon->id) }}"class="btn btn-info btn-icon py-1 me-2" data-bs-toggle="modal"
-                  data-bs-target="#showCouponModal" data-id="{{ $coupon->id }}" title="Show"
-                  style="width: 100px; height: 40px;">
-                  {{ trans('words.show') }} <i class="bi bi-eye fs-16"></i>
-                </a>
+
 
                 <button type="button" class="btn btn-danger delete-coupon" data-id="{{ $coupon->id }}"
                   style="width: 100px; height: 40px;">

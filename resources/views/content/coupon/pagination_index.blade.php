@@ -1,4 +1,3 @@
-
 <?php
 $i=0;
 ?>
@@ -49,14 +48,14 @@ $i=0;
             <td>
               @if($coupon->is_active==1)
               <div>
-                  <span class="badge text-white bg-success fw-semibold fs-11">True</span>
+                <span class="badge text-white bg-success fw-semibold fs-11">True</span>
               </div>
               @else
               <div>
-                  <span class="badge text-white bg-danger fw-semibold fs-11">False</span>
+                <span class="badge text-white bg-danger fw-semibold fs-11">False</span>
               </div>
               @endif
-          </td>
+            </td>
 
 
 
@@ -68,30 +67,32 @@ $i=0;
                 <a href="{{ LaravelLocalization::localizeURL(route('coupons.edit', $coupon->id)) }}"
                   class="btn btn-info btn-icon py-1 me-2 update_coupon_form" data-bs-toggle="modal"
                   data-bs-target="#updateCouponModal" data-id="{{ $coupon->id }}"
-                  data-discount_percentage="{{ $coupon->discount_percentage }}"
-                  data-code="{{ $coupon->code }}"
-                  data-store_id="{{ $coupon->store_id }}"
-                  data-is_active="{{ $coupon->is_active }}"
+                  data-discount_percentage="{{ $coupon->discount_percentage }}" data-code="{{ $coupon->code }}"
+                  data-store_id="{{ $coupon->store_id }}" data-is_active="{{ $coupon->is_active }}"
                   data-expire_date="{{ $coupon->expire_date }}"
-                  data-max_user_used_code	="{{ $coupon->max_user_used_code	 }}"
-                  title="Edit"
+                  data-max_user_used_code="{{ $coupon->max_user_used_code	 }}" title="Edit"
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
 
-                <a  href="{{ route('coupons.show', $coupon->id) }}" class="btn btn-success show-coupon"  style="width: 100px; height: 40px;">
+                <a href="{{ route('coupons.show', $coupon->id) }}" class="btn btn-success show-offer"
+                  style="width: 100px; height: 40px;">
                   <i class="bi bi-eye"></i> {{ trans('words.show') }}
                 </a>&nbsp;&nbsp;
 
-              <button type="button" class="btn btn-danger delete-coupon" data-id="{{ $coupon->id }}" style="width: 100px; height: 40px;">
+
+
+                <button type="button" class="btn btn-danger delete-coupon" data-id="{{ $coupon->id }}"
+                  style="width: 100px; height: 40px;">
                   <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}
-              </button>
+                </button>
               </div>
             </td>
           </tr>
           @endforeach
         </tbody>
       </table>
+
       {{-- {!! $cities->links() !!} --}}
       <div class="mt-4">
         @if ($coupons->lastPage() > 1)

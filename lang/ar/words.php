@@ -52,6 +52,9 @@ return [
   "offers"=>"العروض",
   "storename"=>"اسم المتجر",
   "code"=>"الكود",
-  "isActive"=>"هل نشط"
+  "isActive"=>"هل نشط",
+  "assignedto"=>"مخصص ل",
+  "created_date"=>"تاريخ الإنشاء",
+  "guard"=>"اسم الجارد"
 
 ];

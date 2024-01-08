@@ -1,46 +1,59 @@
+@extends('layouts/layoutMaster')
 
-<!-- Modal -->
+@section('title', 'Coupon')
 
-  <div class="modal fade" id="showCouponModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addModalLabel">Add Coupon</h1>
-          <button type="button" class="btn-close close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+@section('vendor-style')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
+@endsection
+
+@section('page-style')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-invoice.css') }}" />
+    <style>
+        /* Add your custom styles here */
+        .store-link {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+    </style>
+@endsection
+
+@section('page-script')
+    <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
+    <script src="{{ asset('assets/js/offcanvas-add-payment.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.store-link').on('click', function () {
+                // Redirect to the show page of the store
+                var storeId = $(this).data('store-id');
+                window.location.href = '/stores/' + storeId;
+            });
+        });
+    </script>
+@endsection
+
+@section('content')
+
+    <div class="card invoice-preview-card">
+        <div class="card-body">
+            <!-- Display Coupon Details -->
+            <h4 class="card-title mb-1">Coupon Details</h4>
+            <ul>
+                <li><strong>Discount Percentage:</strong> {{ $coupon->discount_percentage }}</li>
+                <li><strong>Code:</strong> {{ $coupon->code }}</li>
+                <li><strong>Max User Used Code:</strong> {{ $coupon->max_user_used_code }}</li>
+                <li>
+                    <strong>Store Name:</strong>
+                    <span class="store-link" data-store-id="{{ $coupon->store->id }}">
+                        {{ $coupon->store->name }}
+                    </span>
+                </li>
+                <li><strong>Expire Date:</strong> {{ $coupon->expire_date }}</li>
+            </ul>
         </div>
-        <div class="modal-body">
-          <div class="errMsgContainer mb-3">
-          </div>
+    </div>
 
-
-
-
-          <div class="form-group"></div>
-          <label for="name">Code</label>
-          <input type="text" name="code" class="form-control" id="code">
-          <span class="text-danger error-message" id="error_code"></span>
-          <br>
-
-          <div class="form-group">
-            <label for="discount_percentage">Discount Percentage</label>
-            <input type="number" class="form-control" name="discount_percentage" id="discount_percentage" step="0.01">
-            <span class="text-danger error-message" id="error_discount_percentage"></span>
-          </div>
-          <br>
-          <div class="form-group">
-            <label for="max_user_used_code">Max User Used Code</label>
-            <input type="number" class="form-control" name="max_user_used_code" id="max_user_used_code">
-            <span class="text-danger error-message" id="error_max_user_used_code"></span>
-          </div>
-          <br>
-
-
-          <div class="form-group">
-            <label for="expire_date">Expire Date</label>
-            <input type="date" class="form-control" name="expire_date" value="{{ now()->format('Y-m-d') }}" id="expire_date">
-            <span class="text-danger error-message" id="error_expire_date"></span>
-          </div>
-
-
-
-</div>
+@endsection

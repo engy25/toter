@@ -127,7 +127,7 @@ class CouponController extends Controller
    */
   public function show(Coupon $coupon)
   {
-  
+    return view("content.coupon.show", compact("coupon"));
   }
 
   /**

@@ -147,7 +147,8 @@
   "SubSections": "SubSections",
   "Stores": "Stores",
 
-  "Items": "Items"
-
-
+  "Items": "Items",
+  "assignedto": "Assigned To",
+  "created_date": "Created Date",
+  "guard": "guard"
 }

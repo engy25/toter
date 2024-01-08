@@ -52,5 +52,8 @@ return [
   "offers"=>"العروض",
   "storename"=>"store Name",
   "code"=>"Code",
-  "isActive"=>"Is Active"
+  "isActive"=>"Is Active",
+  "assignedto"=>"Assigned To",
+  "created_date"=>"Created Date",
+  "guard"=>"guard"
 ];
