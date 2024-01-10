@@ -40,15 +40,17 @@ $i=0;
 
             <td class="center align-middle">
               <div class="btn-group">
-                <a href="{{ route('roles.edit', $role->id) }}"
-                  class="btn bg-info-transparent d-flex align-items-center justify-content-center">
-                  <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>&nbsp;
+                <a href="{{ route('rolePermissions.create',$role->id) }}" class="btn btn-primary me-2"
+                title="{{ trans('words.add') }}">
+                  {{ trans('words.add') }}
+                </a>
                 <a href="{{ LaravelLocalization::localizeURL(route('roles.edit', $role->id)) }}"
                   class="btn btn-info btn-icon py-1 me-2 update_role_form" data-bs-toggle="modal"
                   data-bs-target="#updateRoleModal" data-id="{{ $role->id }}" data-guard="{{ $role->guard_name }}"
                   data-name="{{ $role->name }}" title="Edit" style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
+
                 <button type="button" class="btn btn-danger delete-role" data-id="{{ $role->id }}">
                   <span class="bi bi-trash me-1">{{ trans('words.delete') }}</span>
                 </button>

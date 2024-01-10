@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\{Permission,Role};
 use App\Http\Requests\dash\DE\StorePermissionRequest;
 
 class PermissionController extends Controller
@@ -61,6 +61,8 @@ class PermissionController extends Controller
       'name' => $request->name,
 
     ]);
+    $role_admin=Role::findByName("Admin");
+    $role_admin->givePermissionTo($permisssion);
 
     if ($permisssion) {
       return response()->json([

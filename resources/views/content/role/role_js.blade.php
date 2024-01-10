@@ -110,7 +110,7 @@ $(document).on("click", ".update_role", function(e) {
             } else{
 
               // alert('This Coupon Is Used You Cannot Update It.');
-              $('#updatePermissionModal').modal('hide');
+              $('#updateRoleModal').modal('hide');
                 $('#success5').show();
                 /* hide success message after 4 seconds */
                 setTimeout(function () {
@@ -258,6 +258,9 @@ function role(page) {
         type: 'get',
         success: function(data) {
             $('.table-responsive').html(data);
+        },
+        error:function(response){
+          console.log(response);
         }
     });
 }

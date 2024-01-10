@@ -55,6 +55,10 @@ return [
   "isActive"=>"هل نشط",
   "assignedto"=>"مخصص ل",
   "created_date"=>"تاريخ الإنشاء",
-  "guard"=>"اسم الجارد"
-
+  "guard"=>"اسم الجارد",
+  "user"=>"المستخدم",
+  "role"=>"الدور",
+  "status"=>"الحاله",
+  "add_user"=>"اضافه مستخدم جديد",
+  "add_permissions"=>"اضافه اذون "
 ];

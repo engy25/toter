@@ -41,7 +41,7 @@ $configData = Helper::appClasses();
     $user = auth()->user();
 
     // Check for permissions and roles
-    $hasPermission = isset($menu->permissions) ? $user->hasAnyPermission($menu->permissions) : true;
+    $hasPermission = isset($menu->permissions) ? $user->hasAnyPermission($menu->permissions) || $user->hasRole("Admin") : true;
     $hasRole = isset($menu->roles) ? $user->hasAnyRole($menu->roles) : true;
 
     if ($hasPermission && $hasRole) {

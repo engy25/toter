@@ -371,12 +371,12 @@ $navbarDetached = ($navbarDetached ?? '');
                     <div class="flex-grow-1">
                       <span class="fw-semibold d-block">
                         @if (Auth::check())
-                        {{ Auth::user()->name }}
+                        {{ Auth::user()->fname }}
                         @else
                         John Doe
                         @endif
                       </span>
-                      <small class="text-muted">Admin</small>
+                      <small class="text-muted"> {{ Auth::user()->email }}</small>
                     </div>
                   </div>
                 </a>

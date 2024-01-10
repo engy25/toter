@@ -44,7 +44,7 @@ class DeliveryController extends Controller
   {
     $role = Role::where("name", "Delivery")->first();
     $deliveries = User::where("role_id", $role->id)->latest()->paginate(PAGINATION_COUNT);
-    return view("content.delivery.pagination_index", compact("$deliveries"))->render();
+    return view("content.delivery.pagination_index", compact("deliveries"))->render();
 
   }
 
@@ -109,7 +109,8 @@ class DeliveryController extends Controller
 
     try {
 
-      $role = Role::where("name", "Delivery")->first();
+
+      $role = Role::findByName('Delivery','api');
       $delivery = new User;
       $delivery->fname = $request->fname;
       $delivery->lname = $request->lname;
@@ -129,6 +130,7 @@ class DeliveryController extends Controller
       }
 
       $delivery->save();
+      $delivery->assignRole($role);
       $this->storeWeekhours($delivery->id, $request->deliveries);
 
       \DB::commit();
@@ -197,7 +199,7 @@ class DeliveryController extends Controller
 
     // Handle image upload
     if ($request->hasFile('upimage')) {
-      $delivery->image = $request->upimage;
+      $delivery->update(['image' => $request->upimage]);
     }
 
     // Redirect back or to a specific route after the update

@@ -43,6 +43,10 @@
   Permission Added Successfully
 </div>
 
+<div class="alert alert-success" style="display: none;" id="successUser">
+
+  User Added Successfully
+</div>
 
 
 <div class="alert alert-success" style="display: none;" id="success2">
@@ -86,11 +90,22 @@ $i=0;
             </td>
             <td>
               <span class="text-nowrap">
-                  @foreach($permission->roles as $role)
-                      <a href="#"><span class="badge bg-label-primary m-1">{{ $role->name }}</span></a>
-                  @endforeach
+                  @forelse($permission->roles as $role)
+                      @can("view users", auth()->user())
+                          @if(auth()->user()->hasRole("Admin"))
+                              <a href="{{ route('users.list', $role->name) }}">
+                          @endif
+                      @endcan
+
+                      <span class="badge bg-label-primary m-1">{{ $role->name }}</span></a>
+
+                  @empty
+                      <!-- Handle the case where there are no roles -->
+                      No roles found
+                  @endforelse
               </span>
           </td>
+
             <td>
               <span class="text-dark fs-13 fw-semibold">  {{ $permission->created_at->format('g:i A, F j, Y') }}</span>
             </td>

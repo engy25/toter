@@ -55,5 +55,10 @@ return [
   "isActive"=>"Is Active",
   "assignedto"=>"Assigned To",
   "created_date"=>"Created Date",
-  "guard"=>"guard"
+  "guard"=>"guard",
+  "user"=>"User",
+  "role"=>"Role",
+  "status"=>"Status",
+  "add_user"=>"Add New User",
+  "add_permissions"=>"Add Permissions"
 ];

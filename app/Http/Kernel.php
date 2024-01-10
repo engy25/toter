@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http;
+// use Spatie\Permission\Middlewares\PermissionMiddleware;
+
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -71,6 +73,9 @@ class Kernel extends HttpKernel
     'signed' => \App\Http\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 ];
 
 protected $routeMiddleware = [
@@ -89,6 +94,9 @@ protected $routeMiddleware = [
     'setLocale' => \App\Http\Middleware\setLocale::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'checkUser' => \App\Http\Middleware\CheckUserMiddleware::class,
+    'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+  //  'can.access.admins.list' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+
 ];
 
 

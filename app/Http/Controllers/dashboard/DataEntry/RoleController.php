@@ -12,7 +12,7 @@ class RoleController extends Controller
 
   public function paginationRole()
   {
-    $roles = Role::latest()->paginate(PAGINATION_COUNT);
+    $roles = Role::where("name","!=","Admin")->latest()->paginate(PAGINATION_COUNT);
 
     return view("content.role.pagination_index", compact("roles"))->render();
   }
@@ -21,7 +21,7 @@ class RoleController extends Controller
   {
     $searchString = '%' . $request->search_string . '%';
 
-    $roles = Role::Where('name', 'like', $searchString)
+    $roles = Role::where("name","!=","Admin")->Where('name', 'like', $searchString)
       ->orWhere('guard_name', 'like', $searchString)
       ->orWhere('created_at', 'like', $searchString)
       ->orderBy('created_at', 'desc') // Assuming you want to order by the 'created_at' column
@@ -40,7 +40,7 @@ class RoleController extends Controller
   public function index()
   {
 
-    $roles = Role::latest()->paginate(PAGINATION_COUNT);
+    $roles =Role::where("name","!=","Admin")->latest()->paginate(PAGINATION_COUNT);
 
     return view("content.role.index", compact("roles"));
   }
