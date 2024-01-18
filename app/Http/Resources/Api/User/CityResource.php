@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DistrictResource extends JsonResource
+class CityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,16 +14,12 @@ class DistrictResource extends JsonResource
      */
     public function toArray($request)
     {
+      return [
+        "id"=>$this->id,
+        "name"=>$this->name,
+        "districts"=>DistrictsResource::collection($this->districts)
 
 
-
-        return [
-         "id"=>$this->id,
-         "name"=>$this->name,
-          "delivery_charge"=>(double)$this->pivot->delivery_charge
-
-      
-
-        ];
+      ];
     }
 }

@@ -15,11 +15,11 @@ class District extends Model implements TranslatableContract
     public $translatedAttributes = ['name'];
 
 
- 
+
 
   public function stores()
   {
-    return $this->belongsToMany(Store::class,"store_districts","district_id","store_id")->withPivot("delivery_charge","id");
+    return $this->belongsToMany(Store::class,"store_districts","district_id","store_id")->withPivot("delivery_charge","id","district_id");
 
   }
     public function city()

@@ -101,7 +101,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**
        * cities
        */
-      Route::get('get-cities', [CityController::class, 'index']);
+      Route::get('get-cities/{storeId?}', [CityController::class, 'index']);
+
+
 
       Route::get('home', [HomeController::class, 'index']);
       /***new and up_to_50 section  pagination in home */
