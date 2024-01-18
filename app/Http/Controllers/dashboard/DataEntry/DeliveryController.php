@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\DataEntry;
+namespace App\Http\Controllers\dashboard\DataEntry;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Day, Country, DeliverySchedule};
+use App\Models\{User, Day, Country, DeliverySchedule, DayTranslation, Currency, DeliveryArrivalTime, WalletTransaction};
+
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-use App\Http\Requests\dash\DE\{DeliveryStoreRequest, StoreDeliveryScheduleRequest};
+use App\Http\Requests\dash\{
+  DE\DeliveryStoreRequest,
+  DE\StoreDeliveryScheduleRequest,
+  CallCenter\StoreArrivalTimeRequest,
+  CallCenter\StoreDailyPriceToDeliveryRequest
+};
 use App\Helpers\Helpers;
 use DateTime;
+use Carbon\Carbon;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class DeliveryController extends Controller
@@ -110,7 +117,7 @@ class DeliveryController extends Controller
     try {
 
 
-      $role = Role::findByName('Delivery','api');
+      $role = Role::findByName('Delivery', 'api');
       $delivery = new User;
       $delivery->fname = $request->fname;
       $delivery->lname = $request->lname;
@@ -152,11 +159,11 @@ class DeliveryController extends Controller
   {
     $locale = LaravelLocalization::getCurrentLocale();
     $deliveryId = $delivery->id;
+    $orderCounts = User::deliveryOrdersCount($delivery->id);
     $weekhours = DeliverySchedule::where("delivery_id", $deliveryId)->get();
+    $arrivalTimes = DeliveryArrivalTime::where("delivery_id", $deliveryId)->orderBy('is_paid', 'asc')->get();
 
-
-
-    return view('content.delivery.show', compact('delivery', 'weekhours'));
+    return view('content.delivery.show', compact('delivery', 'weekhours', 'orderCounts', 'arrivalTimes'));
   }
 
   /**
@@ -231,11 +238,11 @@ class DeliveryController extends Controller
 
     return response()->json($days);
   }
-  public function deliveryScheduleUpdate(Request $request,DeliverySchedule $deliveryschedule)
+  public function deliveryScheduleUpdate(Request $request, DeliverySchedule $deliveryschedule)
   {
     $rules = [
-      "up_to_timme"=>"required",
-      "up_fromtimee"=>"required"
+      "up_to_timme" => "required",
+      "up_fromtimee" => "required"
 
     ];
 
@@ -249,9 +256,9 @@ class DeliveryController extends Controller
     $toTime = new DateTime($request->up_to_timme);
     // Calculate the working hours
     $interval = $fromTime->diff($toTime);
-    $workingHours =  $interval->h + ($interval->i / 60);
+    $workingHours = $interval->h + ($interval->i / 60);
 
-    $deliveryschedule->update(["from_time"=>$request->up_fromtimee,"to_time"=>$request->up_to_timme,"working_hours"=>$workingHours]);
+    $deliveryschedule->update(["from_time" => $request->up_fromtimee, "to_time" => $request->up_to_timme, "working_hours" => $workingHours]);
 
     return response()->json([
       "status" => true,
@@ -273,7 +280,7 @@ class DeliveryController extends Controller
   public function getDaysNotInSchedule(User $deliveryId)
   {
 
-    $deliveryId=$deliveryId->id;
+    $deliveryId = $deliveryId->id;
 
     $locale = LaravelLocalization::getCurrentLocale();
     $dayswhereNotInSchedule = Day::with([
@@ -302,10 +309,10 @@ class DeliveryController extends Controller
 
     $schedule = DeliverySchedule::create([
       "day_id" => $request->day_id,
-      "delivery_id"=>$request->delivery_id,
-      "from_time"=>$request->fromTime,
-      "to_time"=>$request->toTime,
-      "working_hours"=>$workingHours
+      "delivery_id" => $request->delivery_id,
+      "from_time" => $request->fromTime,
+      "to_time" => $request->toTime,
+      "working_hours" => $workingHours
 
     ]);
 
@@ -321,6 +328,84 @@ class DeliveryController extends Controller
       ], 500); // Internal Server Error status code
     }
   }
+
+
+  /**
+   * Add Arrival Time To Delivery
+
+  */public function addArrivalTimeToDelivery(StoreArrivalTimeRequest $request)
+  {
+    $currentDayName = Carbon::now()->format('l');
+    $day = DayTranslation::where("name", $currentDayName)->first();
+    $dayId = $day->day_id;
+
+    $fromTime = new DateTime($request->fromTime);
+    $toTime = new DateTime($request->toTime);
+
+    // Calculate the working hours
+    $interval = $fromTime->diff($toTime);
+    $workingHours = $interval->h + ($interval->i / 60);
+
+    $currentDate = Carbon::now()->format('Y-m-d');
+
+    // Check if there is a record for this delivery on this date
+    $deliveryArrivalTime = DeliveryArrivalTime::where("delivery_id", $request->delivery_id)
+      ->whereDate("created_at", $currentDate)
+      ->first();
+
+    if ($deliveryArrivalTime) {
+      // If a record exists, update it
+      $deliveryArrivalTime->update([
+        "attendance_time" => $fromTime, // Use formatted time string
+        "cancel_time" => $toTime, // Use formatted time string
+        "working_hours" => $workingHours
+      ]);
+    } else {
+      // If no record exists, create a new one
+      DeliveryArrivalTime::create([
+        "day_id" => $dayId,
+        "delivery_id" => $request->delivery_id,
+        "attendance_time" => $fromTime, // Use formatted time string
+        "cancel_time" => $toTime, // Use formatted time string
+        "working_hours" => $workingHours
+      ]);
+    }
+
+    return response()->json([
+      "status" => true,
+      "message" => "Delivery Arrival Time updated successfully"
+    ]);
+  }
+
+  public function AddDailyPriceToDelivery(StoreDailyPriceToDeliveryRequest $request)
+  {
+
+    $defaultCurrency = Currency::where("default", 1)->first();
+    $arrival_time_id = $request->arrivalTimeId;
+    $delivery_id = $request->delivery_id;
+    $price = $request->price;
+    /**add price of this day to the delivery wallet */
+    $wallet = WalletTransaction::create([
+      "sender_id" => auth()->user()->id,
+      "receiver_id" => $delivery_id,
+      "transaction_type" => "daily calculation",
+      "amount" => $price,
+      "currency_id" => $defaultCurrency->id,
+      // "to_date"=>
+    ]);
+    /**update paid the  delivery_arrival_times */
+    DeliveryArrivalTime::whereId($arrival_time_id)->update([
+      "is_paid" => 1
+    ]);
+
+    return response()->json([
+      "status" => true,
+      "message" => "Added successfully"
+    ]);
+
+  }
+
+
 
 
 }

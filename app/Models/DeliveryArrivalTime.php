@@ -10,6 +10,7 @@ class DeliveryArrivalTime extends Model
 {
   use HasFactory;
 
+  protected $guarded = [];
   public static function booted()
   {
     static::creating(function (DeliveryArrivalTime $deliveryArrivalTime) {
@@ -42,4 +43,9 @@ class DeliveryArrivalTime extends Model
 
     return Carbon::parse($this->attributes['cancel_time'])->format('H:i');
   }
+
+
+
+
+
 }

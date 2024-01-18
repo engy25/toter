@@ -18,13 +18,13 @@
 
 
           <div class="form-group">
-            <label for="fromtime">From Time (24-hour format)</label>
+            <label for="fromtime">From Time </label>
             <input type="time" name="upfromtime" id="upfromtime" class="form-control" required>
             <span class="text-danger error-message" id="error_upfromtime"></span>
           </div>
 <br>
           <div class="form-group">
-            <label for="uptotime">To Time (24-hour format)</label>
+            <label for="uptotime">To Time</label>
             <input type="time" name="uptotime" id="uptotime" class="form-control" required>
             <span class="text-danger error-message" id="error_uptotime"></span>
           </div>

@@ -47,10 +47,6 @@ class ItemController extends Controller
       ])->latest()->paginate(PAGINATION_COUNT);
 
 
-
-
-
-
     return view("content.item.indexItem", compact("items"));
   }
 

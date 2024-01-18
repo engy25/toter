@@ -32,8 +32,8 @@ class AddressStoreRequest extends ApiMasterRequest
       'phone' => 'required|regex:/^[^0]\d{8,19}$/|numeric|unique:users,phone',
       'country_code' => 'required|exists:countries,country_code',
       'default' => 'required|in:1,0',
-      'lat' => 'required|numeric',
-      'lng' => 'required|numeric',
+      'lat' => 'nullable|numeric',
+      'lng' => 'nullable|numeric',
       'instructions' => 'nullable|min:3,max:200',
     ];
   }

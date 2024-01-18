@@ -34,27 +34,20 @@ $i=0;
             <td>
               <span class="text-dark fs-13 fw-semibold">{{ $user->country_code }} {{ $user->phone }}</span>
             </td>
-            <td>
-              @if($user->is_active==1)
-              <span class="badge text-white bg-success fw-semibold fs-11">Active</span>
-              @else
-              <span class="badge text-white bg-danger fw-semibold fs-11">Not Active</span>
-              @endif
-            </td>
+
+           
             <td class="center align-middle">
               <div class="btn-group">
-
-                
+                  <a href="{{ route('createStore.create', ['user' => $user->id]) }}" class="btn btn-success" title="Add Order">
+                      Add Order
+                  </a>
 
               </div>
-            </td>
+          </td>
+
           </tr>
           @endforeach
         </tbody>
       </table>
       {{-- {!! $cities->links() !!} --}}
-      <div class="mt-4">
-        @if ($users->lastPage() > 1)
-        {{ $users->links('pagination.simple-bootstrap-4') }}
-        @endif
-      </div>
+

@@ -6,22 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model {
+class OrderItem extends Model
+{
 
-	protected $table = 'order_items';
-	public $timestamps = true;
+  protected $table = 'order_items';
+  public $timestamps = true;
 
-	use HasFactory;
+  use HasFactory;
   protected $guarded = [];
-	protected $dates = ['deleted_at'];
-
-  public function order(){
-    return $this->belongsTo(Order::class);
-  }
+  protected $dates = ['deleted_at'];
 
   public function item()
-{
+  {
     return $this->belongsTo(Item::class);
-}
+  }
+
+  public function ordereable()
+	{
+		return $this->morphTo();
+	}
 
 }

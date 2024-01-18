@@ -49,7 +49,7 @@ class AddToCartRequest extends ApiMasterRequest
       "services" => $this->input('services') !== null ?  'required|exists:services,id' : 'nullable',
 
       //  "preferences" => $this->input("preferences") !== null ? 'required|exists:preferences,id': 'nullable',
-      "days" => $this->input("days") !== null ?  'required|exists:days,id' : 'nullable',
+     // "days" => $this->input("days") !== null ?  'required|exists:days,id' : 'nullable',
       "drinks" => $this->input("drinks") !== null ? 'required|exists:drinks,id' : 'nullable',
       "sides" => $this->input("sides") !== null ? 'required|exists:sides,id': 'nullable',
       "notes" => "nullable|min:3|max:250",

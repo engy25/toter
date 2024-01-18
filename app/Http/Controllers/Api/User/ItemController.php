@@ -23,7 +23,7 @@ class ItemController extends Controller
   public function show(Request $request)
   {
 
-    $item = Item::withoutGlobalScope(ItemScope::class)->with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Removeingredients", "services", "options", "preferences"])->find($request->item_id);
+    $item = Item::withoutGlobalScope(ItemScope::class)->with(["drinks", "sides", "addons", "gifts", "Removeingredients", "Addingredients", "services", "options", "preferences"])->find($request->item_id);
     if (!$item) {
       return $this->helper->responseJson(
         'failed',

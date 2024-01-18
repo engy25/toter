@@ -13,7 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable {
+class User extends Authenticatable
+{
 
   protected $table = 'users';
   public $timestamps = true;
@@ -21,7 +22,8 @@ class User extends Authenticatable {
   use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
   public $helper;
-  public function __construct() {
+  public function __construct()
+  {
     $this->helper = new Helpers();
   }
   protected $dates = ['deleted_at'];
@@ -37,12 +39,13 @@ class User extends Authenticatable {
     //'password' => 'hashed',
   ];
 
-  protected static function booted() {
+  protected static function booted()
+  {
     static::created(function ($user) {
       // Check the number of orders for the user this month
       $orderCount = Order::where("user_id", $user->id)
         ->where('created_at', '>=', Carbon::now()->month)->count();
-      if($orderCount >= 10) {
+      if ($orderCount >= 10) {
         // Update the user to the golden tier
         $user->update(['tier_id' => '2']);
       }
@@ -51,13 +54,14 @@ class User extends Authenticatable {
 
   }
 
-  public function setImageAttribute($value) {
-    if($value && $value->isValid()) {
-      if(isset($this->attributes['image']) && $this->attributes['image']) {
+  public function setImageAttribute($value)
+  {
+    if ($value && $value->isValid()) {
+      if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-        if(file_exists(storage_path('app/public/images/user/'.$this->attributes['image']))) {
-          \File::delete(storage_path('app/public/images/user/'.$this->attributes['image']));
+        if (file_exists(storage_path('app/public/images/user/' . $this->attributes['image']))) {
+          \File::delete(storage_path('app/public/images/user/' . $this->attributes['image']));
         }
       }
       $image = $this->helper->upload_single_file($value, 'app/public/images/user/');
@@ -66,14 +70,16 @@ class User extends Authenticatable {
   }
 
 
-  public function getImageAttribute() {
-    $image = isset($this->attributes['image']) && $this->attributes['image'] ? 'storage/images/user/'.$this->attributes['image'] : asset('https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y');
+  public function getImageAttribute()
+  {
+    $image = isset($this->attributes['image']) && $this->attributes['image'] ? 'storage/images/user/' . $this->attributes['image'] : asset('https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y');
     return asset($image);
   }
 
 
-  public function setPasswordAttribute($value) {
-    if($value) {
+  public function setPasswordAttribute($value)
+  {
+    if ($value) {
       $this->attributes['password'] = bcrypt($value);
     }
   }
@@ -83,68 +89,102 @@ class User extends Authenticatable {
   //   return $this->belongsTo(Role::class);
   // }
 
-  public function addresses() {
+  public function addresses()
+  {
     return $this->hasMany(Address::class);
   }
 
-  public function reviews() {
+  public function reviews()
+  {
     return $this->morphMany(Review::class, 'reviewable');
   }
 
-  public function searchHistories() {
+  public function searchHistories()
+  {
     return $this->hasMany(SearchHistory::class);
   }
 
-  public function coupons() {
+  public function coupons()
+  {
     return $this->hasOne(Coupon::class, 'coupon_users', 'user_id', 'coupon_id');
   }
 
-  public function notifeable() {
+  public function notifeable()
+  {
     return $this->morphMany(Notification::class, 'notifeable');
   }
 
-  public function tier() {
+  public function tier()
+  {
     return $this->belongsTo(Tier::class);
   }
 
-  public function teirPoints() {
+  public function teirPoints()
+  {
     return $this->morphedByMany(Tier::class, 'pointeable', 'point_users');
   }
 
-  public function storePoints() {
+  public function storePoints()
+  {
     return $this->morphedByMany(Store::class, 'pointeable', 'point_users');
   }
 
-  public function punchcardPoints() {
+  public function punchcardPoints()
+  {
     return $this->morphedByMany(User::class, 'pointeable', 'point_users');
   }
 
-  public function offerPoints() {
+  public function offerPoints()
+  {
     return $this->morphedByMany(Offer::class, 'pointeable', 'point_users');
   }
 
-  public function devices() {
+  public function devices()
+  {
 
     return $this->hasMany(Device::class);
   }
 
-  public function userOrders() {
+
+  public function deliveryOrderCallcenter()
+  {
+    return $this->hasMany(OrderCallcenter::class, "delivery_id");
+  }
+
+
+  public function userOrderCallCenter()
+  {
+    return $this->hasMany(OrderCallcenter::class, "user_id");
+  }
+
+  public function callCenterOrderCallCenter()
+  {
+    return $this->hasMany(OrderCallcenter::class, "callcenter_id");
+  }
+
+
+  public function userOrders()
+  {
     return $this->hasMany(Order::class, "user_id");
   }
 
-  public function deliveryOrders() {
+  public function deliveryOrders()
+  {
     return $this->hasMany(Order::class, "driver_id");
   }
 
-  public function userOrderButlers() {
+  public function userOrderButlers()
+  {
     return $this->hasMany(OrderButler::class, "user_id");
   }
 
-  public function deliveryOrderButlers() {
+  public function deliveryOrderButlers()
+  {
     return $this->hasMany(OrderButler::class, "driver_id");
   }
 
-  public function count_orders_created_this_month() {
+  public function count_orders_created_this_month()
+  {
 
     return $this->userOrders()->where('created_at', '>=', Carbon::now()->month)
       ->count();
@@ -153,13 +193,15 @@ class User extends Authenticatable {
   }
 
 
-  public function providers() {
+  public function providers()
+  {
     return $this->hasMany(Provider::class);
   }
 
 
 
-  public function userPoints() {
+  public function userPoints()
+  {
     $user_id = auth('api')->id();
     $point_user = PointUser::where("user_id", $user_id)->where("expired_at", '>=', date('Y-m-d'))->sum('point_earned');
     $offer_point = OfferUser::where("user_id", $user_id)->where("expire_at", '>=', date('Y-m-d'))->sum('point_earned');
@@ -167,10 +209,11 @@ class User extends Authenticatable {
 
     $points = $point_user + $offer_point;
 
-    return (int)$points;
+    return (int) $points;
   }
 
-  public function userExpiredPointsCount() {
+  public function userExpiredPointsCount()
+  {
     $user_id = auth('api')->id();
     $point_user = PointUser::where("user_id", $user_id)->where("expired_at", '<', date('Y-m-d'))->sum('point_expired');
     $offer_point = OfferUser::where("user_id", $user_id)->where("expire_at", '<', date('Y-m-d'))->sum('point_expired');
@@ -178,11 +221,12 @@ class User extends Authenticatable {
 
     $points = $point_user + $offer_point;
 
-    return (int)$points;
+    return (int) $points;
   }
 
 
-  public function userUsedPointsCount() {
+  public function userUsedPointsCount()
+  {
     $user_id = auth('api')->id();
     $point_user = PointUser::where("user_id", $user_id)->where("expired_at", '>=', date('Y-m-d'))->sum('point_used');
     $offer_point = OfferUser::where("user_id", $user_id)->where("expire_at", '>=', date('Y-m-d'))->sum('point_used');
@@ -190,13 +234,14 @@ class User extends Authenticatable {
 
     $points = $point_user + $offer_point;
 
-    return (int)$points;
+    return (int) $points;
   }
 
 
-  public function scopeNearest($query, $lat, $lng) {
-    $lat = (float)$lat;
-    $lng = (float)$lng;
+  public function scopeNearest($query, $lat, $lng)
+  {
+    $lat = (float) $lat;
+    $lng = (float) $lng;
     $space_search_by_kilos = 10000;
     $query->select(\DB::raw("*,
               (6371 * ACOS(COS(RADIANS($lat))
@@ -211,7 +256,9 @@ class User extends Authenticatable {
 
 
 
-  public function assignDriverToOrder(Order $order) {
+  public function assignDriverToOrder(Order $order)
+  {
+
     $role_delivery = Role::where("name", "Delivery")->first();
     $delivery = User::where("role_id", $role_delivery->id);
     $store = Store::whereId($order->store_id)->first();
@@ -219,7 +266,7 @@ class User extends Authenticatable {
     $usersQuery = User::where("role_id", $role_delivery->id);
 
     // Check if the Nearest scope exists and if the store has latitude and longitude
-    if(method_exists($usersQuery->getModel(), 'scopeNearest') && $store->lat && $store->lng) {
+    if (method_exists($usersQuery->getModel(), 'scopeNearest') && $store->lat && $store->lng) {
       $usersQuery->Nearest($store->lat, $store->lng);
     }
 
@@ -239,12 +286,12 @@ class User extends Authenticatable {
 
 
 
-    if($the_nearest_empty_driver) {
+    if ($the_nearest_empty_driver) {
       return $the_nearest_empty_driver;
     }
 
-    if(!$the_nearest_empty_driver) {
-      if($the_nearest_the_least_loaded_driver != null) {
+    if (!$the_nearest_empty_driver) {
+      if ($the_nearest_the_least_loaded_driver != null) {
         return $the_nearest_the_least_loaded_driver;
       } else {
         return User::with(["deliveryOrders", "deliveryOrderButlers"])
@@ -259,7 +306,8 @@ class User extends Authenticatable {
 
 
 
-  public function assignDriverToOrderButler(OrderButler $order) {
+  public function assignDriverToOrderButler(OrderButler $order)
+  {
     $role_delivery = Role::where("name", "Delivery")->first();
     $delivery = User::where("role_id", $role_delivery->id);
     // dd($order->from_address);
@@ -269,7 +317,7 @@ class User extends Authenticatable {
     $usersQuery = User::where("role_id", $role_delivery->id);
 
     // Check if the Nearest scope exists and if the store has latitude and longitude
-    if(method_exists($usersQuery->getModel(), 'scopeNearest') && $from_address->lat && $from_address->lng) {
+    if (method_exists($usersQuery->getModel(), 'scopeNearest') && $from_address->lat && $from_address->lng) {
       $usersQuery->Nearest($from_address->lat, $from_address->lng);
     }
 
@@ -288,12 +336,12 @@ class User extends Authenticatable {
       ->first();
 
 
-    if($the_nearest_empty_driver) {
+    if ($the_nearest_empty_driver) {
       return $the_nearest_empty_driver;
     }
 
-    if(!$the_nearest_empty_driver) {
-      if($the_nearest_the_least_loaded_driver != null) {
+    if (!$the_nearest_empty_driver) {
+      if ($the_nearest_the_least_loaded_driver != null) {
         return $the_nearest_the_least_loaded_driver;
       } else {
         return User::with(["deliveryOrders", "deliveryOrderButlers"])
@@ -310,6 +358,84 @@ class User extends Authenticatable {
 
 
   }
+
+
+  public function schedules()
+  {
+    return $this->hasMany(DeliverySchedule::class, "delivery_id");
+  }
+
+
+
+
+  /**
+   *The Deliveries are currently available (not assigned to any order)
+   * and are within their working hours based on the schedules stored in the delivery_schedules table
+   */
+  public static function GetAllDriverToOrders()
+  {
+
+    $delivery = User::role("Delivery", "api");
+
+    $currentDayName = Carbon::now()->format('l');
+    $day = DayTranslation::where("name", $currentDayName)->first();
+    $dayId = $day->day_id;
+
+    $currentTime = Carbon::now()->format('H:i:s');
+
+    /**get the Query users within working hours */
+    $userWithingTheirWorkingHoursQuery = User::whereHas("schedules", function ($query) use ($dayId, $currentTime) {
+      $query->where("day_id", $dayId)
+        ->where("from_time", "<=", $currentTime)
+        ->where("to_time", ">=", $currentTime);
+    });
+
+
+    /**get the users that  empty now and donot have any orders */
+    $userEmpty = $userWithingTheirWorkingHoursQuery->whereDoesntHave("deliveryOrders")
+      ->whereDoesntHave("deliveryOrderButlers")->whereDoesntHave("deliveryOrderCallCenter")->get();
+
+    if ($userEmpty->count() > 0) {
+      return $userEmpty;
+    }
+
+    // If no empty users, get the user with the least orders
+    $userWithLeastOrders = User::withCount(['deliveryOrders', 'deliveryOrderButlers', 'deliveryOrderCallcenter'])
+      ->whereHas("schedules", function ($query) use ($dayId, $currentTime) {
+        $query->where("day_id", $dayId)
+          ->where("from_time", "<=", $currentTime)
+          ->where("to_time", ">=", $currentTime);
+      })
+      ->orderBy('delivery_orders_count')
+      ->orderBy('delivery_order_butlers_count')
+      ->orderBy('delivery_order_callcenter_count')
+      ->get();
+
+    return $userWithLeastOrders;
+
+  }
+  public  static function deliveryOrdersCount($userId)
+  {
+      $user = User::withCount('deliveryOrders', 'deliveryOrderCallcenter', 'deliveryOrderButlers')->find($userId);
+      $deliveryOrdersCount = $user->delivery_orders_count;
+      $deliveryOrderCallcenterCount = $user->delivery_order_callcenter_count;
+      $deliveryOrderButlersCount = $user->delivery_order_butlers_count;
+
+      return [
+          'deliveryOrdersCount' => $deliveryOrdersCount,
+          'deliveryOrderCallcenterCount' => $deliveryOrderCallcenterCount,
+          'deliveryOrderButlersCount' => $deliveryOrderButlersCount,
+      ];
+  }
+
+
+
+
+
+
+
+
+
 
 
 }

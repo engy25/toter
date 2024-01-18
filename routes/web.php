@@ -7,10 +7,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\Web\{
   DashboardController,
-  OrderController,
   StatusController,
-
-
   AdminController,
   AboutController,
   PrivacyController,
@@ -18,7 +15,11 @@ use App\Http\Controllers\Web\{
 };
 
 use App\Http\Controllers\dashboard\CallCenter\{
-  TraditionalUserController
+  TraditionalUserController,
+  OrderController,
+  OrderCallCenterController,
+  OrderUserController,
+  OrderButlerController
 
 };
 use App\Http\Controllers\dashboard\Admin\{
@@ -246,66 +247,56 @@ Route::group(
 
     Route::group(['middleware' => ['role:DataEntry|Admin']], function () {
 
-                /******************Roles **************************/
+      /******************Roles **************************/
       Route::Resource('roles', RoleController::class);
       Route::get("/pagination/paginate-role", [RoleController::class, "paginationRole"]);
       Route::get('/search-role', [RoleController::class, 'searchRole'])->name('search.role');
-               /*------------------------------------------------------- */
+      /*------------------------------------------------------- */
 
 
-                /************** Permissions**********/
+      /************** Permissions**********/
       Route::Resource('permissions', PermissionController::class);
       Route::get("/pagination/paginate-permission", [PermissionController::class, "paginationPermission"]);
       Route::get('/search-permission', [PermissionController::class, 'searchPermission'])->name('search.permission');
-                /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-        /*** Role Permission to admin*/
-      Route::get('rolePermissions/{roleId}/create', [RolePermissionController::class,"create"])->name('rolePermissions.create');
-      Route::post('rolePermissions/{roleId}/store', [RolePermissionController::class,"store"])->name('rolePermissions.store');
-              /*------------------------------------------------------------------------- */
+      /*** Role Permission to admin*/
+      Route::get('rolePermissions/{roleId}/create', [RolePermissionController::class, "create"])->name('rolePermissions.create');
+      Route::post('rolePermissions/{roleId}/store', [RolePermissionController::class, "store"])->name('rolePermissions.store');
+      /*------------------------------------------------------------------------- */
 
-              /*******************Cities *****************/
+      /*******************Cities *****************/
       Route::Resource('cities', CityController::class);
       Route::get("/pagination/paginate-city", [CityController::class, "paginationCity"]);
       Route::get('/search-city', [CityController::class, 'searchCity'])->name('search.city');
-         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-             /***************************Countries ************************/
+      /***************************Countries ************************/
       Route::Resource('countries', CountryController::class);
       Route::get("/pagination/paginate-country", [CountryController::class, "paginationCountry"]);
       Route::get('/search-country', [CountryController::class, 'searchCountry'])->name('search.country');
       Route::get('countries-display', [CountryController::class, "countryIndex"])->name("countries.display");
-              /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-            /******************************Deliveries *****************************/
-      Route::Resource('deliveries', DeliveryController::class);
-      Route::get('/getDaysNotInSchedule/{deliveryId}', [DeliveryController::class, 'getDaysNotInSchedule'])->name('getDaysNotInSchedule');
-      Route::put("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleUpdate"])->name('deliveryschedules.update');
-      Route::post("deliveryschedules", [DeliveryController::class, "deliveryScheduleStore"])->name('deliveryschedules.store');
-      Route::delete("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleDestroy"])->name('deliveryschedules.destroy');
-      Route::get("/pagination/paginate-delivery", [DeliveryController::class, "paginationDelivery"]);
-      Route::get('/search-delivery', [DeliveryController::class, 'searchDelivery'])->name('search.delivery');
-      Route::get('/get-days', [DeliveryController::class, 'getDays']);
-              /*------------------------------------------------------------------------- */
 
 
-              /********************subsections************************************************* */
+      /********************subsections************************************************* */
       Route::Resource('subsections', SubSectionController::class);
       Route::get("/pagination/paginate-subsection", [SubSectionController::class, "paginationSubsection"]);
       Route::get('/search-subsections', [SubSectionController::class, 'searchSubsection'])->name('search.subsection');
       Route::get('sections-display', [SectionController::class, "sectionIndex"])->name("sections.display");
-              /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
 
 
 
-              /********************stores************************************************* */
+      /********************stores************************************************* */
       Route::Resource('stores', StoreController::class);
       /***fetch cities  */
       Route::get('get-cities', [StoreController::class, 'getCities'])->name("getCities");
@@ -315,37 +306,37 @@ Route::group(
       Route::get("/pagination/paginate-storeItem/{store_id}", [StoreController::class, "paginationItem"]);
       Route::get("/pagination/paginate-store", [StoreController::class, "paginationStore"]);
       Route::get('/search-stores', [StoreController::class, 'searchStore'])->name('search.store');
-                    /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-            /********************currencies************************************************* */
+      /********************currencies************************************************* */
       Route::get('currencies-display', [CurrencyController::class, "currencyIndex"])->name("currencies.display");
-                    /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-            /********************storedistricts************************************************* */
+      /********************storedistricts************************************************* */
       Route::Resource('storedistricts', StoreDistrictController::class);
-                    /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
-          /********************offers************************************************* */
+      /********************offers************************************************* */
       Route::Resource('offers', OfferController::class);
       Route::get("/pagination/paginate-offers", [OfferController::class, "paginationOffer"]);
       Route::get('/search-offers', [OfferController::class, 'searchOffer'])->name('search.offer');
       Route::get('offer-items/{store_id}', [OfferController::class, "displayItems"])->name('offer.items');
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-          /********************coupons************************************************* */
+      /********************coupons************************************************* */
       Route::Resource('coupons', CouponController::class);
       Route::get("/pagination/paginate-coupon", [CouponController::class, "paginationCoupon"]);
       Route::get('/search-coupon', [CouponController::class, 'searchCoupon'])->name('search.coupon');
       Route::get('stores-display', [CouponController::class, "StoreIndex"])->name("stores.display");
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-          /********************items************************************************* */
+      /********************items************************************************* */
       Route::Resource('items', ItemController::class);
       Route::get("/pagination/paginate-item", [ItemController::class, "paginationItem"]);
       Route::get('/search-items', [ItemController::class, 'searchItem'])->name('search.item');
@@ -353,92 +344,92 @@ Route::group(
       Route::get('store-tags/{store_id}', [ItemController::class, "displayTags"])->name('store.tags');
       /***display the drinks of the  store */
       Route::get('store-drinks/{store_id}', [ItemController::class, "displayDrinks"])->name('store.drinks');
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
       Route::Resource('itemdrinks', ItemDrinkController::class);
       Route::delete('/itemdrink/{item_id}/{drink_id}', [ItemDrinkController::class, "delete"])->name('itemdrinks.delete');
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
       Route::Resource('itemgifts', ItemGiftController::class);
-                         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('itemsides', ItemSideController::class);
-                         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('itemsizes', ItemSizeController::class);
-                         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('itemservices', ItemServiceController::class);
-                         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('itempreferences', ItemPreferenceController::class);
-                         /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('itemoptions', ItemOptionController::class);
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       /***display the addons of the  store */
       Route::get('store-addons/{store_id}', [ItemController::class, "displayAddons"])->name('store.addons');
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
       Route::Resource('ingredients', IngredientController::class);
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-                   /**********************addons ***************/
+      /**********************addons ***************/
       Route::Resource('addons', AddonController::class);
       Route::Resource('adds', AddController::class);
       Route::Delete('addon/{addon}/{item}', [AddonController::class, "delete"])->name('addon.delete');
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-                   /**********************Drinks ***************/
+      /**********************Drinks ***************/
       Route::Resource('drinks', DrinkController::class);
-            /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-                   /***********************Tags *****************/
+      /***********************Tags *****************/
       Route::Resource('tags', TagController::class);
-            /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
-                   /******************Sides ******************/
+      /******************Sides ******************/
       Route::Resource('sides', SideController::class);
-            /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-                   /***********************Sizes ****************************/
+      /***********************Sizes ****************************/
       Route::Resource('sizes', SizeController::class);
-                  /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-                   /**************************Gifts *****************************/
+      /**************************Gifts *****************************/
       Route::Resource('gifts', GiftController::class);
-                  /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-                   /****************************options *********************************/
+      /****************************options *********************************/
       Route::Resource('options', OptionController::class);
-                  /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
-                   /*******************************preferences *****************************/
+      /*******************************preferences *****************************/
       Route::Resource('preferences', PreferenceController::class);
-                  /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
-                   /**********************services ***********************************/
+      /**********************services ***********************************/
       Route::Resource('services', ServiceController::class);
-                  /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
-                   /*****************************weekhours *****************************/
+      /*****************************weekhours *****************************/
       Route::Resource('weekhours', WeekhourController::class);
       Route::get('weekhours/{weekhour}/edit/{day}', [WeekhourController::class, 'customEdit'])->name('weekhours.customEdit');
 
 
-            /*------------------------------------------------------------------------- */
-                   /*****************************districts *****************************/
+      /*------------------------------------------------------------------------- */
+      /*****************************districts *****************************/
       Route::Resource('districts', DistrictController::class);
       Route::get("/pagination/paginate-district", [DistrictController::class, "paginationDistrict"]);
       Route::get('/search-districts', [DistrictController::class, 'searchDistrict'])->name('search.district');
       Route::get('cities-display', [DistrictController::class, "cityIndex"])->name("cities.display");
-                   /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
 
 
@@ -448,21 +439,21 @@ Route::group(
 
 
 
- /**********************************************ADMIN *********************************************************/
+    /**********************************************ADMIN *********************************************************/
     Route::group(['middleware' => ['role:Admin']], function () {
 
       /**
        * Users
        */
       Route::Resource('users', UserController::class);
-      Route::get('usersList/{roleName}', [UserController::class,"indexUser"])->name('users.list');
+      Route::get('usersList/{roleName}', [UserController::class, "indexUser"])->name('users.list');
       Route::get("/pagination/paginate-user/{roleName}", [UserController::class, "paginationUser"]);
       Route::get('/search-user/{roleName}', [UserController::class, 'searchUser'])->name('search.user');
       /**to display the lists of the permissions depends of the role */
       Route::get('permissionsList/{roleId}', [UserController::class, "displayPermissions"])->name('permissions.list');
-    /*------------------------------------------------------------------------- */
+      /*------------------------------------------------------------------------- */
 
-                 /*******************all users *******************/
+      /*******************all users *******************/
       Route::Resource('allusers', AllUserController::class);
       Route::get("/pagination/paginate-alluser", [AllUserController::class, "paginationUser"]);
       Route::get('/search-alluser', [AllUserController::class, 'searchUser'])->name('search.alluser');
@@ -472,15 +463,81 @@ Route::group(
 
 
 
-       });
+    });
+
+
+    Route::group(['middleware' => ['role:CallCenter|Admin|DataEntry|CallCenter']], function () {
 
 
 
-      /*******************************************Call Center******************************************/
-      Route::group(['middleware' => ['role:CallCenter|Admin']], function () {
-        Route::resource("traditionalusers",TraditionalUserController::class);
-        Route::get('/search-traditionaluser', [TraditionalUserController::class, 'searchUser'])->name('search.traditionaluser');
-      });
+      /******************************Deliveries *****************************/
+      Route::Resource('deliveries', DeliveryController::class);
+      Route::get('/getDaysNotInSchedule/{deliveryId}', [DeliveryController::class, 'getDaysNotInSchedule'])->name('getDaysNotInSchedule');
+      Route::put("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleUpdate"])->name('deliveryschedules.update');
+      Route::post("deliveryschedules", [DeliveryController::class, "deliveryScheduleStore"])->name('deliveryschedules.store');
+      Route::delete("deliveryschedules/{deliveryschedule}", [DeliveryController::class, "deliveryScheduleDestroy"])->name('deliveryschedules.destroy');
+      Route::get("/pagination/paginate-delivery", [DeliveryController::class, "paginationDelivery"]);
+      Route::get('/search-delivery', [DeliveryController::class, 'searchDelivery'])->name('search.delivery');
+      Route::get('/get-days', [DeliveryController::class, 'getDays']);
+      /*------------------------------------------------------------------------- */
+
+      /***to add attendance time to each delivery */
+      Route::post("add-arrival-time",[DeliveryController::class,"AddArrivalTimeToDelivery"])->name("arrivaltime.store");
+      /***to add the daily price of delivery */
+      Route::post("add-daily-price-to-delivery",[DeliveryController::class,"AddDailyPriceToDelivery"])->name("dailyprice.delivery.store");
+    });
+
+
+    /*******************************************Call Center******************************************/
+    Route::group(['middleware' => ['role:CallCenter|Admin']], function () {
+    /**
+   * the traditional user :the user that doesnot have mobile that doesnot
+   *  have account to login we make the account cause he make order by phone
+   */
+      Route::resource("traditionalusers", TraditionalUserController::class);
+
+      Route::get("/pagination/paginate-traditionaluser", [TraditionalUserController::class, "paginationUser"]);
+      Route::get('/search-traditionaluser', [TraditionalUserController::class, 'searchUser'])->name('search.traditionaluser');
+
+      /******************************************************************************************************/
+
+      /*********************************************** Create Orders Belongs To CallCenter*******************************************************/
+      Route::get("createStores/{user}", [OrderController::class, "createStores"])->name("createStore.create");
+      Route::get('/search-item/{order}', [OrderController::class, 'searchItem'])->name('search.items');
+      Route::post("createStores/{user}", [OrderController::class, "storeStores"])->name("createStore.store");
+
+      /**Order CallCenter */
+      Route::get("orders/{id}", [OrderController::class, "create"])->name("orders.create");
+      Route::post("orders/{id}", [OrderController::class, "store"])->name("orders.store");
+      /**system may be filters the orders by date and delivery and sub total and total */
+      Route::resource("ordercallcenters",OrderCallCenterController::class);
+      Route::get("/pagination/paginate-ordercallcenter", [OrderCallCenterController::class, "paginationOrderCallCenter"]);
+      Route::get('/search-ordercallcenter', [OrderCallCenterController::class, 'searchOrder'])->name('search.order.callcenter');
+      /**export order call center table */
+      Route::get('/export-callcenter-pdf', [OrderCallCenterController::class, 'export'])->name('exportcallcenter.pdf');
+
+      /******************************************************************************************************/
+
+      /********************************************Orders User***********************************************/
+      Route::resource("orderusers",OrderUserController::class);
+      Route::get("/pagination/paginate-orderuser", [OrderUserController::class, "paginationOrderUser"]);
+      Route::get('/search-orderuser', [OrderUserController::class, 'searchOrder'])->name('search.order.user');
+
+
+       /**export order user table */
+       Route::get('/export-user-pdf', [OrderUserController::class, 'export'])->name('exportuser.pdf');
+  /******************************************************************************************************/
+
+  /****************************************************Order Butlers**************************************************/
+       Route::resource("orderbutlers",OrderButlerController::class);
+       Route::get("/pagination/paginate-orderbutler", [OrderButlerController::class, "paginationOrderButler"]);
+       Route::get('/search-orderbutler', [OrderButlerController::class, 'searchOrder'])->name('search.order.butler');
+
+
+        /**export order user table */
+        Route::get('/export-butler-pdf', [OrderButlerController::class, 'export'])->name('exportbutler.pdf');
+
+    });
   }
 );
 

@@ -60,5 +60,14 @@ return [
   "role"=>"الدور",
   "status"=>"الحاله",
   "add_user"=>"اضافه مستخدم جديد",
-  "add_permissions"=>"اضافه اذون "
+  "add_permissions"=>"اضافه اذون ",
+  "no_users_found"=>"لا يوجد",
+  "order"=>"الطلب",
+  "delivery"=>"الطيار",
+  "total"=>"الاجمالي الكلي",
+  "date"=>"التاريخ",
+  "subtotal"=>"المجموع الفرعي",
+  "isCoupon"=>"هل الكوبون مستخدم",
+  "delivery_charge" => "رسوم التوصيل"
+
 ];

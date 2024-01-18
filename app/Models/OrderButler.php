@@ -72,7 +72,13 @@ class OrderButler extends Model
 
   public function orderItems()
   {
-    return $this->belongsTo(OrderButlerItem::class,"order_id");
+    return $this->hasMany(OrderButlerItem::class,"order_id");
+
+  }
+
+  public function status()
+  {
+    return $this->belongsTo(Status::class);
 
   }
 

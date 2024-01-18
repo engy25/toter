@@ -394,3 +394,220 @@ $(document).on("click", ".update_schedule", function(e) {
     });
 });
 </script>
+
+{{-- -------------------------------------------------------------------------------------- --}}
+
+
+{{-- Add Attendance Time --}}
+<script>
+  $(document).ready(function(){
+    // console.log('Document is ready.');
+    $(document).on("click", '.add_delivery_arrival', function(e){
+    e.preventDefault();
+    let delivery_id = $('#delivery_id').val();
+
+    let fromTime=$('#fromTime').val();
+    let toTime=$('#toTime').val();
+    // console.log(delivery_id);
+    // console.log(fromTime);
+    // console.log(toTime);
+
+
+    var formData = new FormData();
+
+    formData.append('delivery_id', delivery_id);
+
+    formData.append('fromTime', fromTime);
+    formData.append('toTime', toTime);
+
+    $('.errMsgContainer').empty();
+    // Clear previous error messages
+
+    $.ajax({
+
+      url: "{{ route('arrivaltime.store') }}",
+      method: 'post',
+      data: formData,
+      dataType: "json",
+      contentType: false,  // Set to false for FormData
+      processData: false,  // Set to false for FormData
+      headers: {
+
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+
+
+      success: function(data) {
+        console.log(data);
+
+      $('.errMsgContainer').empty(); // Clear previous error messages
+      $("#addDeliveryArrivalTimeModal").modal("hide");
+      $('#add_delivery_arrival_time_form')[0].reset();
+      $('#data-table5').load(location.href+' #data-table5');
+      $('#success200').show();
+      /* hide success message after 4 seconds */
+       setTimeout(function() {
+
+        $('#success200').hide();
+       }, 2000); // 2000 milliseconds = 2 seconds
+
+      $('.errMsgContainer').empty(); // Clear previous error messages
+      },
+      error: function(response) {
+        console.log(response.responseJSON);
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        errors = response.responseJSON.errors;
+        $.each(errors, function(index, value){
+          $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br />');
+        });
+      }
+    });
+  });
+});
+
+</script>
+
+
+
+{{-- -------------------------------------------------------------------------------------- --}}
+
+
+{{-- Add Daily Caculation Time --}}
+<script>
+  $(document).ready(function(){
+    // console.log('Document is ready.');
+    $(document).on("click", '.add_daily_cal', function(e){
+    e.preventDefault();
+    let delivery_id = $('#delivery_id').val();
+
+    let arrivalTimeId = $('#arrivalTimeId').val();
+
+
+
+    let price=$('#price').val();
+
+    console.log(delivery_id);
+    console.log(arrivalTimeId);
+    console.log(price);
+
+    var formData = new FormData();
+
+    formData.append('delivery_id', delivery_id);
+
+    formData.append('price', price);
+    formData.append('arrivalTimeId', arrivalTimeId);
+
+    $('.errMsgContainer').empty();
+    // Clear previous error messages
+
+    $.ajax({
+
+      url: "{{ route('dailyprice.delivery.store') }}",
+      method: 'post',
+      data: formData,
+      dataType: "json",
+      contentType: false,  // Set to false for FormData
+      processData: false,  // Set to false for FormData
+      headers: {
+
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+
+
+      success: function(data) {
+
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        $("#dailyCalculationModal").modal("hide");
+        $('#add_daily_cal_form')[0].reset();
+        $('#data-table5').load(location.href + ' #data-table5', function () {
+          $('#successPrice').show();
+
+          setTimeout(function() { /* hide success message after 4 seconds */
+            $('#successPrice').hide();
+          }, 2000); // 2000 milliseconds = 2 seconds
+        });
+        $('.errMsgContainer').empty(); // Clear previous error messages
+      },
+
+      error: function(response) {
+        console.log(response.responseJSON);
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        errors = response.responseJSON.errors;
+        $.each(errors, function(index, value){
+          $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br />');
+        });
+      }
+    });
+  });
+});
+
+</script>
+
+
+{{-- -------------------------------------------------------------------------------------- --}}
+
+
+{{-- Add Incentives --}}
+<script>
+  $(document).ready(function(){
+    // console.log('Document is ready.');
+    $(document).on("click", '.add_incentive', function(e){
+    e.preventDefault();
+    let delivery_id = $('#delivery_id').val();
+    let price=$('#price').val();
+
+    console.log(delivery_id);
+    console.log(price);
+
+    var formData = new FormData();
+
+    formData.append('delivery_id', delivery_id);
+
+    formData.append('price', price);
+   
+
+    $('.errMsgContainer').empty();
+    // Clear previous error messages
+
+    $.ajax({
+
+      url: "{{ route('dailyprice.delivery.store') }}",
+      method: 'post',
+      data: formData,
+      dataType: "json",
+      contentType: false,  // Set to false for FormData
+      processData: false,  // Set to false for FormData
+      headers: {
+
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+
+
+      success: function(data) {
+
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        $("#dailyCalculationModal").modal("hide");
+        $('#add_daily_cal_form')[0].reset();
+        $('#data-table5').load(location.href + ' #data-table5', function () {
+          $('#successPrice').show();
+
+          setTimeout(function() { /* hide success message after 4 seconds */
+            $('#successPrice').hide();
+          }, 2000); // 2000 milliseconds = 2 seconds
+        });
+        $('.errMsgContainer').empty(); // Clear previous error messages
+      },
+
+      error: function(response) {
+        console.log(response.responseJSON);
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        errors = response.responseJSON.errors;
+        $.each(errors, function(index, value){
+          $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br />');
+        });
+      }
+    });
+  });
+});
+
+</script>

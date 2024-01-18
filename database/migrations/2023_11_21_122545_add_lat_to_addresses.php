@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::table('addresses', function (Blueprint $table) {
             //
-            $table->double('lat');
-            $table->double('lng');
-            $table->string('title');
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
+            $table->string('title')->nullable();
 
         });
     }

@@ -67,7 +67,6 @@ class ItemResource extends JsonResource
       "image" => $this->image,
       'offer_name' => $offer_name,
       'offer_description' => $offer_description,
-      'delivery_time' => $this->store->delivery_time,
       "tag" => $this->category->name,
       "store" => $this->store->name,
       "subsection" => $this->subsection->name,
@@ -89,11 +88,7 @@ class ItemResource extends JsonResource
 
     ];
 
-    if($this->choose_days!=null)
-    {
-      $returnData['choose ' .$this->choose_days.' days'] =DayResource::collection(Day::cursor());
-    }
-
+   
     if ($this->Addingredients->isNotEmpty()) {
       $returnData['Add_ingredients'] = IngredientResource::collection($this->Addingredients);
     }

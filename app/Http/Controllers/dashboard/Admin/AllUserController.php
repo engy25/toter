@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Admin;
+namespace App\Http\Controllers\dashboard\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User,Country};
+use App\Models\{User, Country};
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\{Role, Permission};
 
@@ -57,27 +57,27 @@ class AllUserController extends Controller
    */
   public function searchUser(Request $request)
   {
-      $searchString = '%' . $request->search_string . '%';
-      $role = $request->role;
-      $status = $request->status;
+    $searchString = '%' . $request->search_string . '%';
+    $role = $request->role;
+    $status = $request->status;
 
-      $users = User::when($request->search_string, function ($q) use ($searchString) {
-          $q->where("fname", 'like', $searchString)
-              ->orWhere('email', 'like', $searchString)
-              ->orWhere('phone', 'like', $searchString);
-      })->when($request->role, function ($q) use ($role) {
-          $q->where("role_id", $role);
-      })->when($request->status, function ($q) use ($status) {
-          $q->where("is_active", $status);
-      })->latest()->paginate(PAGINATION_COUNT);
+    $users = User::when($request->search_string, function ($q) use ($searchString) {
+      $q->where("fname", 'like', $searchString)
+        ->orWhere('email', 'like', $searchString)
+        ->orWhere('phone', 'like', $searchString);
+    })->when($request->role, function ($q) use ($role) {
+      $q->where("role_id", $role);
+    })->when($request->status, function ($q) use ($status) {
+      $q->where("is_active", $status);
+    })->latest()->paginate(PAGINATION_COUNT);
 
-      if ($users->count() > 0) {
-          return view("content.Alluser.pagination_index", compact("users"))->render();
-      } else {
-          return response()->json([
-              "status" => 'nothing_found',
-          ]);
-      }
+    if ($users->count() > 0) {
+      return view("content.Alluser.pagination_index", compact("users"))->render();
+    } else {
+      return response()->json([
+        "status" => 'nothing_found',
+      ]);
+    }
   }
 
 
@@ -123,7 +123,7 @@ class AllUserController extends Controller
   public function edit(User $alluser)
   {
     $countries = Country::all();
-    return view("content.Alluser.update", compact("alluser","countries"));
+    return view("content.Alluser.update", compact("alluser", "countries"));
   }
 
   /**
@@ -134,31 +134,33 @@ class AllUserController extends Controller
    */
   public function update(Request $request, User $alluser)
   {
+    try {
+      $alluser->update([
+        'fname' => $request->fname,
+        'lname' => $request->lname,
+        'email' => $request->email,
+        'country_code' => $request->country,
+        'phone' => $request->phone,
+
+      ]);
+      if ($request->password != null) {
+
+        $alluser->update(['password' => $request->password]);
+      }
 
 
+      // Handle image upload
+      if ($request->hasFile('upimage')) {
+        $alluser->update(['image' => $request->upimage]);
 
-    $alluser->update([
-      'fname' => $request->fname,
-      'lname' => $request->lname,
-      'email' => $request->email,
-      'country_code' => $request->country,
-      'phone' => $request->phone,
+      }
 
-    ]);
-    if ($request->password != null) {
-
-      $alluser->update(['password' => $request->password]);
+      // Redirect back or to a specific route after the update
+      return redirect()->route('allusers.index')->with('successUpdate', 'User updated successfully');
+    } catch (\Exception $e) {
+      \DB::rollBack();
+      return redirect()->back()->with('error', 'Failed to create user. ' . $e->getMessage());
     }
-
-
-    // Handle image upload
-    if ($request->hasFile('upimage')) {
-      $alluser->update(['image' => $request->upimage]);
-
-    }
-
-    // Redirect back or to a specific route after the update
-    return redirect()->route('allusers.index')->with('successUpdate', 'User updated successfully');
   }
 
   /**

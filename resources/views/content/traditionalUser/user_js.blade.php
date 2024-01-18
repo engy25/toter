@@ -34,93 +34,8 @@
 
 
 
-{{-- /** to fetch list of the data of tags and populate the dropdown*/// --}}
-<script>
-  $(document).ready(function(){
-    $('#role').change(function () {
-      let id = $(this).val();
-
-      if (id) {
-        $.ajax({
-          url: "{{ route('permissions.list', ['roleId' => ':id']) }}".replace(':id', id),
-          method: 'GET',
-          dataType: "json",
-          success: function (data) {
-            console.log(data);
-            // populate the dropdown with the received tag data
-            var options = '<option value=""> Select Permission </option>';
-            $.each(data, function (index, permission) {
-              var permissionName = permission.name;
-              options += '<option value="' + permission.id + '">' + permissionName + '</option>';
-            });
-            $('#permissions').html(options);
-          },
-          error: function (response) {
-            // Handle error if fetching tags fails
-            console.error('Error fetching Permission:', response);
-          }
-        });
-      }
-    });
-  });
-</script>
 
 
-
-{{-- //////////////////////////////DElete Delivery////////////////////////////// --}}
-{{--
-<script>
-  $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-
-// Use document or a container element that is always present on the page
-$(document).on('click', '.delete-store', function (e) {
-    e.preventDefault();
-    var store_id = $(this).data('id');
-
-    if (confirm("Are you sure you want to delete this store?")) {
-        $.ajax({
-            url: 'stores/' + store_id,
-            type: 'DELETE',
-            data: {
-                _token: '{{ csrf_token() }}',
-                store: store_id
-            },
-            success: function (data) {
-                if (data.status == true) {
-                    // store was deleted successfully
-                    $('#data-table2').load(location.href + ' #data-table2');
-
-                    $('#success3').show();
-                    /* hide success message after 4 seconds */
-                    setTimeout(function () {
-                        $('#success3').hide();
-                    }, 2000);
-                } else if (data.status == 422) {
-                    // City could not be deleted due to relationships
-                    alert('You cannot delete this store as it is related to other tables.');
-                } else if (data.status == 403) {
-                    // City deletion forbidden due to relationships
-                    alert('Deletion of this store is forbidden as it is related to other tables.');
-                }
-            },
-            error: function (data) {
-                console.log(data);
-                if (data.status !== 500) {
-                    alert('An error occurred while deleting the store.');
-                }
-            }
-        });
-    }
-});
-
-
-</script> --}}
-
-{{-- //////////////////////////////////////////////////////////// --}}
 
 
 
@@ -136,11 +51,12 @@ $(document).on('click', '.delete-store', function (e) {
 
 function user(page) {
     $.ajax({
-      url: "/pagination/paginate-alluser/"  + "?page=" + page, // Updated URL
+      url: "/pagination/paginate-traditionaluser/"  + "?page=" + page, // Updated URL
         type: 'get',
         success: function(data) {
             $('.table-responsive').html(data);
-        }
+        },
+
     });
 }
 
@@ -150,44 +66,31 @@ function user(page) {
 
 {{-- /////////////////////////////Search User///////////////////////////////////// --}}
 <script>
-  function performSearch() {
-    let search_string = $('#search').val();
-    let role = $('#role').val();
-    let status = $("#status").val();
+  $(document).on('keyup',function(e){
+  e.preventDefault();
+  let search_string=$('#search').val();
+  // console.log(search_string);
+  $.ajax({
+    url:"{{ route('search.traditionaluser') }}",
+    method:'GET',
+    data:{
+      search_string:search_string
+    },
+    success:function(data){
+      console.log(data);
 
+      $('.table-responsive').html(data);
+    },
+    error:function(response){
+      console.log(response);
+    }
 
-    $.ajax({
-      url: "/search-alluser/",
-      method: 'GET',
-      data: {
-        search_string: search_string,
-        role: role,
-        status: status
-      },
-      success: function (data) {
-        console.log(data);
-        $('.table-responsive').html(data);
-      },
-      error: function (response) {
-        console.log(response);
-      }
-    });
-  }
-
-  $(document).on('keyup', function (e) {
-
-    performSearch();
   });
 
-  $('#role').change(function () {
 
-    performSearch();
-  });
 
-  $('#status').change(function () {
+})
 
-    performSearch();
-  });
 </script>
 
 

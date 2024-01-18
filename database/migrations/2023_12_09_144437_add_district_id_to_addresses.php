@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('addresses', function (Blueprint $table) {
             //
-            $table->bigInteger("district_id")->unsigned()->default(1);
+            $table->bigInteger("district_id")->unsigned()->nullable();
             $table->foreign("district_id")->references("id")->on("districts")->onDelete("cascade");
         });
     }

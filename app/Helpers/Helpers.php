@@ -8,7 +8,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\{
   Device,
-  Notification
+  Notification,
+  User
 
 };
 
@@ -480,10 +481,46 @@ class Helpers
 
   public static function applyOffer( &$order_data, $sub_total)
   {
-    
+
 
   }
 
+  /**
+   * get the count of each orders that delivery make based on the date
+   */
+  public static function deliveryOrdersCount($deliveryId, $date)
+  {
 
+    // Retrieve the delivery
+    $delivery = User::with('deliveryOrders', 'deliveryOrderCallcenter', 'deliveryOrderButlers')->find($deliveryId);
+
+    // Filter orders based on the provided date
+    $filteredOrders = $delivery->deliveryOrders->filter(function ($order) use ($date) {
+   
+      return $order->created_at->format('d-m-Y') == $date;
+    });
+
+    // Count the filtered orders
+    $deliveryOrdersCount = $filteredOrders->count();
+
+    // Similarly, filter and count for deliveryOrderCallcenter and deliveryOrderButlers
+    $filteredCallcenterOrders = $delivery->deliveryOrderCallcenter->filter(function ($order) use ($date) {
+      return $order->created_at->format('d-m-Y') == $date;
+    });
+
+    $deliveryOrderCallcenterCount = $filteredCallcenterOrders->count();
+
+    $filteredButlersOrders = $delivery->deliveryOrderButlers->filter(function ($order) use ($date) {
+      return $order->created_at->format('d-m-Y') == $date;
+    });
+
+    $deliveryOrderButlersCount = $filteredButlersOrders->count();
+
+    return [
+      'deliveryOrdersCount' => $deliveryOrdersCount,
+      'deliveryOrderCallcenterCount' => $deliveryOrderCallcenterCount,
+      'deliveryOrderButlersCount' => $deliveryOrderButlersCount,
+    ];
+  }
 
 }

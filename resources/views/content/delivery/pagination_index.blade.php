@@ -60,12 +60,12 @@ $i=0;
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
-                @can('show Delivery', $delivery)
+                {{-- @can('show Delivery', $delivery) --}}
                 <a href="{{ route('deliveries.show', $delivery->id) }}" class="btn btn-success show-delivery"
                   style="width: 100px; height: 40px;">
                   <i class="bi bi-eye"></i> {{ trans('words.show') }}
                 </a>&nbsp;&nbsp;
-                @endcan
+                {{-- @endcan --}}
 
 
               </div>

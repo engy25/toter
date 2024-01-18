@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\{
   User\OderController,
   User\PointUserController,
   User\CartController,
+  User\CityController,
 };
 use App\Http\Middleware\CheckRoleScopeMiddleware;
 
@@ -96,6 +97,11 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
        */
 
       Route::get('get-country', [CountryController::class, 'index']);
+
+      /**
+       * cities
+       */
+      Route::get('get-cities', [CityController::class, 'index']);
 
       Route::get('home', [HomeController::class, 'index']);
       /***new and up_to_50 section  pagination in home */

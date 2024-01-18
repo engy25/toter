@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
@@ -14,11 +14,13 @@ use Astrotomic\Translatable\Translatable;
 class Store extends Model implements TranslatableContract
 {
 
-  use SoftDeletes, HasFactory, Translatable;
+  use  HasFactory, Translatable;
   protected $table = 'stores';
   public $timestamps = true;
   protected $guarded = [];
   public $translatedAttributes = ['name', 'description'];
+
+
   protected static function boot()
   {
       parent::boot();
@@ -47,22 +49,9 @@ class Store extends Model implements TranslatableContract
   {
     return asset('storage/images/stores/' . $this->attributes['image']);
   }
-  // public function setImageAttribute($value)
-  // {
-  //   if ($value && $value->isValid()) {
-  //     if (isset($this->attributes['image']) && $this->attributes['image']) {
 
 
-  //       if (file_exists(storage_path('app/public/images/stores/' . $this->attributes['image']))) {
-  //         \File::delete(storage_path('app/public/images/stores/' . $this->attributes['image']));
-  //       }
-  //     }
-  //     $image = $this->helper->upload_single_file($value, 'app/public/images/stores/');
-  //     $this->attributes['image'] = $image;
-  //   }
-  // }
 
-  protected $dates = ['deleted_at'];
 
   public function points()
   {
