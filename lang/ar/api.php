@@ -81,7 +81,7 @@ return [
   "address_delete_success" => "تم حذف العنوان بنجاح",
   'order_empty' => " الكارت فاضي ",
   'wallet_empty' => "المحفظه فارغة",
-  "wallet_success" => "Wallet Return Successfully",
+  "wallet_success" => "تم استرجاع المحغظه بنجاح  ",
   "upload_image_success" => "تم رقع الصوره بنجاح",
   "order_not_found" => "انت لا تمتلك ذلك الطلب",
   "text_of_tier" => " يوجد :count طلبات متبقيه للترقيه للمستوي الاخضر حتي :duration",
@@ -90,18 +90,16 @@ return [
   "open" => 'مفتوح',
   "close" => 'مغلق',
   "popular" => 'شائع',
-
-
   "store_not_found"=>"المتجر غير موجود",
   "not_found" => "غير موجود",
   "reviews_not_allowed"=>"غير مسموح بعمل مراجعه",
-  "not_found"=>"غير موجود",
   "reward_golden_tier"=>"المكافات الخاصه بالفئه الذهبية",
   "msg_reward"=>"توصيل مجاني من الوضاح علي 10 طلبات متاح فقط للفئه الذهبيه حسابك ينتمي للفئه الخضراء لذلك قم باتمام 10 طلبات خلال شهر واحد للوصول للفئه الذهبيه وعاود شراء هذا الصنف ",
   "msg_point"=>"انت لا تمتلك نقاط كافيه",
   "alreadyaplliedoffer"=>"انت بالفعل استخدمت هذا العرض",
   'offer_applied_success' => 'تم تطبيق العرض بنجاح',
   'invalid_ingredient'=>'تم تحديد مكون غير صالح لهذا العنصر.',
-  'invalid_details_in_this_item'=>'Invalid details in this item'
+  'invalid_details_in_this_item'=>'تفاصيل غير متاحع في ذلك العنصر',
+  'items_must_belobg_to_the_same_store'=>'كل العناصر يجب ان تنتمي الي نفس المتجر'
 ];
 

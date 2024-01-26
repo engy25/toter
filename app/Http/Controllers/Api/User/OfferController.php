@@ -146,6 +146,7 @@ class OfferController extends Controller
     }
     $points = OfferUser::where("user_id", $user->id)->where("offer_id", $offer->id)->first();
 
+    /**check the user have the offer ? */
     if ($points) {
       return $this->helper->responseJson(
         'failed',
@@ -160,7 +161,7 @@ class OfferController extends Controller
       "offer_id" => $offer->id,
       "order_count_of_user" => $offer->order_counts,
       "expire_at" => $offer->to_date,
-      "point_earned" => $offer->earned_points,
+      "point_earned" =>0,
       "free_delivery" => $offer->free_delivery
     ]);
 

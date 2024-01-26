@@ -25,12 +25,24 @@ class AddOrderRequest extends ApiMasterRequest
     public function rules()
     {
         return [
-            "district_id"=>$this->district_id,
-            'payment_type' => 'required|in:cash,visa',
-            'transaction_id' => 'required_if:payment_type,online',
-            'coupon_id' => 'nullable|exists:coupons,id',
-            'address_id' => 'required|exists:addresses,id',
-            
+          'items' => 'required|array',
+          'items.*.item_id' => 'required|exists:items,id',
+          'items.*.size_id' => 'nullable|exists:sizes,id',
+          'items.*.drinks' => 'nullable|array',
+          'items.*.addingredients' => 'nullable|array',
+
+          'items.*.removeingredients' => 'nullable|array',
+          'items.*.options' => 'nullable|array',
+          'items.*.sides' =>'nullable|array',
+          'items.*.services' => 'nullable|array',
+          'items.*.notes' => 'nullable|min:3|max:500',
+          'items.*.qty' => 'required|numeric|min:1',
+          "district_id"=>'required|exists:districts,id',
+          'payment_type' => 'required|in:cash,visa',
+          'transaction_id' => 'required_if:payment_type,online',
+          'coupon_id' => 'nullable|exists:coupons,id',
+          'address_id' => 'required|exists:addresses,id',
+
         ];
     }
 }

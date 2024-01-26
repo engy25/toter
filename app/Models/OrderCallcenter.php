@@ -57,4 +57,9 @@ class OrderCallcenter extends Model
   {
     return $this->morphMany(OrderItem::class, 'ordereable');
   }
+  public function statuses()
+  {
+      return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
+          ->withTimestamps();
+  }
 }

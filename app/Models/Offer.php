@@ -53,6 +53,10 @@ class Offer extends Model implements TranslatableContract
     return $this->hasMany(OfferTranslation::class);
   }
 
+  public function offerUsers()
+  {
+    return $this->hasMany(OfferUser::class,"offer_id");
+  }
   public function tier()
   {
     return $this->belongsTo(Tier::class);

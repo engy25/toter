@@ -112,12 +112,12 @@
       </div>
 
 
-      <!-- Price -->
+      {{-- <!-- Price -->
       <div class="mb-3">
         <label for="min_price">Minimum Price</label>
         <input type="number" name="min_price" class="form-control" step="0.01" id="min_price" required>
         <span class="text-danger error-message" id="error_min_price"></span>
-      </div>
+      </div> --}}
 
 
       <!-- Save Up Price -->
@@ -140,11 +140,11 @@
         <span class="text-danger error-message" id="error_required_points"></span>
       </div>
 
-      <div class="mb-3">
+      {{-- <div class="mb-3">
         <label for="earned_points">Earned Points </label>
         <input type="number" name="earned_points" class="form-control" step="0.01" id="earned_points" required>
         <span class="text-danger error-message" id="error_earned_points"></span>
-      </div>
+      </div> --}}
 
       <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="featured" name="featured" value="1">

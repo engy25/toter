@@ -229,6 +229,9 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
         Route::post('make-butler-order',[OderButlerController::class,"store"]);
         Route::post('make-order',[OderController::class,"store"]);
+        Route::get('get-orders',[OderController::class,'getOrders']);
+        Route::get('order-details', [OderController::class, 'orderDetails']);
+
         Route::post('apply-offer',[OfferController::class,"applyOffer"]);
 
 

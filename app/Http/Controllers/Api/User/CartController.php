@@ -23,209 +23,6 @@ class CartController extends Controller
 
 
 
-
-  // protected function itemSatisfiesConditions($item_id, $size_id = null, $option_id = null, $preference_id = null, $gift_id = null, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)
-  // {
-  //   $item = Item::find($item_id);
-
-  //   $hasSize = $size_id != null ? $item->sizes()->where('id', $size_id)->exists() : true;
-  //   $hasOption = $option_id != null ? $item->options()->where('id', $option_id)->exists() : true;
-  //   $hasPreference = $preference_id ? $item->preferences()->where('id', $preference_id)->exists() : true;
-  //   $hasGift = $gift_id != null ? $item->gifts()->where('id', $gift_id)->exists() : true;
-
-  //   /**check  Add ingredients exists in this item */
-
-  //   if ($add_ingredients) {
-
-  //     foreach ($add_ingredients as $add_ingredient) {
-
-  //       if (!$item->addingredients()->whereId($add_ingredient)->exists()) {
-
-  //         return false;
-  //       }
-  //     }
-  //   }
-
-  //   /**check  Remove ingredients exists in this item */
-
-  //   if ($remove_ingredients) {
-
-  //     foreach ($remove_ingredients as $remove_ingredient) {
-
-  //       if (!$item->Removeingredients()->whereId($remove_ingredient)->exists()) {
-
-  //         return false;
-  //       }
-  //     }
-  //   }
-
-  //   /**check Services exists in this item */
-
-  //   if ($services) {
-
-  //     foreach ($services as $service) {
-
-  //       if (!$item->services()->whereId($service)->exists()) {
-
-  //         return false;
-  //       }
-  //     }
-  //   }
-
-  //   /**check  Drinks exists in this item */
-
-  //   if ($drinks) {
-
-  //     foreach ($drinks as $drink) {
-
-  //       if (!$item->drinks()->whereId($drink)->exists()) {
-
-  //         return false;
-  //       }
-  //     }
-  //   }
-
-  //   /**check   sides exists in this item */
-
-  //   if ($sides) {
-
-  //     foreach ($sides as $side) {
-
-  //       if (!$item->sides()->whereId($side)->exists()) {
-
-  //         return false;
-  //       }
-  //     }
-  //   }
-
-  //   /**check  Addons exists in this item */
-
-  //   if ($addons) {
-
-  //     foreach ($addons as $addon) {
-  //       // dd($item->addons()->get());
-  //       // dd($item->addons()->where("addon_id",$addon)->get());
-  //       if (!$item->addons()->where("addon_id", $addon)->exists()) {
-
-  //         return false;
-  //       } else {
-
-  //       }
-  //     }
-  //   }
-
-  //   return $hasSize && $hasOption && $hasPreference && $hasGift;
-  // }
-
-  // public function totalCart($item_id, $size_id = null, $option_id = null, $preference_id = null, $gift_id = null, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)
-  // {
-
-
-  // }
-
-
-
-  // public function store(AddToCartRequest $request)
-  // {
-  //   $item_id = $request->item_id;
-  //   $add_ingredients = $request->input("add_ingredients", []);
-  //   $remove_ingredients = $request->input("remove_ingredients", []);
-  //   $services = $request->input("services", []);
-  //   $size_id = $request->size_id;
-  //   $option_id = $request->option_id;
-  //   $preference_id = $request->preference_id;
-  //   $gift_id = $request->gift_id;
-  //   $drinks = $request->drinks;
-  //   $sides = $request->sides;
-  //   $addons = $request->addons;
-  //   $item = Item::find($item_id);
-
-
-  //   // Check if the item satisfies conditions
-  //   if (!$this->itemSatisfiesConditions($item_id, $size_id, $option_id, $preference_id, $gift_id, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)) {
-  //     return $this->helper->responseJson('failed', trans('api.invalid_details_in_this_item'), 422, null);
-  //   } else {
-  //     $cart = Cart::create([
-  //       "item_id" => $request->item_id,
-  //       "user_id" => auth("api")->user()->id,
-  //       "size_id" => $request->size_id,
-  //       "qty" => $request->qty,
-  //       "preference_id" => $request->preference_id,
-  //       "option_id" => $request->option_id,
-  //       "notes" => $request->notes,
-  //       "gift_id" => $request->gift_id,
-  //       "store_id" => $item->store_id
-
-  //     ]);
-  //     if ($add_ingredients) {
-  //       foreach ($add_ingredients as $add_ingredient) {
-  //         $the_add_ingredient = Ingredient::find($add_ingredient);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Ingredient", "optionable_id" => $the_add_ingredient->id, "price" => $the_add_ingredient->price]);
-  //       }
-  //     }
-
-  //     if ($remove_ingredients) {
-
-  //       foreach ($remove_ingredients as $remove_ingredient) {
-  //         $the_remove_ingredient = Ingredient::find($remove_ingredient);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Ingredient", "optionable_id" => $the_remove_ingredient->id, "price" => $the_remove_ingredient->price]);
-  //       }
-  //     }
-
-  //     if ($services) {
-  //       foreach ($services as $service) {
-  //         $the_service = Service::find($service);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Service", "optionable_id" => $the_service->id, "price" => $the_service->price]);
-  //       }
-  //     }
-
-  //     if ($addons) {
-  //       foreach ($addons as $addon) {
-  //         $the_addon = Addon::find($addon);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Addon", "optionable_id" => $the_addon->id, "price" => $the_addon->price]);
-  //       }
-  //     }
-
-  //     if ($drinks) {
-  //       foreach ($drinks as $drink) {
-  //         $the_drink = Drink::find($drink);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Drink", "optionable_id" => $the_drink->id, "price" => $the_drink->price]);
-  //       }
-  //     }
-
-
-  //     if ($sides) {
-  //       foreach ($sides as $side) {
-  //         $the_side = Side::find($side);
-  //         CartItemOption::create(["cart_id" => $cart->id, "optionable_type" => "App\Models\Side", "optionable_id" => $the_side->id, "price" => $the_side->price]);
-  //       }
-  //     }
-
-
-
-
-
-  //   }
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   protected function itemSatisfiesConditions($item, $size_id = null, $option_id = null, $preference_id = null, $gift_id = null, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)
   {
     $hasSize = $size_id ? $item->sizes()->where('id', $size_id)->exists() : true;
@@ -250,8 +47,10 @@ class CartController extends Controller
     }
 
     // Check Drinks
-    if ($drinks && !$this->checkOptionsExist($item, 'drinks', $drinks)) {
+    if ($drinks && !$this->checkDrinksExist($item, $drinks)) {
+      // return false;
       return false;
+
     }
 
     // Check Sides
@@ -260,13 +59,16 @@ class CartController extends Controller
     }
 
     // Check Addons
-    if ($addons && !$this->checkOptionsExist($item, 'addons', $addons)) {
+    if ($addons && !$this->checkAddonsExist($item, $addons)) {
+
       return false;
     }
 
     return $hasSize && $hasOption && $hasPreference && $hasGift;
   }
-
+  /**
+   * check option exists in item
+   */
   private function checkOptionsExist($item, $relation, $options)
   {
     foreach ($options as $option) {
@@ -278,19 +80,58 @@ class CartController extends Controller
     return true;
   }
 
-  public function totalCart($item_id, $size_id = null, $option_id = null, $preference_id = null, $gift_id = null, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)
+
+
+  /**
+   * to ckeck the drinks exists or not and this drinks exist in this item or not
+   */
+  private function checkDrinksExist($item, $drinks)
   {
-    // Implement your cart total calculation logic here
+    foreach ($drinks as $drink) {
+
+      if (!$item->drinks()->wherePivot('drink_id', $drink)->exists()) {
+        // If a drink doesn't exist, return false
+        return false;
+      }
+    }
+
+    // If all drinks exist, return true
+    return true;
   }
 
+  /**
+   * to ckeck the addons exists or not and this addon exist in this item or not
+   */
+  private function checkAddonsExist($item, $addons)
+  {
+    foreach ($addons as $addon) {
+      if (!$item->addons()->wherePivot("addon_id", $addon)->exists()) {
+        // If a addon doesn't exist, return false
+        return false;
+      }
+    }
+    //if all the addons exist, return true
+    return true;
+  }
+
+
+
+
+  /**
+   * to store the cart
+   */
   public function store(AddToCartRequest $request)
   {
+    \DB::beginTransaction();
+    try {
     $item = Item::find($request->item_id);
 
     // Check if the item satisfies conditions
     if (!$this->itemSatisfiesConditions($item, $request->size_id, $request->option_id, $request->preference_id, $request->gift_id, $request->add_ingredients, $request->remove_ingredients, $request->services, $request->drinks, $request->sides, $request->addons)) {
       return $this->helper->responseJson('failed', trans('api.invalid_details_in_this_item'), 422, null);
     }
+
+
 
     // Create the cart
     $cart = Cart::create([
@@ -306,36 +147,67 @@ class CartController extends Controller
     ]);
 
     // Process cart options
-   dd( $this->processCartOptions($cart, 'addingredients', $request->add_ingredients,"Ingredient"));
-    $this->processCartOptions($cart, 'removeingredients', $request->remove_ingredients,"Ingredient");
-    $this->processCartOptions($cart, 'services', $request->services,"Service");
-    $this->processCartOptions($cart, 'drinks', $request->drinks,"Drink");
-    $this->processCartOptions($cart, 'sides', $request->sides,"Side");
-    $this->processCartOptions($cart, 'addons', $request->addons,"Addon");
+    $this->processCartOptions($cart, 'addingredients', $request->add_ingredients, "Ingredient");
+    $this->processCartOptions($cart, 'removeingredients', $request->remove_ingredients, "Ingredient");
+    $this->processCartOptions($cart, 'services', $request->services, "Service");
+    $this->processCartOptions($cart, 'drinks', $request->drinks, "Drink");
+    $this->processCartOptions($cart, 'sides', $request->sides, "Side");
+    $this->processCartOptions($cart, 'addons', $request->addons, "Addon");
 
-    // You can call the totalCart function here to calculate the total
+    // //  the totalCart function to calculate the total
+    // dd($this->helper->totalCart(
+    //   $request->item_id,
+    //   $request->qty,
+    //   $request->size_id,
+    //   $request->option_id,
+    //   $request->preference_id,
+
+    //   $request->add_ingredients,
+    //   $request->remove_ingredients,
+    //   $request->services,
+    //   $request->drinks,
+    //   $request->sides,
+    //   $request->addons
+    // ));
+
 
     return $this->helper->responseJson('success', trans('api.cart_added_successfully'), 200, null);
-  }
 
-  private function processCartOptions($cart, $relation, $options,$model)
-  {
-    foreach ($options as $option) {
+    } catch (\Exception $e) {
+      \DB::rollBack();
+      return $this->helper->responseJson('fail', trans('api.auth_something_went_wrong'), 500, null);
 
-      $optionModel = app("App\\Models\\" . ucfirst($model))->find($option);
-
-      if ($optionModel) {
-        $cart_item=CartItemOption::create([
-          "cart_id" => $cart->id,
-          "optionable_type" => "App\\Models\\" . ucfirst($model),
-          "optionable_id" => $optionModel->id,
-          "price" => $optionModel->price
-        ]);
-
-      }
-      dd($cart_item);
     }
+
   }
+
+  /**
+   * to store the options of the cart in cartItemOptions table
+   */
+  private function processCartOptions($cart, $relation, $options, $model)
+  {
+    if ($options) {
+      foreach ($options as $option) {
+
+        $optionModel = app("App\\Models\\" . ucfirst($model))->find($option);
+
+        if ($optionModel) {
+          $cart_item = CartItemOption::create([
+            "cart_id" => $cart->id,
+            "optionable_type" => "App\\Models\\" . ucfirst($model),
+            "optionable_id" => $optionModel->id,
+            "price" => $optionModel->price
+          ]);
+
+        }
+      }
+    }
+
+
+  }
+
+
+
 
 
 

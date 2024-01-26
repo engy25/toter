@@ -40,7 +40,7 @@ class OfferUpdateRequest extends FormRequest
           'saveup_price' => 'numeric|required|max:9999999999999999999999999999.99',
           'order_counts' => 'numeric|integer|required|digits_between:1,11|max:99999999999',
           'required_points' => 'numeric|integer|required|min:1|max:9223372036854775807',
-          'earned_points' => 'numeric|integer|required|min:1|max:9223372036854775807',
+          // 'earned_points' => 'numeric|integer|required|min:1|max:9223372036854775807',
          'featured'=>'nullable'
         ];
     }

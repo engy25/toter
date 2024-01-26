@@ -81,6 +81,10 @@ class OrderButler extends Model
     return $this->belongsTo(Status::class);
 
   }
-
+  public function statuses()
+  {
+      return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
+          ->withTimestamps();
+  }
 
 }

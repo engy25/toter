@@ -62,7 +62,7 @@ class Item extends Model implements TranslatableContract
 
   public function drinks()
   {
-    return $this->belongsToMany(Drink::class, 'item_drinks', 'item_id', 'drink_id');
+    return $this->belongsToMany(Drink::class, 'item_drinks', 'item_id', 'drink_id')->withPivot("drink_id");
   }
 
   public function addons()

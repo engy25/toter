@@ -32,7 +32,7 @@ class OderButlerController extends Controller
       */
   public function applyCoupon(ApplyCouponRequest $request)
   {
-    $coupon = Coupon::where('code', $request->code)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
+    $coupon = Coupon::where('code', $request->code)->where("store_id",$request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
 
     if (!$coupon) {
 
@@ -40,12 +40,10 @@ class OderButlerController extends Controller
 
     }
 
-    if (Coupon::where('code', $request->code)->where('max_user_used_code', '>=', 'user_used_code_count')->live()->first()) {
-
-
+    if (Coupon::where('code', $request->code)->where("store_id",$request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->live()->first()) {
 
       $coupon_user = CouponUser::firstOrCreate(['coupon_id' => $coupon->id, 'user_id' => auth('api')->user()->id, "is_used" => 0]);
-      //$coupon->update(['user_used_code_count'=>$coupon->user_used_code_count +1]);
+
       return $this->helper->responseJson('succcess', trans('api.coupon_applied_success'), 200, ['coupon' => new CouponResource($coupon)]);
 
     } else {
@@ -97,9 +95,12 @@ class OderButlerController extends Controller
           ->first();
 
         if ($coupon) {
+          CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->update(['is_used' => 1]);
           $this->helper->applyCouponDiscount($coupon, $order_data, $sub_total);
+          //update the couponuser
         }
       } else {
+        /**coupon not found  return with msg*/
         $order_data["sub_total"] = $sub_total;
         $order_data["total"] = $sub_total;
       }

@@ -11,7 +11,7 @@ class CreateOrderStatusesTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('order_id')->unique()->unsigned();
+		
 			$table->bigInteger('status_id')->unique()->unsigned();
 		});
 	}

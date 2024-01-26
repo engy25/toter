@@ -177,11 +177,11 @@ class OfferController extends Controller
         'store_id' => $storeId,
         'tier_id' => $request->tier_id,
         'discount_percentage' => $request->discount_percentage,
-        'min_price' => $request->min_price,
+        // 'min_price' => $request->min_price,
         'saveup_price' => $request->saveup_price,
         'order_counts' => $request->order_counts,
         'required_points' => $request->required_points,
-        'earned_points' => $request->earned_points,
+        // 'earned_points' => $request->earned_points,
         'from_date' => $request->from_date,
         'to_date' => $request->to_date,
         'free_delivery'=>$request->featured
@@ -264,7 +264,7 @@ class OfferController extends Controller
         'saveup_price' => $request->saveup_price,
         'order_counts' => $request->order_counts,
         'required_points' => $request->required_points,
-        'earned_points' => $request->earned_points,
+        // 'earned_points' => $request->earned_points,
         'from_date' => $request->from_date,
         'to_date' => $request->to_date,
         'free_delivery' => $request->featured

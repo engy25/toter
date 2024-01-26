@@ -66,11 +66,11 @@
             <h4 class="mb-1">SubSection Name:</h4>
             <h6 class="mb-3">{{ $offer->subsection->name}}</h6>
             <h4 class="mb-1">Minimum Price:</h4>
-            <h6 class="mb-3">{{ $offer->min_price}}</h6>
+
             <h4 class="mb-1">SaveUp Price:</h4>
             <h6 class="mb-3">{{ $offer->saveup_price}}</h6>
             <h4 class="mb-1">Earned Points:</h4>
-            <h6 class="mb-3">{{ $offer->earned_points}}</h6>
+            {{-- <h6 class="mb-3">{{ $offer->earned_points}}</h6> --}}
             <h4 class="mb-1">Required Points:</h4>
             <h6 class="mb-3">{{ $offer->required_points}}</h6>
             <h4 class="mb-1">Required Tier:</h4>

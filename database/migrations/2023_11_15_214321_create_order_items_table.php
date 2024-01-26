@@ -18,7 +18,7 @@ class CreateOrderItemsTable extends Migration
 			$table->text('drinks')->nullable();
 			$table->text('sides')->nullable();
 			$table->text('choose_days')->nullable();
-			$table->decimal('price', 30, 2);
+			$table->decimal('price', 30, 2)->default('0');
 			$table->integer('qty')->default('1');
 			$table->decimal('total_price', 30, 2)->default('1');
 			$table->text('services')->nullable();

@@ -15,4 +15,8 @@ class OrderStatus extends Model {
 
 	protected $dates = ['deleted_at'];
   protected $guarded = [];
+  public function ordereable()
+	{
+		return $this->morphTo();
+	}
 }

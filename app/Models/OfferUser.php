@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Database\Eloquent\Model;
 
 class OfferUser extends Model {
@@ -11,8 +11,13 @@ class OfferUser extends Model {
 	protected $table = 'offer_users';
 	public $timestamps = true;
 
-	use SoftDeletes,HasFactory;
+	use HasFactory;
   protected $guarded = [];
-	protected $dates = ['deleted_at'];
+	//protected $dates = ['deleted_at'];
+
+  public function scopeValid($query)
+  {
+    $query->whereDate('expire_at', '>=', date('Y-m-d'));
+  }
 
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Api\User;
 
-use App\Http\Requests\Api\ApiMasterRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApplyCouponRequest extends ApiMasterRequest
+class OrderRequestId extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +24,7 @@ class ApplyCouponRequest extends ApiMasterRequest
     public function rules()
     {
         return [
-          'code'=>'required',
-          "store_id"=>'required|exists:stores,id'
+          'order_id' => 'required|exists:orders,id',
         ];
     }
 }

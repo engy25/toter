@@ -68,6 +68,7 @@ return [
   "date"=>"التاريخ",
   "subtotal"=>"المجموع الفرعي",
   "isCoupon"=>"هل الكوبون مستخدم",
-  "delivery_charge" => "رسوم التوصيل"
+  "delivery_charge" => "رسوم التوصيل",
+  "wallet_success" => "تم استرجاع المحفظه بنجاح",
 
 ];

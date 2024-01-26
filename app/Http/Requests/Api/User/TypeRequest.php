@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api\User;
 use App\Http\Requests\Api\ApiMasterRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchRequest extends ApiMasterRequest
+class TypeRequest extends ApiMasterRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,15 +25,7 @@ class SearchRequest extends ApiMasterRequest
   public function rules()
   {
     return [
-      'keyword' => 'nullable|string',
-
-      
-      'max_price' => 'nullable:min_price|integer',
-      'rate' => 'nullable',
-      'subsection_id' => 'nullable|exists:subsections,id',
-      'tag_id'=> 'nullable|exists:store_categories,id',
-
-      'type' => 'nullable|string'
+      "type" => 'required|in:active,history,cancel'
     ];
   }
 }

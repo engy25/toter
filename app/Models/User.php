@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+use App\Models\Scopes\UserScope;
+
 class User extends Authenticatable
 {
 
@@ -21,11 +23,7 @@ class User extends Authenticatable
 
   use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
-  public $helper;
-  public function __construct()
-  {
-    $this->helper = new Helpers();
-  }
+
   protected $dates = ['deleted_at'];
   protected $guarded = [];
 
@@ -41,17 +39,23 @@ class User extends Authenticatable
 
   protected static function booted()
   {
+    static::addGlobalScope(new UserScope);
+
     static::created(function ($user) {
-      // Check the number of orders for the user this month
-      $orderCount = Order::where("user_id", $user->id)
-        ->where('created_at', '>=', Carbon::now()->month)->count();
-      if ($orderCount >= 10) {
-        // Update the user to the golden tier
-        $user->update(['tier_id' => '2']);
-      }
-
+      $user->checkAndUpdateTier();
     });
+  }
+  public function checkAndUpdateTier()
+  {
+    // Check the number of orders for the user this month
+    $orderCount = Order::where("user_id", $this->id)
+      ->where('created_at', '>=', now()->startOfMonth())
+      ->count();
 
+    if ($orderCount >= 10) {
+      // Update the user to the golden tier
+      $this->update(['tier_id' => '2']);
+    }
   }
 
   public function setImageAttribute($value)
@@ -64,6 +68,7 @@ class User extends Authenticatable
           \File::delete(storage_path('app/public/images/user/' . $this->attributes['image']));
         }
       }
+      $helper = new Helpers();
       $image = $this->helper->upload_single_file($value, 'app/public/images/user/');
       $this->attributes['image'] = $image;
     }
@@ -199,18 +204,25 @@ class User extends Authenticatable
   }
 
 
+  public function points()
+  {
+    return $this->hasMany(PointUser::class, "user_id");
+  }
 
   public function userPoints()
   {
     $user_id = auth('api')->id();
+    /**of the tier */
     $point_user = PointUser::where("user_id", $user_id)->where("expired_at", '>=', date('Y-m-d'))->sum('point_earned');
-    $offer_point = OfferUser::where("user_id", $user_id)->where("expire_at", '>=', date('Y-m-d'))->sum('point_earned');
+    //  $offer_point = OfferUser::where("user_id", $user_id)->where("expire_at", '>=', date('Y-m-d'))->sum('point_earned');
 
 
-    $points = $point_user + $offer_point;
+    $points = $point_user;
 
     return (int) $points;
   }
+
+
 
   public function userExpiredPointsCount()
   {
@@ -256,48 +268,83 @@ class User extends Authenticatable
 
 
 
-  public function assignDriverToOrder(Order $order)
+  public function assignDriverToOrder(Order $order, $storeId)
   {
 
     $role_delivery = Role::where("name", "Delivery")->first();
     $delivery = User::where("role_id", $role_delivery->id);
-    $store = Store::whereId($order->store_id)->first();
+    $store = Store::whereId($storeId)->first();
 
-    $usersQuery = User::where("role_id", $role_delivery->id);
+
+
+    $currentDayName = Carbon::now()->format('l');
+    $day = DayTranslation::where("name", $currentDayName)->first();
+    $dayId = $day->day_id;
+
+    $currentTime = Carbon::now()->format('H:i:s');
+
+    /**get the Query deliveries within working hours and if the delivery doesnot have scheduled  in this day
+     * get the users with schedules if doesnot have schedules get the delivery only
+     * */
+    $usersQuery = User::where("role_id", $role_delivery->id)
+      ->where(function ($query) use ($dayId, $currentTime) {
+        $query->where(function ($subQuery) use ($dayId, $currentTime) {
+          $subQuery->whereHas("schedules", function ($scheduleQuery) use ($dayId, $currentTime) {
+            $scheduleQuery->where("day_id", $dayId)
+              ->where("from_time", "<=", $currentTime)
+              ->where("to_time", ">=", $currentTime);
+          });
+        })
+          ->orWhere(function ($subQuery) use ($dayId) {
+            $subQuery->whereHas("schedules", function ($scheduleQuery) use ($dayId) {
+              $scheduleQuery->where("day_id", $dayId);
+            });
+          })
+          ->orWhereDoesntHave("schedules"); // Users without schedules
+      });
+
+
+
+    // $usersQuery = User::where("role_id", $role_delivery->id);
+
 
     // Check if the Nearest scope exists and if the store has latitude and longitude
-    if (method_exists($usersQuery->getModel(), 'scopeNearest') && $store->lat && $store->lng) {
+    if (method_exists($usersQuery->getModel(), 'Nearest') && $store->lat && $store->lng) {
+
       $usersQuery->Nearest($store->lat, $store->lng);
     }
 
 
     $the_nearest_empty_driver = $usersQuery->whereDoesntHave("deliveryOrders")
-      ->whereDoesntHave("deliveryOrderButlers")->first();
+      ->whereDoesntHave("deliveryOrderButlers")->whereDoesntHave("deliveryOrderCallcenter")->first();
 
-    $the_nearest_the_least_loaded_driver = User::with(["deliveryOrders", "deliveryOrderButlers"])
+    $the_nearest_the_least_loaded_driver = User::with(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
       ->where("role_id", $role_delivery->id)
 
       ->when(method_exists($usersQuery->getModel(), 'scopeNearest') && $store->lat && $store->lng, function ($query) use ($store) {
         return $query->Nearest($store->lat, $store->lng);
       })
-      ->withCount(["deliveryOrders", "deliveryOrderButlers"])
-      ->orderByRaw("delivery_orders_count + delivery_order_butlers_count")
+      ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+      ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
       ->first();
 
 
 
     if ($the_nearest_empty_driver) {
+
       return $the_nearest_empty_driver;
     }
 
     if (!$the_nearest_empty_driver) {
       if ($the_nearest_the_least_loaded_driver != null) {
+
         return $the_nearest_the_least_loaded_driver;
       } else {
-        return User::with(["deliveryOrders", "deliveryOrderButlers"])
+
+        return User::with(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
           ->where("role_id", $role_delivery->id)
-          ->withCount(["deliveryOrders", "deliveryOrderButlers"])
-          ->orderByRaw("delivery_orders_count + delivery_order_butlers_count")
+          ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+          ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
           ->first();
       }
     }
@@ -414,18 +461,21 @@ class User extends Authenticatable
     return $userWithLeastOrders;
 
   }
-  public  static function deliveryOrdersCount($userId)
+  /**
+   * get the orders count of the delivery
+   */
+  public static function deliveryOrdersCount($userId)
   {
-      $user = User::withCount('deliveryOrders', 'deliveryOrderCallcenter', 'deliveryOrderButlers')->find($userId);
-      $deliveryOrdersCount = $user->delivery_orders_count;
-      $deliveryOrderCallcenterCount = $user->delivery_order_callcenter_count;
-      $deliveryOrderButlersCount = $user->delivery_order_butlers_count;
+    $user = User::withCount('deliveryOrders', 'deliveryOrderCallcenter', 'deliveryOrderButlers')->find($userId);
+    $deliveryOrdersCount = $user->delivery_orders_count;
+    $deliveryOrderCallcenterCount = $user->delivery_order_callcenter_count;
+    $deliveryOrderButlersCount = $user->delivery_order_butlers_count;
 
-      return [
-          'deliveryOrdersCount' => $deliveryOrdersCount,
-          'deliveryOrderCallcenterCount' => $deliveryOrderCallcenterCount,
-          'deliveryOrderButlersCount' => $deliveryOrderButlersCount,
-      ];
+    return [
+      'deliveryOrdersCount' => $deliveryOrdersCount,
+      'deliveryOrderCallcenterCount' => $deliveryOrderCallcenterCount,
+      'deliveryOrderButlersCount' => $deliveryOrderButlersCount,
+    ];
   }
 
 

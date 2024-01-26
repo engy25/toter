@@ -26,7 +26,7 @@ class offerSeeder extends Seeder
     //   "subsection_id" => 12,
     //   'discount_percentage' => 5,
     //   'order_counts' => 5,
-    //   'min_price' => 6,
+
     //   'required_points' => 2100000,
     //   'tier_id' => 1,
     //   'saveup_price' => 4.6601,
@@ -64,7 +64,7 @@ class offerSeeder extends Seeder
     //   "subsection_id" => 1,
     //   'discount_percentage' => 5,
     //   'order_counts' => 5,
-    //   'min_price' => 6,
+
     //   'required_points' => 2100000,
     //   'tier_id' => 1,
     //   'saveup_price' => 4.6601,
@@ -106,7 +106,7 @@ class offerSeeder extends Seeder
       "subsection_id" => 12,
       'discount_percentage' => 5,
       'order_counts' => 0,
-      'min_price' => 0,
+
       'required_points' => 0,
       'tier_id' => 1,
       'saveup_price' => 0,

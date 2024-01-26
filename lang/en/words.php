@@ -68,5 +68,6 @@ return [
   "date" => "Date",
   "subtotal" => "Sub Total",
   "isCoupon" => "Is Coupon Used?",
-  "delivery_charge" => "Delivery Charge"
+  "delivery_charge" => "Delivery Charge",
+
 ];

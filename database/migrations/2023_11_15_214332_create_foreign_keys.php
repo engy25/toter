@@ -192,11 +192,7 @@ class CreateForeignKeys extends Migration {
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
-		Schema::table('order_statuses', function(Blueprint $table) {
-			$table->foreign('order_id')->references('id')->on('orders')
-						->onDelete('restrict')
-						->onUpdate('restrict');
-		});
+	
 		Schema::table('order_statuses', function(Blueprint $table) {
 			$table->foreign('status_id')->references('id')->on('statuses')
 						->onDelete('restrict')
@@ -363,7 +359,7 @@ class CreateForeignKeys extends Migration {
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
-		
+
 		Schema::table('options', function(Blueprint $table) {
 			$table->foreign('item_id')->references('id')->on('items')
 						->onDelete('restrict')
