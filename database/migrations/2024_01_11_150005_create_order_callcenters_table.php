@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('order_callcenters', function (Blueprint $table) {
           $table->id();
-          $table->string("order_number")->unique();
+          $table->string("order_number", 191)->unique();
           $table->bigInteger('user_id')->unsigned()->nullable();
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
           $table->bigInteger('callcenter_id')->unsigned()->nullable();
