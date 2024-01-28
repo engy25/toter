@@ -16,7 +16,7 @@ class SubSectionController extends Controller
   {
     $this->helper = new Helpers();
   }
-  
+
   public function showStore($id)
   {
     $store_of_subsection = Store::where("sub_section_id", $id)->paginate(10);

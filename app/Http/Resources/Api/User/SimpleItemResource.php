@@ -50,6 +50,7 @@ class SimpleItemResource extends JsonResource
       // 'exchange_rate'=>(double)$this->exchange_rate,
       "delivery_time" => $this->store->delivery_time." ".trans("api.unit"),
       "reviews_count" => $reviews_count,
+      "subSection_name"=>$this->subsection->name ??null,
       'rating' => $this->reviews->isEmpty() ? 0 : (double) round($this->reviews->pluck('rating')->sum() / $this->reviews->pluck('rating')->count(), 1),
       'favourite' => ($fav) ? 1 : 0,
       'popuar'=>$this->status

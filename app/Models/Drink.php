@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,7 @@ class Drink extends Model implements TranslatableContract
   }
   public function items()
   {
-    return $this->belongsToMany(Item::class, 'item_drinks', 'drink_id', 'item_id');
+    return $this->belongsToMany(Item::class, 'item_drinks', 'drink_id', 'item_id')->withoutGlobalScope(ItemScope::class);
   }
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {

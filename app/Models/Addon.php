@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +46,7 @@ class Addon extends Model
 
   public function items()
   {
-    return $this->belongsToMany(Item::class, 'item_addons', 'addon_id', "item_id");
+    return $this->belongsToMany(Item::class, 'item_addons', 'addon_id', "item_id")->withoutGlobalScope(ItemScope::class);
   }
   public function getcurrencyAttribute()
   {

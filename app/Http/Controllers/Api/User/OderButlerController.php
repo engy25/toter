@@ -53,11 +53,7 @@ class OderButlerController extends Controller
     }
 
 
-
-
   }
-
-
 
   public function store(AddOrderButlerRequest $request)
   {

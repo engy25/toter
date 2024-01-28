@@ -575,9 +575,7 @@ class Helpers
     if ($itemPoints > 1) {
       /**check if the user have enoughp points */
       if ($itemPoints <= $theUserPoint) {
-
-
-
+        $points += $itemPoints;
         $remainingItemPoints = $itemPoints;
 
         while ($remainingItemPoints > 0) {
@@ -604,7 +602,7 @@ class Helpers
               ]);
 
               $remainingItemPoints -= $pointsToDeduct;
-              $points += $itemPoints;
+
 
             } else {
 
@@ -692,6 +690,7 @@ class Helpers
 
     $total_price *= $qty;
     // dd($total_price); ->490.5
+
 
 
     $percentage = $discount / 100;

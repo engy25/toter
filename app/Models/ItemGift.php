@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class ItemGift extends Model {
   protected $guarded = [];
 	public function item()
 	{
-		return $this->belongsTo(Item::class);
+		return $this->belongsTo(Item::class)->withoutGlobalScope(ItemScope::class);
 	}
 
 

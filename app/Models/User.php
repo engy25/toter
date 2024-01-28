@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helpers\Helpers;
 use Illuminate\Support\Carbon;
@@ -108,6 +109,20 @@ class User extends Authenticatable
   {
     return $this->hasMany(SearchHistory::class);
   }
+
+  public function itemFavourites()
+  {
+    return $this->morphedByMany(Item::class,"favoriteable","favourites")->withoutGlobalScope(ItemScope::class);
+  }
+
+
+
+
+  public function storeFavourites()
+  {
+    return $this->morphedByMany(Store::class,"favoriteable","favourites");
+  }
+
 
   public function coupons()
   {

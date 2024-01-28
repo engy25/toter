@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use App\Observers\CartObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,6 +40,8 @@ class Cart extends Model
   }
 
 
+
+
   public function user()
   {
     return $this->belongsTo(User::class);
@@ -63,7 +66,7 @@ class Cart extends Model
   }
   public function item()
   {
-    return $this->belongsTo(Item::class);
+    return $this->belongsTo(Item::class)->withoutGlobalScope(ItemScope::class);
   }
 
 

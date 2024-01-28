@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\Api\User\UpdateCartRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\User\AddToCartRequest;
 use App\Models\{Cart, Item, Drink, Service, Ingredient, CartItemOption, Addon, Side};
 use App\Helpers\Helpers;
+use App\Http\Resources\Api\User\Carts\CartResource;
 
 class CartController extends Controller
 {
@@ -124,54 +126,54 @@ class CartController extends Controller
   {
     \DB::beginTransaction();
     try {
-    $item = Item::find($request->item_id);
+      $item = Item::find($request->item_id);
 
-    // Check if the item satisfies conditions
-    if (!$this->itemSatisfiesConditions($item, $request->size_id, $request->option_id, $request->preference_id, $request->gift_id, $request->add_ingredients, $request->remove_ingredients, $request->services, $request->drinks, $request->sides, $request->addons)) {
-      return $this->helper->responseJson('failed', trans('api.invalid_details_in_this_item'), 422, null);
-    }
-
-
-
-    // Create the cart
-    $cart = Cart::create([
-      "item_id" => $request->item_id,
-      "user_id" => auth("api")->user()->id,
-      "size_id" => $request->size_id,
-      "qty" => $request->qty,
-      "preference_id" => $request->preference_id,
-      "option_id" => $request->option_id,
-      "notes" => $request->notes,
-      "gift_id" => $request->gift_id,
-      "store_id" => $item->store_id
-    ]);
-
-    // Process cart options
-    $this->processCartOptions($cart, 'addingredients', $request->add_ingredients, "Ingredient");
-    $this->processCartOptions($cart, 'removeingredients', $request->remove_ingredients, "Ingredient");
-    $this->processCartOptions($cart, 'services', $request->services, "Service");
-    $this->processCartOptions($cart, 'drinks', $request->drinks, "Drink");
-    $this->processCartOptions($cart, 'sides', $request->sides, "Side");
-    $this->processCartOptions($cart, 'addons', $request->addons, "Addon");
-
-    // //  the totalCart function to calculate the total
-    // dd($this->helper->totalCart(
-    //   $request->item_id,
-    //   $request->qty,
-    //   $request->size_id,
-    //   $request->option_id,
-    //   $request->preference_id,
-
-    //   $request->add_ingredients,
-    //   $request->remove_ingredients,
-    //   $request->services,
-    //   $request->drinks,
-    //   $request->sides,
-    //   $request->addons
-    // ));
+      // Check if the item satisfies conditions
+      if (!$this->itemSatisfiesConditions($item, $request->size_id, $request->option_id, $request->preference_id, $request->gift_id, $request->add_ingredients, $request->remove_ingredients, $request->services, $request->drinks, $request->sides, $request->addons)) {
+        return $this->helper->responseJson('failed', trans('api.invalid_details_in_this_item'), 422, null);
+      }
 
 
-    return $this->helper->responseJson('success', trans('api.cart_added_successfully'), 200, null);
+
+      // Create the cart
+      $cart = Cart::create([
+        "item_id" => $request->item_id,
+        "user_id" => auth("api")->user()->id,
+        "size_id" => $request->size_id,
+        "qty" => $request->qty,
+        "preference_id" => $request->preference_id,
+        "option_id" => $request->option_id,
+        "notes" => $request->notes,
+        "gift_id" => $request->gift_id,
+        "store_id" => $item->store_id
+      ]);
+
+      // Process cart options
+      $this->processCartOptions($cart, 'addingredients', $request->add_ingredients, "Ingredient");
+      $this->processCartOptions($cart, 'removeingredients', $request->remove_ingredients, "Ingredient");
+      $this->processCartOptions($cart, 'services', $request->services, "Service");
+      $this->processCartOptions($cart, 'drinks', $request->drinks, "Drink");
+      $this->processCartOptions($cart, 'sides', $request->sides, "Side");
+      $this->processCartOptions($cart, 'addons', $request->addons, "Addon");
+
+      // //  the totalCart function to calculate the total
+      // dd($this->helper->totalCart(
+      //   $request->item_id,
+      //   $request->qty,
+      //   $request->size_id,
+      //   $request->option_id,
+      //   $request->preference_id,
+
+      //   $request->add_ingredients,
+      //   $request->remove_ingredients,
+      //   $request->services,
+      //   $request->drinks,
+      //   $request->sides,
+      //   $request->addons
+      // ));
+
+
+      return $this->helper->responseJson('success', trans('api.cart_added_successfully'), 200, null);
 
     } catch (\Exception $e) {
       \DB::rollBack();
@@ -202,6 +204,45 @@ class CartController extends Controller
         }
       }
     }
+
+
+  }
+
+  /***display cart */
+
+  public function getCart()
+  {
+    $userId = auth("api")->user()->id;
+    $carts = Cart::with("cartItems")->where("user_id", $userId)->get();
+    return $this->helper->responseJson(
+      'success',
+      trans('api.order_retreived_success'),
+      200,
+      [
+        'carts' => CartResource::collection($carts),
+
+      ]
+    );
+  }
+
+  /**
+   * update the qty of the cart
+   */
+  public function updateCartQty(UpdateCartRequest $request)
+  {
+
+    $cart = Cart::with('cartItems')->find($request->id);
+    if (!$cart) {
+      return $this->helper->responseJson('failed', trans('api.cart_not_found'), 404, null);
+    }
+    $currentQty = $cart->qty;
+
+    $incrementQty = $request->qty;
+    $newQty = $currentQty + $incrementQty;
+    
+    $cart->update(["qty" => $newQty]);
+
+    return $this->helper->responseJson('success', trans('api.cart_updated_successfully'), 200, null);
 
 
   }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -90,7 +91,7 @@ class Offer extends Model implements TranslatableContract
 
   public function item()
   {
-    return $this->belongsTo(Item::class)->whereNotNull("item_id");
+    return $this->belongsTo(Item::class)->whereNotNull("item_id")->withoutGlobalScope(ItemScope::class);
   }
 
 

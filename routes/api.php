@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\{
   User\PointUserController,
   User\CartController,
   User\CityController,
+  User\FavouriteController
 };
 use App\Http\Middleware\CheckRoleScopeMiddleware;
 
@@ -42,6 +43,7 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 Route::namespace('Api')->middleware('setLocale')->group(function () {
+
 
 
 
@@ -137,7 +139,10 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**review */
       Route::get('review',[ReviewController::class,"show"]);
 
-
+       /**fav */
+       Route::get('favourites/{sort}',[FavouriteController::class,"index"]);
+       Route::post('add-item-to-favourites/{id}', [FavouriteController::class, 'addItemToFavorite']);
+       Route::post('add-store-to-favourites/{id}', [FavouriteController::class, 'addStoreToFavorite']);
       /**itm details */
       Route::get('item',[ItemController::class,"show"]);
 
@@ -224,6 +229,8 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
          * Add To Cart
          */
         Route::post("add-to-cart",[CartController::class,"store"]);
+        Route::get('get-cart',[CartController::class,'getCart']);
+        Route::post('update-cart_qty',[CartController::class,'updateCartQty']);
 
         /**make order */
 
@@ -231,6 +238,7 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         Route::post('make-order',[OderController::class,"store"]);
         Route::get('get-orders',[OderController::class,'getOrders']);
         Route::get('order-details', [OderController::class, 'orderDetails']);
+        Route::post('cancel-order/{id}',[OderController::class,"cancelOrder"]);
 
         Route::post('apply-offer',[OfferController::class,"applyOffer"]);
 

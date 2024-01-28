@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -144,7 +145,7 @@ class Store extends Model implements TranslatableContract
 
   public function items()
   {
-    return $this->hasMany(Item::class);
+    return $this->hasMany(Item::class)->withoutGlobalScope(ItemScope::class);
   }
 
   public function drinks()

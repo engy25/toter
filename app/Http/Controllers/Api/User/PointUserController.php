@@ -22,18 +22,24 @@ class PointUserController extends Controller
   public function show(Request $request)
   {
     $user = auth("api")->user();
-    $point_user = PointUser::where("user_id", $user->id)->where("expired_at", '>=', date('Y-m-d'))->get();
-    $offer_point=OfferUser::where("user_id", $user->id)->where("expire_at", '>=', date('Y-m-d'))->get();
-    dd($point_user);
 
-      // return $this->helper->responseJson(
-      //   'success',
-      //   trans('api.auth_data_retreive_success'),
-      //   200,[
-      //     "reviews" => PoinResource::collection($points)->response()->getData(true),
-      //   ]
+    $scores=[];
+    if($request->elkol){
+      $scores=PointUser::where("user_id", $user->id)->get();
+    }
+    if($request->earned){
+      $scores=PointUser::where("user_id", $user->id)->where('expired_at','>',date('Y-m-d'))->get();
+    }
 
-      // );
+
+      return $this->helper->responseJson(
+        'success',
+        trans('api.auth_data_retreive_success'),
+        200,[
+          "scores" => ScoreResource::collection($scores),
+        ]
+
+      );
 
     }
 

@@ -215,7 +215,7 @@ class Item extends Model implements TranslatableContract
   {
     $default_currency = Currency::where("default", 1)->first();
 
-    return $default_currency->isocose;
+    return $default_currency->isocode;
 
   }
 

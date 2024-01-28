@@ -3,25 +3,23 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\User\OrderRequestId;
-use App\Http\Requests\Api\User\TypeRequest;
-use App\Models\OrderItem;
-use App\Models\OrderStatus;
+use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, OrderResource, OrderItemResource};
+use App\Http\Requests\Api\User\{OrderRequestId, TypeRequest, AddOrderRequest};
+use App\Models\PointUser;
 use App\Models\Scopes\ItemScope;
-use App\Models\StatusTranslation;
-use App\Models\StoreDistrict;
 use Illuminate\Http\Request;
-use App\Models\{Order, User, OrderButler, Address, Item, Store, Coupon, CouponUser, Ingredient};
-use App\Http\Requests\Api\User\AddOrderRequest;
+use App\Models\{Order, User, OrderButler, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
 use App\Helpers\helpers;
-use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, OrderResource,OrderItemResource};
-
+use App\Services\StatusService;
+use App\Events\OrderCompleted;
 class OderController extends Controller
 {
   public $helper;
+  public $statusService;
   public function __construct()
   {
     $this->helper = new Helpers();
+    $this->statusService = new StatusService();
 
   }
   /**
@@ -80,6 +78,7 @@ class OderController extends Controller
         $sub_total_after_discount_offer += $itemSubTotal[3];
         $offerId = $itemSubTotal[4];
 
+
       }
       // dd($sub_total); //520,5
       // dd($sub_total_after_discount_offer); //495.975
@@ -115,9 +114,17 @@ class OderController extends Controller
       if ($request->coupon_id != null) {
         $coupon = Coupon::live()->whereId($request->coupon_id)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
         if ($coupon) {
-          CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->update(['is_used' => 1]);
+          $couponUser = CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->first();
+          if ($couponUser != null) {
+            CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->update(['is_used' => 1]);
+            $this->helper->applyCouponDiscount($coupon, $order_cart_data, $sum);
+          } else {
+            CouponUser::create(["user_id" => auth('api')->user()->id, 'is_used' => 1, "coupon_id" => $request->coupon_id]);
 
-          $this->helper->applyCouponDiscount($coupon, $order_cart_data, $sum);
+            $this->helper->applyCouponDiscount($coupon, $order_cart_data, $sum);
+          }
+
+
 
 
         } else {
@@ -203,7 +210,7 @@ class OderController extends Controller
 
 
       }
-
+      event(new OrderCompleted($order));
 
       \DB::commit();
 
@@ -485,12 +492,11 @@ class OderController extends Controller
     $orders = [];
     $user_id = auth('api')->user()->id;
     //***check type */
-    $statusCancel = StatusTranslation::where("name", "cancell")->value("status_id");
-    $statusFinish = StatusTranslation::where("name", "finish")->value("status_id");
-    $statusPending = StatusTranslation::where("name", "pending")->value("status_id");
-    $statusConfirm = StatusTranslation::where("name", "confirm")->value("status_id");
-    $statusOnOTheRoad = StatusTranslation::where("name", "on_the_road")->value("status_id");
-
+    $statusCancel = $this->statusService->getStatusIdByName("cancell");
+    $statusFinish = $this->statusService->getStatusIdByName("finish");
+    $statusPending = $this->statusService->getStatusIdByName("pending");
+    $statusConfirm = $this->statusService->getStatusIdByName("confirm");
+    $statusOnOTheRoad = $this->statusService->getStatusIdByName("on_the_road");
 
 
     if ($request->type == "active") {
@@ -515,8 +521,6 @@ class OderController extends Controller
 
     }
 
-
-
     return $this->helper->responseJson(
       'success',
       trans('api.order_retreived_success'),
@@ -533,7 +537,7 @@ class OderController extends Controller
     $user_id = auth('api')->user()->id;
 
     $order = Order::where('id', $request->order_id)->where('user_id', $user_id)->first();
-    $items  = $order->orderItems()->get();
+    $items = $order->orderItems()->get();
 
     return $this->helper->responseJson(
       'success',
@@ -548,12 +552,78 @@ class OderController extends Controller
     );
 
 
-
-
-
-
   }
 
+  /**
+   * the user cancel the order in case the order is pending [return the offer if applied and coupon]
+   */
+  public function cancelOrder($id)
+  {
+    $order = Order::find($id);
+    $userId = auth('api')->user()->id;
+    $statusCancel = $this->statusService->getStatusIdByName("cancell");
+    $statusPending = $this->statusService->getStatusIdByName("pending ");
+    if (!$order) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.not_found'),
+        404,
+        null
+      );
+    } elseif ($order->status_id == $statusPending) {
+
+      //if there is points return it if there is offer i return it if there is coupon return it
+      $points = 0;
+
+      if ($order->points != 0) {
+        /**return the points */
+        $pointRow = PointUser::where("user_id", $userId)->where("expired_at", '>=', date('Y-m-d'))->orderBy('expired_at', 'desc')->first();
+        $pointEarned = $pointRow->point_earned;
+        $sum= $pointEarned + $order->points;
+
+        $pointRow->update(["point_earned" =>$sum]);
+      }
+
+      if ($order->coupon_id != null) {
+
+        $couponUser = CouponUser::where("user_id", $userId)->where("coupon_id", $order->coupon_id)->first();
+        $couponUser->update(["is_used" => $couponUser->is_used - 1]);
+
+      }
+      if ($order->offer_id != null) {
+        $offerUser = OfferUser::Where("user_id", $userId)->where("offer_id", $order->offer_id)->first();
+        $offerUser->update(["order_count_of_user" => $offerUser->order_count_of_user + 1]);
+
+      }
+
+      /**update the status */
+      $order->update(["status_id" => $statusCancel]);
+
+      OrderStatus::create([
+        "status_id" => $statusCancel,
+        "ordereable_id" => $order->id, // Explicitly set the ordereable_id
+        "ordereable_type" => "App\Models\Order"
+      ]);
+
+      $orders = Order::where('status_id',$statusCancel)->where('user_id', auth('api')->user()->id)->get();
+
+
+      return $this->helper->responseJson(
+        'success',
+        trans('api.order_cancell_success'),
+        200,
+        ['orders' => SimpleOrderResource::collection($orders)]
+      );
+
+
+    } elseif ($order->status_id == $statusCancel) {
+      return $this->helper->responseJson('failed', trans('api.order_cancell_succes'), 422, null);
+
+    } else {
+      return $this->helper->responseJson('failed', trans('api.order_cannot-cancel'), 422, null);
+    }
+
+  }
 
 
 

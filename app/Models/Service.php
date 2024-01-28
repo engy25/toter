@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ItemScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +23,7 @@ class Service extends Model implements TranslatableContract
 
   public function item()
   {
-    return $this->belongsTo(Item::class);
+    return $this->belongsTo(Item::class)->withoutGlobalScope(ItemScope::class);
   }
   public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
