@@ -92,7 +92,7 @@ deliveryDiv.appendChild(document.createElement('br'));
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'btn btn-danger';
-    removeButton.textContent = 'Remove Side';
+    removeButton.textContent = 'Remove WeekHour';
     removeButton.onclick = function () {
       container.removeChild(deliveryDiv);
     };

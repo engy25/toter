@@ -69,8 +69,12 @@ class User extends Authenticatable
           \File::delete(storage_path('app/public/images/user/' . $this->attributes['image']));
         }
       }
+
       $helper = new Helpers();
-      $image = $this->helper->upload_single_file($value, 'app/public/images/user/');
+      $image = $helper->upload_single_file($value, 'app/public/images/user/');
+
+
+
       $this->attributes['image'] = $image;
     }
   }
@@ -112,7 +116,7 @@ class User extends Authenticatable
 
   public function itemFavourites()
   {
-    return $this->morphedByMany(Item::class,"favoriteable","favourites")->withoutGlobalScope(ItemScope::class);
+    return $this->morphedByMany(Item::class, "favoriteable", "favourites")->withoutGlobalScope(ItemScope::class);
   }
 
 
@@ -120,7 +124,7 @@ class User extends Authenticatable
 
   public function storeFavourites()
   {
-    return $this->morphedByMany(Store::class,"favoriteable","favourites");
+    return $this->morphedByMany(Store::class, "favoriteable", "favourites");
   }
 
 

@@ -168,6 +168,7 @@ return [
     Illuminate\View\ViewServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
     //Barryvdh\DomPDF\ServiceProvider::class,
+    Barryvdh\DomPDF\ServiceProvider::class,
     /*
          * Package Service Providers...
          */
@@ -202,7 +203,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
       // ...
       'Helper' => App\Helpers\Helpers::class,  // Alias for custom helper class
-
+      'PDF' => Barryvdh\DomPDF\Facade::class,
       'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,  // Alias for LaravelLocalization facade
       'Socialite' => Laravel\Socialite\Facades\Socialite::class,  // Alias for Socialite facade
   ])->toArray(),

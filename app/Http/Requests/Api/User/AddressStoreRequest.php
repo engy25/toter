@@ -35,6 +35,7 @@ class AddressStoreRequest extends ApiMasterRequest
       'lat' => 'nullable|numeric',
       'lng' => 'nullable|numeric',
       'instructions' => 'nullable|min:3,max:200',
+      'district_id'=>'required|exists:districts,id'
     ];
   }
 }
