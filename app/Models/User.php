@@ -497,6 +497,40 @@ class User extends Authenticatable
     ];
   }
 
+  public static function totalNumberOfOrders($userId)
+  {
+
+    $user = User::withCount('deliveryOrders', 'deliveryOrderCallcenter', 'deliveryOrderButlers')->find($userId);
+
+
+    $deliveryOrdersCount = $user->delivery_orders_count;
+
+    $deliveryOrderCallcenterCount = $user->delivery_order_callcenter_count;
+    $deliveryOrderButlersCount = $user->delivery_order_butlers_count;
+    return $deliveryOrdersCount + $deliveryOrderCallcenterCount + $deliveryOrderButlersCount;
+
+
+  }
+
+  public static function total_orders_at_the_end_of_the_month($userId)
+  {
+
+    $user = User::find($userId);
+    $endOfMonth = Carbon::now()->endOfMonth();
+    $startOfMonth = Carbon::now()->startOfMonth();
+
+    $deliveryOrdersCount = $user->deliveryOrders()->where('created_at', "<=", $endOfMonth)->where('created_at', '>=', $startOfMonth)->count();
+
+
+    $deliveryOrderCallcenterCount = $user->deliveryOrderCallcenter()->where('created_at', "<=", $endOfMonth)->where('created_at', '>=', $startOfMonth)->count();
+    $deliveryOrderButlersCount = $user->deliveryOrderButlers()->where('created_at', "<=", $endOfMonth)->where('created_at', '>=', $startOfMonth)->count();
+
+
+    return $deliveryOrdersCount + $deliveryOrderCallcenterCount + $deliveryOrderButlersCount;
+
+
+  }
+
 
 
 

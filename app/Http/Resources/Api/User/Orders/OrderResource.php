@@ -37,7 +37,7 @@ class OrderResource extends JsonResource
       'points' => $this->points,
       'payment_type' => $this->payment_type,
       "transaction_id" => $this->transaction_id,
-      'address_id' => AddressResource::make($this->address->first()),
+      'address' => AddressResource::make($this->address->first()),
       'currency' => $this->currency->isocode,
       'delivery_time' => $this->delivery_time ?? null,
       'delivery_fees' => (double) $this->delivery_charge ?? null,

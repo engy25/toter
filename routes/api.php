@@ -24,8 +24,13 @@ use App\Http\Controllers\Api\{
   User\PointUserController,
   User\CartController,
   User\CityController,
-  User\FavouriteController
+  User\FavouriteController,
+
 };
+use App\Http\Controllers\Api\Delivery\AuthController as AuthDeliveryController;
+
+use App\Http\Controllers\Api\Delivery\HomeDeliveryController;
+
 use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 /*
@@ -42,7 +47,8 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 
-Route::namespace('Api')->middleware('setLocale')->group(function () {
+Route::
+    namespace('Api')->middleware('setLocale')->group(function () {
 
 
 
@@ -74,11 +80,15 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**3: User Login  By Social*/
       /**social in flutter */
       Route::post('user-login-social', [AuthController::class, 'userSocialLogin']);
-              /**social in laravel */
+      /**social in laravel */
       Route::get('social/login', [AuthController::class, 'socialLogin']);
 
       /**Resend otp again */
       Route::post('resend-otp', [AuthController::class, 'resendOtp']);
+
+      /***Delivery Login */
+
+      Route::post('delivery-login', [AuthDeliveryController::class, 'deliveryLogin']);
 
 
 
@@ -131,23 +141,23 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**store */
       Route::get('store/{id}/{tag_id?}', [StoreController::class, 'show']);
 
-      Route::get("store-areas",[StoreController::class,"showStoreAreas"]);
+      Route::get("store-areas", [StoreController::class, "showStoreAreas"]);
 
       /**Nearest Store */
       Route::get('nearest-store', [StoreController::class, 'nearestStore']);
 
       /**review */
-      Route::get('review',[ReviewController::class,"show"]);
+      Route::get('review', [ReviewController::class, "show"]);
 
-       /**fav */
-       Route::get('favourites/{sort}',[FavouriteController::class,"index"]);
-       Route::post('add-item-to-favourites/{id}', [FavouriteController::class, 'addItemToFavorite']);
-       Route::post('add-store-to-favourites/{id}', [FavouriteController::class, 'addStoreToFavorite']);
+      /**fav */
+      Route::get('favourites/{sort}', [FavouriteController::class, "index"]);
+      Route::post('add-item-to-favourites/{id}', [FavouriteController::class, 'addItemToFavorite']);
+      Route::post('add-store-to-favourites/{id}', [FavouriteController::class, 'addStoreToFavorite']);
       /**itm details */
-      Route::get('item',[ItemController::class,"show"]);
+      Route::get('item', [ItemController::class, "show"]);
 
       /**serch history */
-      Route::get("filter",[SearchHistoryController::class,"filter"]);
+      Route::get("filter", [SearchHistoryController::class, "filter"]);
 
 
 
@@ -195,7 +205,7 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
         Route::post('address', [AddressController::class, 'store']);
         Route::get('get-addresses', [AddressController::class, 'getAddresses']);
-        Route::post('delete-address/{id}', [AddressController::class, 'destroy']);
+        Route::post('delete-address/{address}', [AddressController::class, 'destroy']);
         Route::post('update-address/{id}', [AddressController::class, 'update']);
         Route::get('address/{address_id}', [AddressController::class, 'show']);
 
@@ -206,46 +216,60 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         /**Butler */
         Route::get('butler', [ButlerController::class, 'index']);
 
-              /**review */
-        Route::post('add-review',[ReviewController::class,"add"]);
+        /**review */
+        Route::post('add-review', [ReviewController::class, "add"]);
 
 
 
         /**point  user */
-        Route::get("point-user-history",[PointUserController::class,"show"]);
+        Route::get("point-user-history", [PointUserController::class, "show"]);
 
         /**recent Searches */
 
 
-        Route::get('recent-search',[SearchHistoryController::class,"recentSearches"]);
-        Route::post('recent-searches/delete', [SearchHistoryController::class,'deleteSearches']);
-        Route::post('recent-searches/destroy/{searchId}', [SearchHistoryController::class,'destroy']);
-        Route::post('store-search', [SearchHistoryController::class,'store']);
+        Route::get('recent-search', [SearchHistoryController::class, "recentSearches"]);
+        Route::post('recent-searches/delete', [SearchHistoryController::class, 'deleteSearches']);
+        Route::post('recent-searches/destroy/{searchId}', [SearchHistoryController::class, 'destroy']);
+        Route::post('store-search', [SearchHistoryController::class, 'store']);
 
         /**apply coupon */
-        Route::post("apply-coupon",[OderButlerController::class,"applyCoupon"]);
+        Route::post("apply-coupon", [OderButlerController::class, "applyCoupon"]);
 
         /**
          * Add To Cart
          */
-        Route::post("add-to-cart",[CartController::class,"store"]);
-        Route::get('get-cart',[CartController::class,'getCart']);
-        Route::post('update-cart_qty',[CartController::class,'updateCartQty']);
+        Route::post("add-to-cart", [CartController::class, "store"]);
+        Route::get('get-cart', [CartController::class, 'getCart']);
+        Route::post('update-cart_qty', [CartController::class, 'updateCartQty']);
 
         /**make order */
 
-        Route::post('make-butler-order',[OderButlerController::class,"store"]);
-        Route::post('make-order',[OderController::class,"store"]);
-        Route::get('get-orders',[OderController::class,'getOrders']);
+        Route::post('make-butler-order', [OderButlerController::class, "store"]);
+        Route::post('make-order', [OderController::class, "store"]);
+        Route::get('get-orders', [OderController::class, 'getOrders']);
         Route::get('order-details', [OderController::class, 'orderDetails']);
-        Route::post('cancel-order/{id}',[OderController::class,"cancelOrder"]);
+        Route::post('cancel-order/{id}', [OderController::class, "cancelOrder"]);
 
-        Route::post('apply-offer',[OfferController::class,"applyOffer"]);
+        Route::post('apply-offer', [OfferController::class, "applyOffer"]);
 
 
 
       });
 
 
+
+    });
+
+/**
+ * Delivery
+ */
+Route::namespace('Api')->middleware(['setLocale'])->group(function () {
+
+
+      Route::middleware(['checkDelivery'])->group(function () {
+
+        Route::get('delivery-home', [HomeDeliveryController::class, "index"]);
+
+      });
 
     });

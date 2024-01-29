@@ -10,6 +10,7 @@ use App\Models\Address;
 use App\Helpers\Helpers;
 use App\Http\Resources\Api\User\Address\AddressResource;
 use Illuminate\Support\Facades\DB;
+
 class AddressController extends Controller
 {
 
@@ -36,13 +37,13 @@ class AddressController extends Controller
 
   public function show($address_id)
   {
-      $address=Address::where(["user_id"=>auth('api')->user()->id,"id"=>$address_id])->first();
+    $address = Address::where(["user_id" => auth('api')->user()->id, "id" => $address_id])->first();
 
-      if(!$address){
-          return $this->helper->responseJson('failed',trans('api.address_not_found'),422,null);
+    if (!$address) {
+      return $this->helper->responseJson('failed', trans('api.address_not_found'), 422, null);
 
-      }
-      return $this->helper->responseJson('success',trans('api.auth_data_retreive_success'),200,["Addresses"=>new AddressResource($address)]);
+    }
+    return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, ["Addresses" => new AddressResource($address)]);
 
 
 
@@ -88,48 +89,83 @@ class AddressController extends Controller
 
   }
 
-  public function update(AddressUpdateRequest $request,$id)
+  public function update(AddressUpdateRequest $request, $id)
   {
-      $address=Address::where(["id"=>$id,"user_id"=>auth('api')->user()->id])->first();
-      DB::beginTransaction();
+    $address = Address::where(["id" => $id, "user_id" => auth('api')->user()->id])->first();
+    DB::beginTransaction();
 
-      try{
-          $this->checkAddresses($request->default,$address->id);
-          $address->update($request->validated());
-          Db::commit();
+    try {
+      $this->checkAddresses($request->default, $address->id);
+      $address->update($request->validated());
+      Db::commit();
 
-          $address=Address::where(['user_id'=>auth('api')->user()->id])->orderByDesc('default')->cursor();
-          return $this->helper->responseJson('success',trans('api.data_saved_success'),200,["Addresses"=>AddressResource::collection($address)]);
+      $address = Address::where(['user_id' => auth('api')->user()->id])->orderByDesc('default')->cursor();
+      return $this->helper->responseJson('success', trans('api.data_saved_success'), 200, ["Addresses" => AddressResource::collection($address)]);
 
 
-      }catch(\Exception $e)
-      {
-          DB::rollBack();
-          return $this->helper->responseJson('failed',trans('api.auth_failed'),422,null);
-      }
+    } catch (\Exception $e) {
+      DB::rollBack();
+      return $this->helper->responseJson('failed', trans('api.auth_failed'), 422, null);
+    }
 
 
   }
 
 
-  public function destroy($id)
+  // public function destroy(Address $address)
+  // {
+
+  //   $address = Address::where([
+  //     'id' => $address->id,
+  //     'user_id' => auth('api')->id(),
+  //   ])->first();
+
+  //   if (!$address) {
+
+  //     return $this->helper->responseJson('failed', trans('api.address_not_found'), 422, null);
+  //   }
+  //   try {
+  //     $address->delete();
+
+  //     $addresses = Address::where(['user_id' => auth('api')->id()])->orderByDesc('default')->cursor();
+
+  //     return $this->helper->responseJson('success', trans('api.address_delete_success'), 200, ["Addresses" => AddressResource::collection($addresses)]);
+
+  //   } catch (\Exception $e) {
+  //     if ($e->getMessage() === "Cannot delete Address, It is related to other tables") {
+  //       return response()->json(['status' => false, 'msg' => $e->getMessage()], 403);
+  //     }
+  //     return response()->json(['status' => false, 'msg' => "An error occurred while deleting the city."], 500);
+  //   }
+
+  // }
+
+
+  public function destroy(Address $address)
   {
+    // Check if the authenticated user owns the address
     $address = Address::where([
-      'id' => $id,
+      'id' => $address->id,
       'user_id' => auth('api')->id(),
     ])->first();
 
+    // If the address is not found or doesn't belong to the authenticated user, return an error response
     if (!$address) {
-
       return $this->helper->responseJson('failed', trans('api.address_not_found'), 422, null);
     }
 
-    $address->delete();
+    try {
 
-    $addresses = Address::where(['user_id' => auth('api')->id()])->orderByDesc('default')->cursor();
+      $address->delete();
 
-    return $this->helper->responseJson('success', trans('api.address_delete_success'), 200, ["Addresses" => AddressResource::collection($addresses)]);
+      $addresses = Address::where(['user_id' => auth('api')->id()])->orderByDesc('default')->cursor();
 
+      return $this->helper->responseJson('success', trans('api.address_delete_success'), 200, ["Addresses" => AddressResource::collection($addresses)]);
+    } catch (\Exception $e) {
 
+      return response()->json(['result'=>'false',"message"=>"Cannot delete Address, It is related to other tables.",'status' => 403,"data"=>null], 403);
+    }
   }
+
+
 }

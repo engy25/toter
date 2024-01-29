@@ -23,10 +23,19 @@ class ApiMasterRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
+      $errors = $validator->messages();
+
+      // Extract the field names from the error messages
+      $fieldNames = array_keys($errors->messages());
+
+
+      // Assuming there is only one field failing validation
+      $fieldName = reset($fieldNames);
+
         throw new HttpResponseException(response()->json([
 
             'result'=>'failed',
-            'message'=>null,
+            'message'=>$fieldNames,
             'errors' => $validator->messages(),
             'status' => 422,
             'data' => null,

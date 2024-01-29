@@ -25,7 +25,11 @@ class OrderButlerItem extends Model
 
   public function getImageAttribute()
   {
-    return asset('storage/images/orderButlers/' . $this->attributes['image']);
+    if($this->attributes['image'] !=null){
+      return asset('storage/images/orderButlers/' . $this->attributes['image']);
+    }
+    return null;
+
   }
 
 

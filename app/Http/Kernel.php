@@ -94,6 +94,7 @@ protected $routeMiddleware = [
     'setLocale' => \App\Http\Middleware\setLocale::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'checkUser' => \App\Http\Middleware\CheckUserMiddleware::class,
+    'checkDelivery' => \App\Http\Middleware\CheckDeliveryMiddleware::class,
     'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
   //  'can.access.admins.list' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
 

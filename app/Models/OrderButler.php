@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Observers\OrderButlerObserver;
+
 class OrderButler extends Model
 {
   use HasFactory;
@@ -59,8 +60,9 @@ class OrderButler extends Model
    */
   public function defaultCurrency()
   {
-    return $this->belongsTo(Currency::class);
+    return $this->belongsTo(Currency::class, "default_currency_id");
   }
+
 
   /**
    * this currency that user paid
@@ -72,7 +74,7 @@ class OrderButler extends Model
 
   public function orderItems()
   {
-    return $this->hasMany(OrderButlerItem::class,"order_id");
+    return $this->hasMany(OrderButlerItem::class, "order_id");
 
   }
 
@@ -83,8 +85,8 @@ class OrderButler extends Model
   }
   public function statuses()
   {
-      return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
-          ->withTimestamps();
+    return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
+      ->withTimestamps();
   }
 
 }
