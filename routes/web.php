@@ -333,6 +333,8 @@ Route::group(
       Route::get("/pagination/paginate-coupon", [CouponController::class, "paginationCoupon"]);
       Route::get('/search-coupon', [CouponController::class, 'searchCoupon'])->name('search.coupon');
       Route::get('stores-display', [CouponController::class, "StoreIndex"])->name("stores.display");
+      Route::get('store-items-display/{store_id}', [CouponController::class, "displayItems"])->name('store.items.display');
+
       /*------------------------------------------------------------------------- */
 
 

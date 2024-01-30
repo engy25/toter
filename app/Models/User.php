@@ -287,7 +287,7 @@ class User extends Authenticatable
 
 
 
-  public function assignDriverToOrder(Order $order, $storeId)
+  public function assignDriverToOrder($storeId)
   {
 
     $role_delivery = Role::where("name", "Delivery")->first();

@@ -70,5 +70,6 @@ return [
   "isCoupon"=>"هل الكوبون مستخدم",
   "delivery_charge" => "رسوم التوصيل",
   "wallet_success" => "تم استرجاع المحفظه بنجاح",
+  "discount_price"=>"الخصم بالسعر"
 
 ];

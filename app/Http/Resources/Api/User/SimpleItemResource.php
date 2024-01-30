@@ -39,12 +39,16 @@ class SimpleItemResource extends JsonResource
 
 
 
+
     return [
       "id" => $this->id,
       "name" => $this->name,
       "image"=>$this->image,
       "price"=>(double)$this->price,
       "currency" => $this->currency,
+      'coupon_discount' => (optional($this->coupon->first())->discount_percentage==null)?(double)optional($this->coupon->first())->price  :optional($this->coupon->first())->discount_percentage . '%',
+      'coupon_code' => optional($this->coupon->first())->code,
+
       // "default_currency"=>$this->store->defaultCurrency->name,
       // "to_currency"=>$to_currency,
       // 'exchange_rate'=>(double)$this->exchange_rate,

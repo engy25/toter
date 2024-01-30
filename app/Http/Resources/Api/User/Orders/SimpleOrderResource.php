@@ -14,7 +14,9 @@ class SimpleOrderResource extends JsonResource
    */
   public function toArray($request)
   {
-    $firstItem = $this->orderItems()->first();
+    $firstItem = $this->orderItems()->first() ?? null;
+    //dd($firstItem->item->name);
+
 
 
     return [
@@ -23,12 +25,15 @@ class SimpleOrderResource extends JsonResource
       'store_id' => $this->store_id ?? null,
       'store_image' => $this->store->image,
       'store_name' => $this->store->translation->name ?? null,
-      'item_image' => $firstItem->item->image,
-      'item_name' => $firstItem->first()->item->name,
-      'item_qty' => $firstItem->qty,
+      //'item_image' => optional($firstItem->item->image) ?? optional($firstItem->item),
+      'item_name' => optional(optional($firstItem)->item)->name ?? null,
+      'item_image' => optional(optional($firstItem)->item)->image ?? null,
+
+      'item_qty' => optional($firstItem)->qty ?? 0,
+
       'total' => (double) $this->total,
       'sub_total' => (double) $this->sub_total,
-      'points'=>$this->points,
+      'points' => $this->points,
       'sum' => (double) $this->sum,
       'currency' => $this->currency->isocode,
       'delivery_time' => $this->delivery_time ?? null,

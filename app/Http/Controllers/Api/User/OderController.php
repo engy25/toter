@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, OrderResource, OrderItemResource};
+use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, OrderResource, OrderItemResource, OrderItemButlersResource};
+use App\Http\Resources\Api\Delivery\{OrderDetailsResource, OrderButlersResource, SimpleOrderButlerUserResource};
 use App\Http\Requests\Api\User\{OrderRequestId, TypeRequest, AddOrderRequest};
+use App\Models\OrderCallcenter;
 use App\Models\PointUser;
 use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
@@ -12,6 +14,8 @@ use App\Models\{Order, User, OrderButler, OfferUser, OrderItem, OrderStatus, Sto
 use App\Helpers\helpers;
 use App\Services\StatusService;
 use App\Events\OrderCompleted;
+
+
 class OderController extends Controller
 {
   public $helper;
@@ -165,7 +169,7 @@ class OderController extends Controller
         "ordereable_id" => $order->id, // Explicitly set the ordereable_id
         "ordereable_type" => "App\Models\Order"
       ]);
-      $order->update(["driver_id" => $driver->assignDriverToOrder($order, $storeId)->id]);
+      $order->update(["driver_id" => $driver->assignDriverToOrder($storeId)->id]);
       /**store order Items */
 
       foreach ($request->items as $item) {
@@ -487,69 +491,117 @@ class OderController extends Controller
   }
 
 
+
+
   public function getOrders(TypeRequest $request)
   {
-    $orders = [];
     $user_id = auth('api')->user()->id;
-    //***check type */
+
     $statusCancel = $this->statusService->getStatusIdByName("cancell");
     $statusFinish = $this->statusService->getStatusIdByName("finish");
     $statusPending = $this->statusService->getStatusIdByName("pending");
     $statusConfirm = $this->statusService->getStatusIdByName("confirm");
     $statusOnOTheRoad = $this->statusService->getStatusIdByName("on_the_road");
 
-
-    if ($request->type == "active") {
-      /**order Active */
-
-      $orders = Order::whereIn('status_id', [$statusPending, $statusOnOTheRoad, $statusConfirm])->where('user_id', $user_id)->cursor();
-
-
+    switch ($request->type) {
+      case 'active':
+        $statuses = [$statusPending, $statusOnOTheRoad, $statusConfirm];
+        break;
+      case 'history':
+        $statuses = [$statusFinish];
+        break;
+      case 'cancel':
+        $statuses = [$statusCancel];
+        break;
+      default:
+        // Handle invalid type
+        break;
     }
-    if ($request->type == "history") {
-      /**order History */
 
+    $orderTypes = ['App\Models\Order', 'App\Models\OrderCallcenter', 'App\Models\OrderButler'];
+    $result = [];
 
-      $orders = Order::where('status_id', $statusFinish)->where('user_id', $user_id)->get();
+    foreach ($orderTypes as $orderType) {
+      $orders = $orderType::whereIn('status_id', $statuses)
+        ->where('user_id', $user_id)
+        ->get();
 
-    }
-    if ($request->type == "cancel") {
-      /**order Cancel */
-
-      $orders = Order::where('status_id', $statusCancel)->where('user_id', $user_id)->get();
-
-
+      if ($orderType === 'App\Models\Order') {
+        $result['orders'] = SimpleOrderResource::collection($orders);
+      } elseif ($orderType === 'App\Models\OrderCallcenter') {
+        $result['ordercallcenters'] = SimpleOrderResource::collection($orders);
+      } elseif ($orderType === 'App\Models\OrderButler') {
+        $result['orderbutlers'] = SimpleOrderButlerUserResource::collection($orders);
+      }
     }
 
     return $this->helper->responseJson(
       'success',
-      trans('api.order_retreived_success'),
+      trans('api.order_retrieved_success'),
       200,
-      ['orders' => SimpleOrderResource::collection($orders)]
+      [
+        'data' => $result,
+      ]
     );
-
-
-
   }
+
+
+
 
   public function orderDetails(OrderRequestId $request)
   {
-    $user_id = auth('api')->user()->id;
 
-    $order = Order::where('id', $request->order_id)->where('user_id', $user_id)->first();
-    $items = $order->orderItems()->get();
+    $order = [];
+    $user_id = auth("api")->user()->id;
+
+
+    $orderType = ucfirst($request->type);
+    $orderModel = "App\\Models\\" . $orderType;
+
+    $order = $orderModel::where('id', $request->order_id)->where('user_id', $user_id)->first();
+    if ($order == null) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.not_found'),
+        401,
+        null
+      );
+    }
+
+    $orderItems = $order->orderItems()->get();
+
+
+
+
+
+    $orderResource = (strcasecmp($orderType, "Order") === 0 || strcasecmp($orderType, "orderCallcenter") === 0)
+      ? OrderDetailsResource::make($order)
+      : OrderButlersResource::make($order);
+
+
+    $orderItemResourceClass = (strcasecmp($orderType, "Order") === 0 || strcasecmp($orderType, "orderCallcenter") === 0)
+      ? OrderItemResource::class
+      : OrderItemButlersResource::class;
+
+
+    $orderItemResource = $orderItemResourceClass::collection($orderItems ?? []);
+
 
     return $this->helper->responseJson(
       'success',
       trans('api.order_retreived_success'),
       200,
+
       [
-        'data' => [
-          'order' => OrderResource::make($order),
-          'items' => OrderItemResource::collection($items),
-        ]
+        "order" => $orderResource,
+        'items' => $orderItemResource
       ]
+
+
     );
+
+
+
 
 
   }
@@ -557,12 +609,23 @@ class OderController extends Controller
   /**
    * the user cancel the order in case the order is pending [return the offer if applied and coupon]
    */
-  public function cancelOrder($id)
+  public function cancelOrder(OrderRequestId $request)
   {
-    $order = Order::find($id);
+
     $userId = auth('api')->user()->id;
+
     $statusCancel = $this->statusService->getStatusIdByName("cancell");
     $statusPending = $this->statusService->getStatusIdByName("pending ");
+
+    $orderType = ucfirst($request->type);
+    $orderModel = "App\\Models\\" . $orderType;
+
+    $order = $orderModel::whereId($request->order_id)
+      ->where("user_id", $userId)
+      ->where("status_id", $statusPending)
+      ->first();
+
+
     if (!$order) {
       return $this->helper->responseJson(
         'failed',
@@ -579,9 +642,9 @@ class OderController extends Controller
         /**return the points */
         $pointRow = PointUser::where("user_id", $userId)->where("expired_at", '>=', date('Y-m-d'))->orderBy('expired_at', 'desc')->first();
         $pointEarned = $pointRow->point_earned;
-        $sum= $pointEarned + $order->points;
+        $sum = $pointEarned + $order->points;
 
-        $pointRow->update(["point_earned" =>$sum]);
+        $pointRow->update(["point_earned" => $sum]);
       }
 
       if ($order->coupon_id != null) {
@@ -602,17 +665,22 @@ class OderController extends Controller
       OrderStatus::create([
         "status_id" => $statusCancel,
         "ordereable_id" => $order->id, // Explicitly set the ordereable_id
-        "ordereable_type" => "App\Models\Order"
+        "ordereable_type" => $orderModel
       ]);
 
-      $orders = Order::where('status_id',$statusCancel)->where('user_id', auth('api')->user()->id)->get();
+      $orders = Order::where('status_id', $statusCancel)->where('user_id', auth('api')->user()->id)->get();
+      $ordercallcenters = OrderCallcenter::where('status_id', $statusCancel)->where('user_id', auth('api')->user()->id)->get();
+      $orderbutlers = OrderButler::where('status_id', $statusCancel)->where('user_id', auth('api')->user()->id)->get();
 
 
       return $this->helper->responseJson(
         'success',
         trans('api.order_cancell_success'),
         200,
-        ['orders' => SimpleOrderResource::collection($orders)]
+        ['orders' => SimpleOrderResource::collection($orders),
+        'ordercallcenters'=>SimpleOrderResource::collection($ordercallcenters),
+        'orderbutlers'=>SimpleOrderButlerUserResource::collection($orderbutlers)
+        ]
       );
 
 
@@ -633,7 +701,8 @@ class OderController extends Controller
 
 
 
-
+  // 'ordercallcenters' =>
+  //   SimpleOrderResource::collection($ordercallcenters),
 
 
 

@@ -36,21 +36,21 @@ class StoreResource extends JsonResource
     $offer_name = "";
     $offer_discount_percentage = 0;
 
+    if ($this->is_offered == 1) {
+      $offer = $this->offer; // Use the relationship method directly
+      if ($offer) {
+          $offer_name = $offer->name;
+          $offer_discount_percentage = $offer->discount_percentage;
+      }
+  }
 
-    if ($this->is_offered == 1 && $this->offer()) {
-
-      $offer_name = $this->offer()->first()->name;
-      $offer_discount_percentage = $this->offers()->first()->discount_percentage;
-    }
     return [
       "id" => $this->id,
       "name" => $this->name,
       "image" => $this->image,
       "price" => (double) $this->price,
       "currency" => $this->currency,
-      // "currency" => $this->defaultCurrency->name,
-      // "exchange_rate"=>(double)$this->exchange_rate,
-      // "to_currency"=>$this->toCurrency->name,
+   
       'offer_name' => $offer_name,
       'offer_discount' => (int) $offer_discount_percentage . '' . '%',
       "delivery_time" => $this->delivery_time . " " . trans("api.unit"),

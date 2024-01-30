@@ -37,11 +37,33 @@
             <span class="text-danger error-message" id="error_up_code"></span>
           </div>
 
-          <div class="form-group">
-            <label for="updiscount_percentage">Discount Percentage:</label>
-            <input type="number" class="form-control" name="updiscount_percentage" id="updiscount_percentage" step="0.01">
-            <span class="text-danger error-message" id="error_updiscount_percentage"></span>
+
+          {{-- <div class="form-group">
+            <label>Discount Type</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="discount_type" id="discount_percentage_radio"
+                value="percentage" checked>
+              <label class="form-check-label" for="discount_percentage_radio">Discount Percentage</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="discount_type" id="discount_price_radio" value="price">
+              <label class="form-check-label" for="discount_price_radio">Discount Price</label>
+            </div>
           </div>
+
+          <div class="form-group">
+            <div id="discount_percentage_section">
+              <label for="discount_percentage">Discount Percentage</label>
+              <input type="number" class="form-control" name="discount_percentage" id="discount_percentage" step="0.01">
+              <span class="text-danger error-message" id="error_discount_percentage"></span>
+            </div>
+
+            <div id="discount_price_section" style="display: none;">
+              <label for="price">Discount Price</label>
+              <input type="number" class="form-control" name="price" id="price" step="0.01">
+              <span class="text-danger error-message" id="error_price"></span>
+            </div>
+          </div> --}}
 
           <div class="form-group">
             <label for="upmax_user_used_code">Max User Used Code:</label>
@@ -51,7 +73,8 @@
 
           <div class="form-group">
             <label for="upexpire_date">Expire Date:</label>
-            <input type="date" class="form-control" name="upexpire_date" value="{{ now()->format('Y-m-d') }}" id="upexpire_date">
+            <input type="date" class="form-control" name="upexpire_date" value="{{ now()->format('Y-m-d') }}"
+              id="upexpire_date">
             <span class="text-danger error-message" id="error_upexpire_date"></span>
           </div>
         </div>
@@ -67,3 +90,17 @@
     </div>
   </form>
 </div>
+
+{{-- <script>
+  $(document).ready(function() {
+    $('input[type=radio][name=discount_type]').change(function() {
+      if (this.value === 'percentage') {
+        $('#discount_percentage_section').show();
+        $('#discount_price_section').hide();
+      } else if (this.value === 'price') {
+        $('#discount_percentage_section').hide();
+        $('#discount_price_section').show();
+      }
+    });
+  });
+</script> --}}

@@ -119,5 +119,7 @@ return [
   'invalid_gift_id_for_item' => "Invalid Gift For This Item",
   'invalid_item_by_point' => "you Cannot But This Item You don't have enough points to buy it ",
   'cart_not_found' => 'Cart Not Found',
-  'cart_updated_successfully'=>'cart Updated Successfully'
+  'cart_updated_successfully'=>'cart Updated Successfully',
+  'you_accepted_the_order_successfully'=>'you accepted the order successfully',
+  'you_cancelled_the_order_successfully'=>'you cancelled the order successfully',
 ];

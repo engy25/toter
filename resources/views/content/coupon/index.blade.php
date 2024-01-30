@@ -32,7 +32,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <a href="{{ route('coupons.create') }}" class="btn btn-primary me-2" data-bs-toggle="modal"
-      data-bs-target="#addCouponModal" title="{{ trans('words.add') }}">
+      data-bs-target="#addModal" title="{{ trans('words.add') }}">
       {{ trans('words.add') }}
     </a>
 
@@ -69,13 +69,14 @@ $i=0;
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table id="data-table2" class="table border p-0 text-nowrap mb-0">
+      <table id="data-table25" class="table border p-0 text-nowrap mb-0">
         <thead class="tabel-row-heading text-dark">
           <tr style="background:#f4f5f7">
             <th class="fw-semibold border-bottom">ID</th>
             <th class="fw-semibold border-bottom">{{ trans('words.storename') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.code') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.discount_percentage') }}</th>
+            <th class="fw-semibold border-bottom">{{ trans('words.discount_price') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.expire_date') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.isActive') }}</th>
             <th class="bg-transparent fw-semibold border-bottom">Action</th>
@@ -103,9 +104,11 @@ $i=0;
             </td>
 
             <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $coupon->discount_percentage }}</span>
+              <span class="text-dark fs-13 fw-semibold">{{ $coupon->discount_percentage ?? "Null" }} </span>
             </td>
-
+            <td>
+              <span class="text-dark fs-13 fw-semibold">{{ $coupon->price?? "Null" }} </span>
+            </td>
             <td>
               <span class="text-dark fs-13 fw-semibold">{{ $coupon->expire_date }}</span>
             </td>

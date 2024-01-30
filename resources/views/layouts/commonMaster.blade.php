@@ -52,7 +52,7 @@ $dir = (app()->getLocale() == 'en') ? 'ltr' : 'rtl';
 </head>
 
 <body>
-  <script src="path/to/your/custom.js"></script>
+  {{-- <script src="path/to/your/custom.js"></script> --}}
 
   <!-- Layout Content -->
   @yield('layoutContent')

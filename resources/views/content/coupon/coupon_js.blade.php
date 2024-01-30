@@ -61,9 +61,14 @@
     // populate the dropdown with the received country data
     var options='<option value=""> Select Store </option>';
     $.each(data, function (index, store) {
+
       var storeName = store.translations ? store.translations[0].name : store.name;
-      options += '<option value="' + store.id + '">' + storeName+ '</option>';
+      options += '<option value="' + store.id + '">' +storeName+ '</option>';
+
     });
+    //console.log(storeName);
+
+
     $('#store_id').html(options);
   },
   error: function (response) {
@@ -79,6 +84,37 @@
 
 
 
+{{-- *////////////////////////////////////////////////////////////////////////////// --}}
+{{-- to fetch list of the items depends on store --}}
+<script>
+  $(document).ready(function() {
+  // Set an event listener for the change in the 'store_id' dropdown
+  $('#store_id').change(function() {
+    // Get the selected store_id
+    const selectedStoreId = $(this).val();
+
+    // Make an AJAX request to fetch items based on the selected store_id
+    $.ajax({
+      url: "{{ url('store-items-display') }}/" + selectedStoreId,
+      method: 'GET',
+      dataType: "json",
+      success: function(data) {
+        let options = '<option value=""> Select Item </option>';
+        $.each(data, function(index, item) {
+          const itemName = item.translations ? item.translations[0].name : item.name;
+          options += `<option value="${item.id}">${itemName}</option>`;
+        });
+        $('#items').html(options);
+      },
+      error: function(response) {
+        console.error('Error fetching Items:', response);
+      }
+    });
+  });
+
+
+});
+</script>
 
 
 {{-- /** to fetch list of the data of stores and populate the dropdown in update */// --}}
@@ -90,10 +126,11 @@
   method: 'GET',
   dataType: "json",
   success: function (data) {
-
+    // console.log(data);
     // populate the dropdown with the received store data
     var options='<option value=""> Select Store </option>';
     $.each(data, function (index, store) {
+
      var storeName = store.translations ? store.translations[0].name : store.name;
 
       options += '<option value="' + store.id + '">' + storeName+ '</option>';
@@ -119,23 +156,23 @@
 {{-- /***update Coupon*// --}}
 
 <script>
-  $(document).on("click", ".close-btn", function(e) {
-    $('.errMsgContainer').empty(); // Clear error messages when form is closed
-});
+  let discountType, discountValue; // Declare these variables outside the function to make them accessible globally
 
+  $(document).on("click", ".close-btn", function(e) {
+    $('.errMsgContainer').empty(); // Clear error messages when the form is closed
+  });
 
   $(document).on("click", '.update_coupon_form', function() {
-    /* To retrieve the data values from the form */
     let id = $(this).data('id');
     let code = $(this).data('code');
     let is_active = $(this).data('is_active');
     let isChecked = is_active === 1;
-    let discount_percentage = $(this).data('discount_percentage');
+
+    // let discount_percentage = 0; // Default value, update based on your logic
+
     let max_user_used_code = $(this).data('max_user_used_code');
     let expire_date = $(this).data('expire_date');
     let store_id =$(this).data('store_id');
-
-
 
     /** To set the values for each input **/
     $('#up_id').val(id);
@@ -144,20 +181,28 @@
     $('#upexpire_date').val(expire_date);
     $('#is_active').prop('checked', isChecked);
 
-    $('#updiscount_percentage').val(discount_percentage);
+    // $('#updiscount_percentage').val(discount_percentage);
     $('#upmax_user_used_code').val(max_user_used_code);
 
+    // discountType = $('input[name=discount_type]:checked').val();
+    // discountValue = parseFloat($('#' + (discountType === 'percentage' ? 'discount_percentage' : 'price')).val());
+
+    // if (isNaN(discountValue)) {
+    //   alert("Discount value should be a number");
+    //   return;
+    // }
+  });
 
 
-});
-$(document).on("click", ".update_coupon", function (e) {
+  $(document).on("click", ".update_coupon", function (e) {
     e.preventDefault();
     let id = $('#up_id').val();
     let up_code = $('#up_code').val();
     let up_store_id = $('#up_store_id').val();
     let upexpire_date = $('#upexpire_date').val();
     let is_active = $('#is_active').prop('checked') ? 1 : 0;
-    let updiscount_percentage = $('#updiscount_percentage').val();
+    // $('#updiscount_percentage').val(discount_percentage);
+
     let upmax_user_used_code = $('#upmax_user_used_code').val();
 
     $('.errMsgContainer').empty(); // Clear previous error messages
@@ -173,18 +218,18 @@ $(document).on("click", ".update_coupon", function (e) {
             up_store_id: up_store_id,
             upexpire_date: upexpire_date,
             is_active: is_active,
-            updiscount_percentage: updiscount_percentage,
-            upmax_user_used_code: upmax_user_used_code
+            upmax_user_used_code: upmax_user_used_code,
+            // discount_type: discountType,
+            // discount_value: discountValue
         },
         dataType: "json",
         success: function (data) {
             console.log('AJAX request successful:', data);
 
             if (data.status) {
-                console.log(data);
                 // Update successful
                 $('#updateCouponModal').modal('hide');
-                $('#data-table2').load(location.href + ' #data-table2');
+                $('#data-table25').load(location.href + ' #data-table25');
                 $('#success2').show();
                 /* hide success message after 4 seconds */
                 setTimeout(function () {
@@ -196,7 +241,7 @@ $(document).on("click", ".update_coupon", function (e) {
             }
         },
         error: function (response) {
-          console.log(response);
+          console.log(response.responseJSON);
             if (response.status === 422) {
               $('.errMsgContainer').empty(); // Clear previous error messages
                 errors = response.responseJSON.errors;
@@ -204,7 +249,7 @@ $(document).on("click", ".update_coupon", function (e) {
                     $('.errMsgContainer').append('<span class="text-danger">' + value + '</span></br>');
                 });
 
-            } else{
+            } else {
               // alert('This Coupon Is Used You Cannot Update It.');
               $('#updateCouponModal').modal('hide');
                 $('#success5').show();
@@ -215,62 +260,90 @@ $(document).on("click", ".update_coupon", function (e) {
             }
         }
     });
-});
+  });
 </script>
+
 
 
 {{-- *-------------------------------------------------------* --}}
 
 {{-- ////////////////////////////////////////**add coupon///////////////////////////////////--}}
 <script>
-  $(document).ready(function(){
-    $(document).on("click", '.add_coupon', function(e){
-        e.preventDefault();
-         let code = $('#code').val();
-         let discount_percentage= $('#discount_percentage').val();
-         let expire_date=$('#expire_date').val();
-         let max_user_used_code=$('#max_user_used_code').val();
+  $(document).ready(function() {
+    $(document).on("click", '.add_coupon', function(e) {
+      e.preventDefault();
 
-         let store_id=$('#store_id').val();
+      let code = $('#code').val();
+      let expire_date = $('#expire_date').val();
+      let max_user_used_code = $('#max_user_used_code').val();
+      let items = $('#items').val();
+      let store_id = $('#store_id').val();
+      let discountType = $('input[name=discount_type]:checked').val();
 
-        $('.errMsgContainer').empty(); // Clear previous error messages
-        console.log(discount_percentage);
-        console.log(code);
-        console.log(max_user_used_code);
 
-        console.log(store_id);
-        $.ajax({
-            url: "{{ route('coupons.store') }}",
-            method: 'post',
-            data: {
-                code: code,
-                expire_date: expire_date,
-                max_user_used_code:max_user_used_code,
+      $('.errMsgContainer').empty(); // Clear previous error messages
 
-                store_id: store_id,
-                discount_percentage:discount_percentage
-            },
-            dataType: "json",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-              console.log(data);
-              $('.errMsgContainer').empty(); // Clear previous error messages
-              $("#addCouponModal").modal("hide");
-              $('#addCouponForm')[0].reset();
-              $('#data-table2').load(location.href+' #data-table2');
-              $('#success1').show();
+      var discountValue;
+      if (discountType === 'percentage') {
+        discountValue = parseFloat($('#discount_percentage').val());
+      } else {
+        discountValue = parseFloat($('#price').val());
+      }
+      // console.log(discountValue);
+
+      if (isNaN(discountValue)) {
+        alert("Discount value should be a number");
+        return;
+      }
+
+      $.ajax({
+        url: "{{ route('coupons.store') }}",
+        method: 'post',
+        data: {
+          code: code,
+          expire_date: expire_date,
+          max_user_used_code: max_user_used_code,
+          items: items,
+          store_id: store_id,
+          discount_type: discountType,
+          discount_value: discountValue,
+        },
+        dataType: "json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+
+                $('.errMsgContainer').empty(); // Clear previous error messages
+                console.log("Before hiding modal");
+                $("#addModal").modal("hide");
+                console.log("After hiding modal");
+
+                $('#addCouponForm')[0].reset();
+                // $('#data-table25').load(location.href + ' #data-table25');
+            //     $.ajax({
+            //       //
+            //       url: "{{ route('coupons.index') }}",
+            //       method: 'GET',
+            //       success: function(data) {
+
+            //         $('.table-responsive').html(data);
+            //       },
+
+            //      error: function(response) {
+            //     console.error('Error fetching Coupons list:', response);
+            //   }
+            // });
+
+                $('#success1').show();
                 /* hide success message after 4 seconds */
                 setTimeout(function() {
                     $('#success1').hide();
                 }, 2000); // 2000 milliseconds = 2 seconds
-              $('.errMsgContainer').empty(); // Clear previous error messages
-
-            },
+                $('.errMsgContainer').empty(); // Clear previous error messages
+              },
             error: function(response) {
-              console.log(response.responseJSON);
-
+                console.log(response.responseJSON);
                 $('.errMsgContainer').empty(); // Clear previous error messages
                 errors = response.responseJSON.errors;
                 $.each(errors, function(index, value){
@@ -281,6 +354,7 @@ $(document).on("click", ".update_coupon", function (e) {
     });
 });
 </script>
+
 
 {{----------------------------------------------------------------}}
 
@@ -395,5 +469,3 @@ function coupon(page) {
 
 
 {{-- ///////////////////////////////////////////////////////////////// --}}
-
-

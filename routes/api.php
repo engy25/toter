@@ -248,7 +248,7 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         Route::post('make-order', [OderController::class, "store"]);
         Route::get('get-orders', [OderController::class, 'getOrders']);
         Route::get('order-details', [OderController::class, 'orderDetails']);
-        Route::post('cancel-order/{id}', [OderController::class, "cancelOrder"]);
+        Route::post('cancel-order', [OderController::class, "cancelOrder"]);
 
         Route::post('apply-offer', [OfferController::class, "applyOffer"]);
 
@@ -269,6 +269,13 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
       Route::middleware(['checkDelivery'])->group(function () {
 
         Route::get('delivery-home', [HomeDeliveryController::class, "index"]);
+        Route::get('delivery-home-show-all', [HomeDeliveryController::class, "indexHomeShow"]);
+        Route::get('delivery-order-details', [HomeDeliveryController::class, "orderDetails"]);
+
+
+        Route::post('delivery-accept-order', [HomeDeliveryController::class, "acceptOrder"]);
+        Route::post('delivery-cancel-order', [HomeDeliveryController::class, "cancelOrder"]);
+
 
       });
 

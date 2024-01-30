@@ -18,11 +18,12 @@ class SimpleOrderUserResource extends JsonResource
       $firstItem = $this->orderItems()->first();
 
 
+
     return [
       'id' => $this->id,
-      'item_image' => $firstItem->item->image,
-      'item_name' => $firstItem->first()->item->name,
-      'item_qty' => $firstItem->qty,
+      'item_image' => $firstItem->item->image ??null,
+      'item_name' => $firstItem->item->name ??null,
+      'item_qty' => $firstItem->qty ??null,
       'total' => (double) $this->total,
       'sub_total' => (double) $this->sub_total,
       'points'=>$this->points,

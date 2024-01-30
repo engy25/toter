@@ -39,6 +39,7 @@ class ItemResource extends JsonResource
     $offer_name = '';
     $offer_description = '';
 
+   
     if ($this->has_offer == 1 && $this->store->offer()) {
 
       $offer_name = $this->store->offer()->first()->name;
@@ -67,6 +68,8 @@ class ItemResource extends JsonResource
       "image" => $this->image,
       'offer_name' => $offer_name,
       'offer_description' => $offer_description,
+      'coupon_discount' => (optional($this->coupon->first())->discount_percentage==null)?(double)optional($this->coupon->first())->price  :optional($this->coupon->first())->discount_percentage . '%',
+      'coupon_code' => optional($this->coupon->first())->code,
       "tag" => $this->category->name,
       "store" => $this->store->name,
       "subsection" => $this->subsection->name,
@@ -88,7 +91,7 @@ class ItemResource extends JsonResource
 
     ];
 
-   
+
     if ($this->Addingredients->isNotEmpty()) {
       $returnData['Add_ingredients'] = IngredientResource::collection($this->Addingredients);
     }

@@ -17,10 +17,10 @@ class Item extends Model implements TranslatableContract
   protected $table = 'items';
   public $timestamps = true;
 
-  use  HasFactory, Translatable;
+  use HasFactory, Translatable;
   public $translatedAttributes = ['name', 'description'];
   protected $guarded = [];
-  protected $dates = ['from_date','to_date'];
+  protected $dates = ['from_date', 'to_date'];
 
   protected static function boot()
   {
@@ -198,7 +198,7 @@ class Item extends Model implements TranslatableContract
 
     $item_price = $this->attributes["price"];
 
-    return $item_price ;
+    return $item_price;
   }
 
 
@@ -218,5 +218,11 @@ class Item extends Model implements TranslatableContract
     return $default_currency->isocode;
 
   }
+
+  public function coupon()
+  {
+    return $this->belongsToMany(Coupon::class, 'coupon_items', 'item_id', 'coupon_id');
+  }
+
 
 }

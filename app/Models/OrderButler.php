@@ -45,7 +45,7 @@ class OrderButler extends Model
 
   public function coupon()
   {
-    return $this->belongsTo(Coupon::class, "coupon_id ");
+    return $this->belongsTo(Coupon::class, "coupon_id");
   }
 
 

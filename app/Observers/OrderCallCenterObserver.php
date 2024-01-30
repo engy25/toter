@@ -26,10 +26,14 @@ class OrderCallCenterObserver
     $orderCallCenter->status_id = $status_pending->status_id;
     $orderCallCenter->callcenter_id = auth()->user()->id;
     $orderCallCenter->currency_id = $defaultCurrency->id;
-    
+
 
   }
 
+  public function updating(OrderCallCenter $orderCallCenter)
+  {
+     
+  }
   public function created(OrderCallCenter $orderCallCenter)
   {
 

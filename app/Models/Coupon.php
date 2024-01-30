@@ -32,5 +32,9 @@ class Coupon extends Model {
 	{
 		return $this->belongsTo(Store::Class);
 	}
+  public function items()
+  {
+    return $this->belongsToMany(Item::class, 'coupon_items', 'coupon_id', 'item_id');
+  }
 
 }

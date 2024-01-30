@@ -11,6 +11,7 @@ $i=0;
             <th class="fw-semibold border-bottom">{{ trans('words.storename') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.code') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.discount_percentage') }}</th>
+            <th class="fw-semibold border-bottom">{{ trans('words.discount_price') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.expire_date') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.isActive') }}</th>
             <th class="bg-transparent fw-semibold border-bottom">Action</th>
@@ -38,9 +39,11 @@ $i=0;
             </td>
 
             <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $coupon->discount_percentage }}</span>
+              <span class="text-dark fs-13 fw-semibold">{{ $coupon->discount_percentage ?? "Null" }} </span>
             </td>
-
+            <td>
+              <span class="text-dark fs-13 fw-semibold">{{ $coupon->price?? "Null" }} </span>
+            </td>
             <td>
               <span class="text-dark fs-13 fw-semibold">{{ $coupon->expire_date }}</span>
             </td>
@@ -99,3 +102,5 @@ $i=0;
         {{ $coupons->links('pagination.simple-bootstrap-4') }}
         @endif
       </div>
+
+    </div>
