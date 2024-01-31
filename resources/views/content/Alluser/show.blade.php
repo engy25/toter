@@ -158,6 +158,6 @@
 @include('content.delivery.createDeliverySchedule', ['delivery'=>$delivery])
 
 @include('content.delivery.updateDeliverySchedule')
-@include('content.delivery.delivery_js')
+@include('content.delivery.delivery_js', ['delivery'=>$delivery])
 </div>
 @endsection
