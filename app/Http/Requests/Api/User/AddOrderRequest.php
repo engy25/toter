@@ -39,7 +39,7 @@ class AddOrderRequest extends ApiMasterRequest
           'items.*.qty' => 'required|numeric|min:1',
           "district_id"=>'required|exists:districts,id',
           'payment_type' => 'required|in:cash,visa',
-          'transaction_id' => 'required_if:payment_type,online',
+          'transaction_id' => 'required_if:payment_type,visa',
           'coupon_id' => 'nullable|exists:coupons,id',
           'address_id' => 'required|exists:addresses,id',
 

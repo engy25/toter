@@ -22,7 +22,9 @@ use App\Models\{
   Side,
   Coupon,
   Store,
-  Offer
+  Offer,
+  CouponUser,
+  CouponItem
 
 };
 
@@ -478,22 +480,10 @@ class Helpers
     return $description ?? '';
   }
 
-  public static function applyCouponDiscount($coupon, &$order_data, $sum)
-  {
-    $percentage = $coupon->discount_percentage / 100;
 
-    $coupon_discount = $sum * $percentage;
 
-    $order_data["sum"] = $sum - $coupon_discount;
-    // $order_data["sub_total"] = $order_data["total"];
-    $order_data['coupon_id'] = $coupon->id;
-    // dd($order_data);
 
-    $coupon->update([
-      'user_used_code_count' => $coupon->user_used_code_count + 1,
-    ]);
 
-  }
 
   public static function applyOffer(&$order_data, $sub_total)
   {
@@ -541,220 +531,9 @@ class Helpers
 
 
 
-  public static function totalCart($item_id, $qty, $size_id = null, $option_id = null, $preference_id = null, $add_ingredients, $remove_ingredients, $services, $drinks, $sides, $addons)
-  {
-    $total_price = 0;
-    $points = 0;
-    $freeDelivery = 0;
-    $discount = 0;
-    $subTotalAfterOfferDiscount = 0;
-    $response = null; // Initialize the $response variable
-    $user_id = auth("api")->user()->id;
-    $offerId = null;
-    $theUserPoint = auth('api')->user()->userPoints();
 
 
-    $user = User::with(['points'])->findOrFail($user_id);
 
-
-    $item = Item::withoutGlobalScope(new ItemScope)->with('sizes', 'options', 'preferences')->findOrFail($item_id);
-
-
-    $store = Store::findOrFail($item->store_id);
-
-    $itemPoints = (int) $item->points * $qty;
-
-
-
-
-
-
-
-
-    // // Check if the item can be bought by points
-    if ($itemPoints > 1) {
-      /**check if the user have enoughp points */
-      if ($itemPoints <= $theUserPoint) {
-        $points += $itemPoints;
-        $remainingItemPoints = $itemPoints;
-
-        while ($remainingItemPoints > 0) {
-          $maxUserPoints = $user->points()->where("point_earned", '>=', $remainingItemPoints)->first();
-
-          if ($maxUserPoints !== null) {
-            // Sufficient points in a single row
-            $maxUserPoints->update([
-              "point_earned" => $maxUserPoints->point_earned - $remainingItemPoints,
-              "point_used" => $maxUserPoints->point_used + $remainingItemPoints,
-            ]);
-            $remainingItemPoints = 0; // Item points fully utilized
-          } else {
-            // No single row with enough points, find a row with the maximum point_earned
-            $maxPointEarnedRow = $user->points()->where('point_earned', $user->points()->max('point_earned'))->first();
-
-
-            if ($maxPointEarnedRow !== null) {
-              $pointsToDeduct = min($remainingItemPoints, $maxPointEarnedRow->point_earned);
-
-              $maxPointEarnedRow->update([
-                "point_earned" => $maxPointEarnedRow->point_earned - $pointsToDeduct,
-                "point_used" => $maxPointEarnedRow->point_used + $pointsToDeduct,
-              ]);
-
-              $remainingItemPoints -= $pointsToDeduct;
-
-
-            } else {
-
-              return self::responseJson(
-                'failed',
-                trans('api.items_must_belong_to_the_same_store'),
-                422,
-                null
-              );
-            }
-
-          }
-        }
-      } else {
-        return false;
-
-
-      }
-
-
-
-
-
-
-    }
-
-
-
-
-
-
-    /**try to buy by the points in tier*/
-
-    $checkOffer = Offer::Valid()
-      ->where("store_id", $item->store_id)
-      ->whereRelation("offerUsers", "user_id", $user_id)->first();
-
-
-
-
-
-    $checkOffer = tap($checkOffer, function ($offer) use ($item, $qty, &$response, &$discount, &$freeDelivery, &$offerId) {
-      if ($offer && $offer->offerUsers->isNotEmpty() && $offer->order_counts > $offer->offerUsers->first()->order_count_of_user) {
-
-
-        // Update count order of the offerUsers
-        $offer->offerUsers()->update([
-          "order_count_of_user" => (int) $offer->offerUsers->first()->order_count_of_user + 1,
-        ]);
-
-        // Set free_delivery to 1 if the offer has free_delivery equal to 1
-        $freeDelivery = $offer->free_delivery == 1 ? 1 : 0;
-        $discount = (int) $offer->discount_percentage;
-        $offerId = $offer->id;
-      }
-
-    });
-
-
-    $total_price += $item->price;
-    // Calculate prices for size, option, preference, and gift
-    $total_price += $size_id ? $item->sizes()->where('id', $size_id)->value('price') : 0;
-    $total_price += $option_id ? $item->options()->where("id", $option_id)->value("price") : 0;
-    $total_price += $preference_id ? $item->preferences()->where("id", $preference_id)->value('price') : 0;
-
-
-    // Check Add ingredients
-    $total_price += self::calculateOptionsPrice($item, 'Addingredients', $add_ingredients);
-
-    // Check remove ingredients
-    $total_price += self::calculateOptionsPrice($item, 'Removeingredients', $remove_ingredients);
-
-    // Check Services
-    $total_price += self::calculateOptionsPrice($item, 'services', $services);
-
-    // Check Drinks
-    $total_price += self::calculateDrinksPrice($item, $drinks);
-
-    // Check Sides
-    $total_price += self::calculateOptionsPrice($item, 'sides', $sides);
-
-    // Check Addons
-    $total_price += self::calculateAddonsPrice($item, $addons);
-    // dd($total_price); ->163.5
-
-    $total_price *= $qty;
-    // dd($total_price); ->490.5
-
-
-
-    $percentage = $discount / 100;
-    $subTotalAfterOfferDiscount = $total_price;
-    $offer_discount = $subTotalAfterOfferDiscount * $percentage;
-    $subTotalAfterOfferDiscount = $subTotalAfterOfferDiscount - $offer_discount;
-
-    return [$total_price, $points, $freeDelivery, $subTotalAfterOfferDiscount, $offerId];
-  }
-
-
-
-  /**
-   * Calculate the total price of options
-   */
-  public static function calculateOptionsPrice($item, $relation, $options)
-  {
-    $totalPrice = 0;
-    if ($options) {
-
-      foreach ($options as $option) {
-        $optionPrice = $item->{$relation}()->where("id", $option)->value('price');
-        $totalPrice += $optionPrice ?: 0;
-
-
-      }
-    }
-    return $totalPrice;
-  }
-
-  /**
-   * Calculate the total price of drinks
-   */
-  public static function calculateDrinksPrice($item, $drinks)
-  {
-    $price = 0;
-    if ($drinks) {
-
-      foreach ($drinks as $drink) {
-        $drinkPrice = $item->drinks()->wherePivot('drink_id', $drink)->value('price');
-        $price += $drinkPrice ?: 0;
-      }
-
-    }
-    return $price;
-  }
-  /**
-   * Calculate the total price of addons
-   */
-  public static function calculateAddonsPrice($item, $addons)
-  {
-    $price = 0;
-    if ($addons) {
-      foreach ($addons as $addon) {
-        $addonPrice = $item->addons()->wherePivot("addon_id", $addon)->value('price');
-
-        $price += $addonPrice ?: 0;
-
-      }
-    }
-
-
-    return $price;
-  }
 
 
 }

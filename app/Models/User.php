@@ -293,7 +293,12 @@ class User extends Authenticatable
     $role_delivery = Role::where("name", "Delivery")->first();
     $delivery = User::where("role_id", $role_delivery->id);
     $store = Store::whereId($storeId)->first();
+    $sectionName=SectionTranslation::where("name","Food")->first();
 
+    if($store->section_id==$sectionName->section_id)
+    {
+      return null;
+    }
 
 
     $currentDayName = Carbon::now()->format('l');
@@ -389,16 +394,16 @@ class User extends Authenticatable
 
 
     $the_nearest_empty_driver = $usersQuery->whereDoesntHave("deliveryOrders")
-      ->whereDoesntHave("deliveryOrderButlers")->first();
+      ->whereDoesntHave("deliveryOrderButlers")->whereDoesntHave("deliveryOrderCallCenter")->first();
 
-    $the_nearest_the_least_loaded_driver = User::with(["deliveryOrders", "deliveryOrderButlers"])
+    $the_nearest_the_least_loaded_driver = User::with(["deliveryOrders", "deliveryOrderButlers","deliveryOrderCallCenter"])
       ->where("role_id", $role_delivery->id)
 
       ->when(method_exists($usersQuery->getModel(), 'scopeNearest') && $from_address->lat && $from_address->lng, function ($query) use ($from_address) {
         return $query->Nearest($from_address->lat, $from_address->lng);
       })
-      ->withCount(["deliveryOrders", "deliveryOrderButlers"])
-      ->orderByRaw("delivery_orders_count + delivery_order_butlers_count")
+      ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+      ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
       ->first();
 
 
@@ -410,10 +415,10 @@ class User extends Authenticatable
       if ($the_nearest_the_least_loaded_driver != null) {
         return $the_nearest_the_least_loaded_driver;
       } else {
-        return User::with(["deliveryOrders", "deliveryOrderButlers"])
+        return User::with(["deliveryOrders", "deliveryOrderButlers","deliveryOrderCallCenter"])
           ->where("role_id", $role_delivery->id)
-          ->withCount(["deliveryOrders", "deliveryOrderButlers"])
-          ->orderByRaw("delivery_orders_count + delivery_order_butlers_count")
+          ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+          ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
           ->first();
       }
 

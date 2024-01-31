@@ -28,13 +28,15 @@ class AddOrderButlerRequest extends ApiMasterRequest
     $rules = [
       'from_address_id' => 'required|exists:addresses,id',
       'to_address_id' => 'required|exists:addresses,id',
+      'district_id'=>'required|exists:company_Districts,id',
       'from_driver_instructions' => 'nullable|min:3|max:1000',
       'to_driver_instructions' => 'nullable|min:3|max:1000',
       'coupon_id' => 'nullable|exists:coupons,id',
       'payment_type' => 'required|in:cash,visa',
-      'transaction_id' => 'required_if:payment_type,online',
+      'transaction_id' => 'required_if:payment_type,visa',
       'butler_id' => 'required|exists:butlers,id',
-      'expected_delivery_charge'=>'required|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
+      'expected_cost'=>'nullable|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
+      //'expected_delivery_charge'=>'required|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
 
     ];
 
@@ -42,7 +44,7 @@ class AddOrderButlerRequest extends ApiMasterRequest
       $rules['items'] = 'required|array';
       $rules['item.*'] = 'required|string|min:3|max:1000';
       $rules['items.*image'] = 'mimes:jpeg,jpg,png,gif|nullable|max:1000';
-      $rules['expected_cost']= 'nullable|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/';
+     // $rules['expected_cost']= 'nullable|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/';
     } else {
       $rules["order"] = "required|string|min:4|max:65535";
 

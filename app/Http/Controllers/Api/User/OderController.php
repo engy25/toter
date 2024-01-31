@@ -15,9 +15,11 @@ use App\Helpers\helpers;
 use App\Services\StatusService;
 use App\Events\OrderCompleted;
 
+use App\Traits\OrderTrait;
 
 class OderController extends Controller
 {
+  use OrderTrait;
   public $helper;
   public $statusService;
   public function __construct()
@@ -34,6 +36,7 @@ class OderController extends Controller
     \DB::beginTransaction();
     try {
       $driver = new User();
+
 
       $order_cart_data = [];
       $sub_total = 0;
@@ -62,31 +65,42 @@ class OderController extends Controller
           return $validationResult;
         }
 
-        $itemSubTotal = $this->calculateSubTotal($item);
+        $couponId = ($request->coupon_id != null) ? $request->coupon_id : null;
 
+        $itemSubTotal = $this->calculateSubTotal($couponId, $item);
 
-        /**check if the user buy the item by points and donot have point */
-        if ($itemSubTotal == false) {
+        // Handle the case where calculateSubTotal returns 401 or 422 if needed
+        if ($itemSubTotal === 401) {
           return $this->helper->responseJson(
             'failed',
             trans('api.invalid_item_by_point'),
             422,
             null
           );
+        } elseif ($itemSubTotal === 422) {
+          return $this->helper->responseJson('failed', trans('api.coupon_not_valid'), 422, null);
+        } elseif (is_float($itemSubTotal[0]) && $itemSubTotal[0] < 0 ) {
+          return $this->helper->responseJson('failed', trans('api.coupon_not_valid_you_must_pay_more'), 422, null);
         }
 
-        $sub_total += $itemSubTotal[0];
-        $total_points += $itemSubTotal[1];
 
+
+
+        $sub_total += $itemSubTotal[0];
+        // dd($sub_total);
+        $total_points += $itemSubTotal[1];
+        // dd($total_points);
         $free_delivery = $itemSubTotal[2];
+        // dd($free_delivery);
         $sub_total_after_discount_offer += $itemSubTotal[3];
+        // dd($sub_total_after_discount_offer);
         $offerId = $itemSubTotal[4];
 
 
       }
-      // dd($sub_total); //520,5
-      // dd($sub_total_after_discount_offer); //495.975
-      // dd($free_delivery); //1
+
+
+      // dd($sub_total);
 
       $sum += $sub_total_after_discount_offer;
 
@@ -95,6 +109,8 @@ class OderController extends Controller
       $storeId = Item::withoutGlobalScope(new ItemScope)->whereId(collect($request->items)->pluck("item_id")->first())->value("store_id");
       $deliveryTime = Store::whereId($storeId)->value('delivery_time');
       $deliveryCharge = StoreDistrict::where("district_id", $request->district_id)->where("store_id", $storeId)->value('delivery_charge');
+
+      $driverId = ($driver->assignDriverToOrder($storeId) == null) ? null : $driver->assignDriverToOrder($storeId)->id;
 
       // check if the the user use offer and this offer is freedelivery
       if ($free_delivery == 1) {
@@ -113,35 +129,7 @@ class OderController extends Controller
         );
       }
 
-      /**check if the user send coupon */
 
-      if ($request->coupon_id != null) {
-        $coupon = Coupon::live()->whereId($request->coupon_id)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
-        if ($coupon) {
-          $couponUser = CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->first();
-          if ($couponUser != null) {
-            CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->update(['is_used' => 1]);
-            $this->helper->applyCouponDiscount($coupon, $order_cart_data, $sum);
-          } else {
-            CouponUser::create(["user_id" => auth('api')->user()->id, 'is_used' => 1, "coupon_id" => $request->coupon_id]);
-
-            $this->helper->applyCouponDiscount($coupon, $order_cart_data, $sum);
-          }
-
-
-
-
-        } else {
-          /**coupon not found */
-          return $this->helper->responseJson('failed', trans('api.coupon_not_found'), 422, null);
-        }
-
-      }
-
-      /**check if the user send offer */
-
-
-      // $order_cart_data["total"] += $deliveryCharge;
       $order_cart_data += [
         "user_id" => auth("api")->user()->id,
         "store_id" => $storeId,
@@ -169,7 +157,7 @@ class OderController extends Controller
         "ordereable_id" => $order->id, // Explicitly set the ordereable_id
         "ordereable_type" => "App\Models\Order"
       ]);
-      $order->update(["driver_id" => $driver->assignDriverToOrder($storeId)->id]);
+      $order->update(["driver_id" => $driverId]);
       /**store order Items */
 
       foreach ($request->items as $item) {
@@ -214,6 +202,9 @@ class OderController extends Controller
 
 
       }
+      /**
+       * if the store make points after certain number of the orders give the points to the user
+       */
       event(new OrderCompleted($order));
 
       \DB::commit();
@@ -235,260 +226,12 @@ class OderController extends Controller
 
 
 
-  /**
-   * chekc the all items belongs to the same store
-   */
-  private function checkItemsFromTheSameStore($items)
-  {
-    $storeIds = [];
-    $itemIds = collect($items)->pluck("item_id");
-
-
-
-    foreach ($itemIds as $itemId) {
-
-      $storeIds[] = Item::withoutGlobalScope(new ItemScope)->where('id', $itemId)->value('store_id');
-
-    }
-
-    $uniqueStoreIds = array_unique($storeIds);
-    // dd($uniqueStoreIds);
-    // dd(count($uniqueStoreIds) === 1);
-    return count($uniqueStoreIds) === 1;
-
-  }
-  /**
-   * calidate the order Item
-   */
-  public function validateOrderItem($item)
-  {
-    // Check if the provided size_id is valid for the item
-    $sizeId = $item['size_id'] ?? null;
-    if ($sizeId && !$this->checkOptionIdForItem($item['item_id'], "sizes", $sizeId)) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_size_id_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if the provided gift_id is valid for the item
-    $giftId = $item['gift_id'] ?? null;
-
-    if ($giftId && !$this->checkOptionIdForItem($item['item_id'], "gifts", $giftId)) {
-      // dd($giftId);
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_gift_id_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if the provided option_id is valid for the item
-    $optionId = $item["option_id"] ?? null;
-    if ($optionId && !$this->checkOptionIdForItem($item['item_id'], "options", $optionId)) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_option_id_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if the provided preference_id is valid for the item
-    $preferenceId = $item["preference_id"] ?? null;
-    if ($preferenceId && !$this->checkOptionIdForItem($item['item_id'], "preferences", $preferenceId)) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_preference_id_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if Addingredients are valid for each item
-    if (isset($item['addingredients']) && !$this->checkOptionsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), 'Addingredients', $item['addingredients'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_add_ingredients_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if removeingredients are valid for each item
-    if (isset($item['remove_ingredients']) && !$this->checkOptionsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), 'Removeingredients', $item['remove_ingredients'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_remove_ingredients_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if sides are valid for each item
-    if (isset($item['sides']) && !$this->checkOptionsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), 'sides', $item['sides'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_sides_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if services are valid for each item
-    if (isset($item['services']) && !$this->checkOptionsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), 'services', $item['services'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_services_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if preferences are valid for each item
-    if (isset($item['preferences']) && !$this->checkOptionsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), 'preferences', $item['preferences'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_preferences_for_item'),
-        422,
-        null
-      );
-    }
-
-    // Check if addons are valid for each item
-    if (isset($item['addons']) && !$this->checkAddonsExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), $item['addons'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_addons_for_item'),
-        422,
-        null
-      );
-    }
-
-
-    // Check if drinks are valid for each item
-    if (isset($item['drinks']) && !$this->checkDrinksExist(Item::withoutGlobalScope(new ItemScope)->findOrFail($item['item_id']), $item['drinks'])) {
-      return $this->helper->responseJson(
-        'failed',
-        trans('api.invalid_drinks_for_item'),
-        422,
-        null
-      );
-    }
-
-    return null; // Validation passed
-  }
-
-  /**
-   * check district is associated with the store
-   */
-  private function checkDistrictIdAssociatedToTheStore($storeId, $districtId)
-  {
-
-    if (
-      !Store::whereId($storeId)->whereHas('districts', function ($query) use ($districtId) {
-        $query->where('districts.id', $districtId);
-      })->exists()
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  /**calculate subtotal */
-  private function calculateSubTotal($item)
-  {
-
-    $sub_total = $this->helper->totalCart(
-      $item['item_id'],
-      $item['qty'],
-      $item['size_id'] ?? null,
-      $item['option_id'] ?? null,
-      $item['preference_id'] ?? null,
-      $item['addingredients'] ?? null,
-      $item['remove_ingredients'] ?? null,
-      $item['services'] ?? null,
-      $item['drinks'] ?? null,
-      $item['sides'] ?? null,
-      $item['addons'] ?? null
-    );
 
 
 
 
 
-    return $sub_total;
-  }
 
-
-  /**
-   * check option exists in item
-   */
-  private function checkOptionsExist($item, $relation, $options)
-  {
-    if ($options) {
-      foreach ($options as $option) {
-
-        if (!$item->{$relation}()->whereId($option)->exists()) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * to ckeck the drinks exists or not and this drinks exist in this item or not
-   */
-  private function checkDrinksExist($item, $drinks)
-  {
-    if ($drinks) {
-      foreach ($drinks as $drink) {
-
-        if (!$item->drinks()->wherePivot('drink_id', $drink)->exists()) {
-          // If a drink doesn't exist, return false
-          return false;
-        }
-      }
-    }
-
-    // If all drinks exist, return true
-    return true;
-  }
-
-
-
-  /**
-   * to ckeck the addons exists or not and this addon exist in this item or not
-   */
-  private function checkAddonsExist($item, $addons)
-  {
-    if ($addons) {
-
-      foreach ($addons as $addon) {
-        if (!$item->addons()->wherePivot("addon_id", $addon)->exists()) {
-          // If a addon doesn't exist, return false
-          return false;
-        }
-      }
-    }
-
-    //if all the addons exist, return true
-    return true;
-  }
-
-  private function checkOptionIdForItem($itemId, $relation, $optionId)
-  {
-    $item = Item::withoutGlobalScope(new ItemScope)->find($itemId);
-    // dd($item);
-    // dd($item->gifts()->where('id', 4)->exists());
-    return $item && $item->{$relation}()->where('id', $optionId)->exists();
-  }
 
 
 
@@ -677,9 +420,10 @@ class OderController extends Controller
         'success',
         trans('api.order_cancell_success'),
         200,
-        ['orders' => SimpleOrderResource::collection($orders),
-        'ordercallcenters'=>SimpleOrderResource::collection($ordercallcenters),
-        'orderbutlers'=>SimpleOrderButlerUserResource::collection($orderbutlers)
+        [
+          'orders' => SimpleOrderResource::collection($orders),
+          'ordercallcenters' => SimpleOrderResource::collection($ordercallcenters),
+          'orderbutlers' => SimpleOrderButlerUserResource::collection($orderbutlers)
         ]
       );
 

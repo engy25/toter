@@ -21,23 +21,31 @@ class OrderButlersResource extends JsonResource
     return [
       'id' => $this->id,
       'order_number' => $this->order_number,
-      // 'order_item' => $firstItem->item ??null,
-      // 'order_image' => $firstItem->image ?? null,
+      
       'delivery_name' => $this->delivery->fname ?? null,
       'delivery_phone' => $this->driver->phone ?? null,
 
       'user_name' => $this->user->fname ?? null,
       'user_phone' => $this->user->phone,
-      'expected_delivery_charge' => (double) $this->expected_delivery_charge,
+
+
+
+      'service_charge'=>$this->service_charge,
+      'delivery_fees'=> (double) $this->delivery_charge ?? null,
       'expected_cost' => (double) $this->expected_cost,
+
       'total' => (double) $this->total,
       'sub_total' => (double) $this->sub_total,
+      'sum'=>$this->sum,
+      'from_district'=>optional($this->district)->from->name ??null,
+      'to_district'=>optional($this->district)->to->name ??null,
+
+
       "coupon_id" => $this->coupon_id,
       "coupon_discount_percentage" => optional($this->coupon)->discount_percentage . " %" ?? 0,
       "coupon_discount_price" => optional($this->coupon)->discount_price ?? 0,
       'currency' => $this->defaultCurrency->isocode,
       'delivery_time' => $this->delivery_time ?? null,
-      'delivery_fees' => (double) $this->delivery_charge ?? null,
       'status' => $this->status->name,
       'from_address' => AddressResource::make($this->fromAddress->first()) ?? null,
       'from_driver_instructions' => $this->from_driver_instructions ?? null,

@@ -122,4 +122,7 @@ return [
   'cart_updated_successfully'=>'cart Updated Successfully',
   'you_accepted_the_order_successfully'=>'you accepted the order successfully',
   'you_cancelled_the_order_successfully'=>'you cancelled the order successfully',
+  "coupon_not_found_for_item"=>"coupon Not Found For Item",
+  "coupon_not_valid"=>"Coupon Not Valid",
+  "coupon_not_valid_you_must_pay_more"=>"Coupon Not Valid You Must Pay More To Benifit The Coupon",
 ];

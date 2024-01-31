@@ -11,7 +11,7 @@ class CreateCouponsTable extends Migration {
 			$table->bigIncrements('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->bigInteger('store_id')->unsigned()->index();
+			$table->bigInteger('store_id')->unsigned()->nullable();
 			$table->string('code');
 			$table->integer('discount_percentage');
 			$table->date('expire_date');

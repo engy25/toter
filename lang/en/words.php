@@ -69,6 +69,9 @@ return [
   "subtotal" => "Sub Total",
   "isCoupon" => "Is Coupon Used?",
   "delivery_charge" => "Delivery Charge",
-  "discount_price"=>"Discount Price"
+  "discount_price"=>"Discount Price",
+  "DeliveryCharge"=>"Delivery Charge",
+  "fromDistrict"=>"from District",
+  "toDistrict"=>"To District"
 
 ];

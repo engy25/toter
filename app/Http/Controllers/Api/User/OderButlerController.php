@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\{OrderButler, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus,Store};
+use App\Models\{OrderButler, CompanyDistrict, OrderStatus, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus, Store};
 use App\Http\Requests\Api\User\{AddOrderButlerRequest, ApplyCouponRequest};
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +32,7 @@ class OderButlerController extends Controller
       */
   public function applyCoupon(ApplyCouponRequest $request)
   {
-    $coupon = Coupon::where('code', $request->code)->where("store_id",$request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
+    $coupon = Coupon::where('code', $request->code)->where("store_id", $request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->first();
 
     if (!$coupon) {
 
@@ -40,7 +40,7 @@ class OderButlerController extends Controller
 
     }
 
-    if (Coupon::where('code', $request->code)->where("store_id",$request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->live()->first()) {
+    if (Coupon::where('code', $request->code)->where("store_id", $request->store_id)->where('max_user_used_code', '>=', 'user_used_code_count')->live()->first()) {
 
       $coupon_user = CouponUser::firstOrCreate(['coupon_id' => $coupon->id, 'user_id' => auth('api')->user()->id, "is_used" => 0]);
 
@@ -57,13 +57,38 @@ class OderButlerController extends Controller
 
   public function store(AddOrderButlerRequest $request)
   {
-
+    \DB::beginTransaction();
     try {
       $butler_id = $request->butler_id;
       $butler = Butler::findOrFail($butler_id);
+      $deliveryCharge = CompanyDistrict::where("id", $request->district_id)->value("delivery_charge");
 
 
-      $sub_total =(double) $request->expected_delivery_charge +(double) $request->expected_cost;
+      $couponId = null;
+      $sum = 0;
+
+      $sub_total = (double) $request->expected_cost;
+
+
+      // Check if coupon exists
+      if ($request->coupon_id != null) {
+
+        $coupon = Coupon::live()->where("id", $request->coupon_id)->first();
+
+
+        $sum = $this->applyCouponDiscount($coupon, $sub_total);
+
+        if ($sum === 422) {
+          return $this->helper->responseJson('failed', trans('api.coupon_not_valid'), 422, null);
+        } elseif (is_float($sum) && $sum < 0) {
+          return $this->helper->responseJson('failed', trans('api.coupon_not_valid_you_must_pay_more'), 422, null);
+        }
+
+        $couponId = $request->coupon_id;
+
+      }
+
+      $sum += (double) $deliveryCharge + $butler->service_charge;
 
       $order_data = [
         "from_address" => $request->from_address_id,
@@ -74,33 +99,18 @@ class OderButlerController extends Controller
         'transaction_id' => $request->transaction_id,
         "order" => $request->order,
         "delivery_time" => $butler->delivery_time,
-        "expected_delivery_charge" => $request->expected_delivery_charge,
+
         "expected_cost" => $request->expected_cost,
-        // "default_currency_id" => $butler->default_currency_id,
-        // "exchange_rate" => $butler->exchange_rate,
-        // "to_currency_id" => $butler->to_currency_id,
+        "district_id" => $request->district_id,
+        "coupon_id" => $couponId,
         "admin_id" => $butler->admin_id,
         "butler_id" => $butler->id,
+        "sub_total" => $sub_total,
+        "sum" => $sum,
+        "total" => $sub_total + $deliveryCharge,
+        "service_charge" => $butler->service_charge,
+        "delivery_charge" => $deliveryCharge
       ];
-
-      // Check if coupon exists
-      if ($request->coupon_id) {
-        $coupon = Coupon::live()
-          ->whereId($request->coupon_id)
-          ->where('max_user_used_code', '>=', 'user_used_code_count')
-          ->first();
-
-        if ($coupon) {
-          CouponUser::where(["user_id" => auth('api')->user()->id, "coupon_id" => $request->coupon_id])->update(['is_used' => 1]);
-          $this->helper->applyCouponDiscount($coupon, $order_data, $sub_total);
-          //update the couponuser
-        }
-      } else {
-        /**coupon not found  return with msg*/
-        $order_data["sub_total"] = $sub_total;
-        $order_data["total"] = $sub_total;
-      }
-
 
 
       $order = OrderButler::create($order_data);
@@ -118,12 +128,78 @@ class OderButlerController extends Controller
       }
 
       $status_pending = StatusTranslation::where("name", "pending")->first();
-      OrderButlerStatus::create(["order_id" => $order->id, "status_id" => $status_pending->status_id]);
 
-      return $this->helper->responseJson('success', trans('api.order_create_success'), 200, null);
-    } catch (Exception $e) {
-      return $this->helper->responseJson('failed', trans('api.auth_something_went_wrong'), 422, null);
+      // Create a new status for the order
+      OrderStatus::create([
+        "status_id" => $status_pending->status_id,
+        "ordereable_id" => $order->id, // Explicitly set the ordereable_id
+        "ordereable_type" => "App\Models\OrderButler"
+      ]);
+
+      \DB::commit();
+      return $this->helper->responseJson('success', trans('api.order_create_success'), (int) 200, null);
+
+
+    } catch (\Exception $e) {
+      \DB::rollBack();
+      return $this->helper->responseJson('fail', trans('api.auth_something_went_wrong'), 422, null);
+
     }
+
+
+  }
+  public static function applyCouponDiscount($coupon, $subtotal)
+  {
+
+    $subTotal = $subtotal;
+
+
+    $coupon = Coupon::live()
+      ->whereId($coupon->id)
+      ->whereNull('store_id') // Check if store_id is null
+      ->where('max_user_used_code', '>=', 'user_used_code_count')
+      ->first();
+
+
+    if (!$coupon) {
+      // Coupon not found
+      return 422;
+    }
+
+    $user_id = auth('api')->user()->id;
+
+    // Check if the user has already used this coupon
+    $couponUser = CouponUser::where(["user_id" => $user_id, "coupon_id" => $coupon->id])->first();
+
+
+    if (!$couponUser) {
+      // User has not used this coupon before
+      CouponUser::create(["user_id" => $user_id, 'is_used' => 1, "coupon_id" => $coupon->id]);
+    } else {
+      // User has used this coupon before
+      CouponUser::where(["user_id" => $user_id, "coupon_id" => $coupon->id])->increment('is_used', 1);
+      ;
+    }
+
+
+    // Apply coupon discount
+    if ($coupon->discount_percentage != null) {
+      $percentage = $coupon->discount_percentage / 100;
+      $coupon_discount = $subTotal * $percentage;
+      $subTotal -= $coupon_discount;
+
+    } else {
+
+      $subTotal -= $coupon->price;
+
+    }
+
+    // Update coupon statistics
+    $coupon->update([
+      'user_used_code_count' => $coupon->user_used_code_count + 1,
+    ]);
+
+    return $subTotal;
   }
 
 

@@ -63,7 +63,7 @@ use App\Http\Controllers\dashboard\DataEntry\{
   CouponController,
   RoleController,
   PermissionController,
-
+  CompanyDistrictController
 };
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -245,7 +245,7 @@ Route::group(
 
     /******************************DATA ENTRY AND ADMIN *****************************************************/
 
-    Route::group(['middleware' => ['role:DataEntry|Admin']], function () {
+    // Route::group(['middleware' => ['role:DataEntry|Admin']], function () {
 
       /******************Roles **************************/
       Route::Resource('roles', RoleController::class);
@@ -319,6 +319,16 @@ Route::group(
       /********************storedistricts************************************************* */
       Route::Resource('storedistricts', StoreDistrictController::class);
       /*------------------------------------------------------------------------- */
+
+
+
+      /********************Company districts************************************************* */
+      Route::Resource('companydistricts', CompanyDistrictController::class);
+      Route::get("/pagination/paginate-companydisctrict", [CompanyDistrictController::class, "paginationCompanyDisctrict"]);
+      Route::get('/search-companydisctrict', [CompanyDistrictController::class, 'searchCompanyDisctrict'])->name('search.companydisctrict');
+      Route::get('city-district/{city_id}', [CompanyDistrictController::class, "displayDistricts"])->name('city.districts');
+      /*------------------------------------------------------------------------- */
+
 
       /********************offers************************************************* */
       Route::Resource('offers', OfferController::class);
@@ -437,12 +447,12 @@ Route::group(
 
 
 
-    });
+    // });
 
 
 
     /**********************************************ADMIN *********************************************************/
-    Route::group(['middleware' => ['role:Admin']], function () {
+    // Route::group(['middleware' => ['role:Admin']], function () {
 
       /**
        * Users
@@ -465,10 +475,10 @@ Route::group(
 
 
 
-    });
+    // });
 
 
-    Route::group(['middleware' => ['role:CallCenter|Admin|DataEntry|CallCenter']], function () {
+    // Route::group(['middleware' => ['role:CallCenter|Admin|DataEntry|CallCenter']], function () {
 
 
 
@@ -487,11 +497,11 @@ Route::group(
       Route::post("add-arrival-time",[DeliveryController::class,"AddArrivalTimeToDelivery"])->name("arrivaltime.store");
       /***to add the daily price of delivery */
       Route::post("add-daily-price-to-delivery",[DeliveryController::class,"AddDailyPriceToDelivery"])->name("dailyprice.delivery.store");
-    });
+    // });
 
 
     /*******************************************Call Center******************************************/
-    Route::group(['middleware' => ['role:CallCenter|Admin']], function () {
+    // Route::group(['middleware' => ['role:CallCenter|Admin']], function () {
     /**
    * the traditional user :the user that doesnot have mobile that doesnot
    *  have account to login we make the account cause he make order by phone
@@ -539,7 +549,7 @@ Route::group(
         /**export order user table */
         Route::get('/export-butler-pdf', [OrderButlerController::class, 'export'])->name('exportbutler.pdf');
 
-    });
+    // });
   }
 );
 
