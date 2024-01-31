@@ -530,7 +530,7 @@ $(document).on("click", ".update_schedule", function(e) {
       },
 
       error: function(response) {
-        console.log(response.responseJSON);
+        console.log(response);
         $('.errMsgContainer').empty(); // Clear previous error messages
         errors = response.responseJSON.errors;
         $.each(errors, function(index, value){
@@ -551,27 +551,28 @@ $(document).on("click", ".update_schedule", function(e) {
 <script>
   $(document).ready(function(){
     // console.log('Document is ready.');
+
     $(document).on("click", '.add_incentive', function(e){
     e.preventDefault();
     let delivery_id = $('#delivery_id').val();
-    let price=$('#price').val();
+    let price = $('#prooice').val();
 
-    console.log(delivery_id);
-    console.log(price);
 
     var formData = new FormData();
 
     formData.append('delivery_id', delivery_id);
 
     formData.append('price', price);
-   
+
+    console.log('delivery_id:', delivery_id);
+    console.log('price:', price);
 
     $('.errMsgContainer').empty();
     // Clear previous error messages
 
     $.ajax({
 
-      url: "{{ route('dailyprice.delivery.store') }}",
+      url: "{{ route('incentive.delivery.store') }}",
       method: 'post',
       data: formData,
       dataType: "json",
@@ -586,8 +587,8 @@ $(document).on("click", ".update_schedule", function(e) {
       success: function(data) {
 
         $('.errMsgContainer').empty(); // Clear previous error messages
-        $("#dailyCalculationModal").modal("hide");
-        $('#add_daily_cal_form')[0].reset();
+        $("#addIncentiveModal").modal("hide");
+
         $('#data-table5').load(location.href + ' #data-table5', function () {
           $('#successPrice').show();
 
@@ -599,7 +600,76 @@ $(document).on("click", ".update_schedule", function(e) {
       },
 
       error: function(response) {
-        console.log(response.responseJSON);
+        console.log(response);
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        errors = response.responseJSON.errors;
+        $.each(errors, function(index, value){
+          $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br />');
+        });
+      }
+    });
+  });
+});
+
+</script>
+
+
+
+
+{{-- Add Discount --}}
+<script>
+  $(document).ready(function(){
+    // console.log('Document is ready.');
+
+    $(document).on("click", '.add_discount', function(e){
+    e.preventDefault();
+    let delivery_id = $('#delivery_id').val();
+    let price = $('#price').val();
+
+
+    var formData = new FormData();
+
+    formData.append('delivery_id', delivery_id);
+
+    formData.append('price', price);
+
+    console.log('delivery_id:', delivery_id);
+    console.log('price:', price);
+
+    $('.errMsgContainer').empty();
+    // Clear previous error messages
+
+    $.ajax({
+
+      url: "{{ route('discount.delivery.store') }}",
+      method: 'post',
+      data: formData,
+      dataType: "json",
+      contentType: false,  // Set to false for FormData
+      processData: false,  // Set to false for FormData
+      headers: {
+
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+
+
+      success: function(data) {
+
+        $('.errMsgContainer').empty(); // Clear previous error messages
+        $("#addDiscountModal").modal("hide");
+
+        $('#data-table5').load(location.href + ' #data-table5', function () {
+          $('#successPrice').show();
+
+          setTimeout(function() { /* hide success message after 4 seconds */
+            $('#successPrice').hide();
+          }, 2000); // 2000 milliseconds = 2 seconds
+        });
+        $('.errMsgContainer').empty(); // Clear previous error messages
+      },
+
+      error: function(response) {
+        console.log(response);
         $('.errMsgContainer').empty(); // Clear previous error messages
         errors = response.responseJSON.errors;
         $.each(errors, function(index, value){

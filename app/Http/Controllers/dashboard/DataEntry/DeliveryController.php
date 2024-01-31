@@ -404,8 +404,59 @@ class DeliveryController extends Controller
     ]);
 
   }
+  /**
+   * add incentive to delivery
+   */
+  public function AddIncenticeToDelivery(StoreDailyPriceToDeliveryRequest $request)
+  {
+
+    $defaultCurrency = Currency::where("default", 1)->first();
+    // $arrival_time_id = $request->arrivalTimeId;
+    $delivery_id = $request->delivery_id;
+    $price = $request->price;
+    /**add price of this day to the delivery wallet */
+    $wallet = WalletTransaction::create([
+      "sender_id" => auth()->user()->id,
+      "receiver_id" => $delivery_id,
+      "transaction_type" => "Incentive",
+      "amount" => $price,
+      "currency_id" => $defaultCurrency->id,
+      // "to_date"=>
+    ]);
 
 
+
+    return response()->json([
+      "status" => true,
+      "message" => "Added successfully"
+    ]);
+
+  }
+  public function AddDiscountToDelivery(StoreDailyPriceToDeliveryRequest $request)
+  {
+
+    $defaultCurrency = Currency::where("default", 1)->first();
+    // $arrival_time_id = $request->arrivalTimeId;
+    $delivery_id = $request->delivery_id;
+    $price = $request->price;
+    /**add price of this day to the delivery wallet */
+    $wallet = WalletTransaction::create([
+      "sender_id" => auth()->user()->id,
+      "receiver_id" => $delivery_id,
+      "transaction_type" => "Discount",
+      "amount" => -$price,
+      "currency_id" => $defaultCurrency->id,
+
+    ]);
+
+
+
+    return response()->json([
+      "status" => true,
+      "message" => "Added successfully"
+    ]);
+
+  }
 
 
 }

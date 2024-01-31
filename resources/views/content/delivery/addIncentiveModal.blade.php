@@ -19,10 +19,11 @@
 
 
           <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" name="price" class="form-control" step="0.01" id="price">
+            <label for="prooice">Price</label>
+
+            <input type="number" name="prooice" class="form-control" step="0.01" id="prooice">
             <!-- The "step" attribute is set to "0.01" to allow decimal values -->
-            <span class="text-danger error-message" id="error_price"></span>
+            <span class="text-danger error-message" id="error_prooice"></span>
           </div>
 
 

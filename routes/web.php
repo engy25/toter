@@ -497,6 +497,8 @@ Route::group(
       Route::post("add-arrival-time",[DeliveryController::class,"AddArrivalTimeToDelivery"])->name("arrivaltime.store");
       /***to add the daily price of delivery */
       Route::post("add-daily-price-to-delivery",[DeliveryController::class,"AddDailyPriceToDelivery"])->name("dailyprice.delivery.store");
+      Route::post("add-incentive-to-delivery",[DeliveryController::class,"AddIncenticeToDelivery"])->name("incentive.delivery.store");
+      Route::post("add-discount-to-delivery",[DeliveryController::class,"AddDiscountToDelivery"])->name("discount.delivery.store");
     // });
 
 
