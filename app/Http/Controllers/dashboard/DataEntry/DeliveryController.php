@@ -30,7 +30,7 @@ class DeliveryController extends Controller
 
     $searchString = '%' . $request->search_string . '%';
     $role = Role::where("name", "Delivery")->first();
-    $deliveries = User::where("role_id", $role->id)->where(function ($query) use ($searchString) {
+    $deliveries = User::role("Delivery","api")->where(function ($query) use ($searchString) {
 
       $query->where("fname", 'like', $searchString)
         ->orWhere('email', 'like', $searchString)
@@ -49,8 +49,8 @@ class DeliveryController extends Controller
 
   public function paginationDelivert(Request $request)
   {
-    $role = Role::where("name", "Delivery")->first();
-    $deliveries = User::where("role_id", $role->id)->latest()->paginate(PAGINATION_COUNT);
+
+    $deliveries = User::role("Delivery","api")->latest()->paginate(PAGINATION_COUNT);
     return view("content.delivery.pagination_index", compact("deliveries"))->render();
 
   }
@@ -62,8 +62,8 @@ class DeliveryController extends Controller
    */
   public function index()
   {
-    $role = Role::where("name", "Delivery")->first();
-    $deliveries = User::where("role_id", $role->id)->latest()->paginate(PAGINATION_COUNT);
+
+    $deliveries = User::role("Delivery","api")->latest()->paginate(PAGINATION_COUNT);
     return view('content.delivery.index', compact('deliveries'));
   }
 
