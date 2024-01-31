@@ -1,4 +1,3 @@
-
 <?php
 $i=0;
 ?>
@@ -38,12 +37,15 @@ $i=0;
               @endif
             </td>
 
+
             <td class="center align-middle">
               <div class="btn-group">
+                @if($role->guard_name=="web" && auth()->user()->can('add permission to roles'))
                 <a href="{{ route('rolePermissions.create',$role->id) }}" class="btn btn-primary me-2"
-                title="{{ trans('words.add') }}">
-                  {{ trans('words.add') }}
+                  title="{{ trans('words.add_permissions') }}">
+                  {{ trans('words.add_permissions') }}
                 </a>
+                @endif
                 <a href="{{ LaravelLocalization::localizeURL(route('roles.edit', $role->id)) }}"
                   class="btn btn-info btn-icon py-1 me-2 update_role_form" data-bs-toggle="modal"
                   data-bs-target="#updateRoleModal" data-id="{{ $role->id }}" data-guard="{{ $role->guard_name }}"
@@ -56,6 +58,7 @@ $i=0;
                 </button>
               </div>
             </td>
+
           </tr>
           @endforeach
         </tbody>
@@ -66,3 +69,4 @@ $i=0;
         {{ $roles->links('pagination.simple-bootstrap-4') }}
         @endif
       </div>
+    </div>
