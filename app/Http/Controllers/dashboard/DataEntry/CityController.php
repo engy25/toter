@@ -127,6 +127,7 @@ class CityController extends Controller
         "status" => true,
         "message" => "City Added Successfully"
       ]);
+      
     } else {
       return response()->json([
         "status" => false,
