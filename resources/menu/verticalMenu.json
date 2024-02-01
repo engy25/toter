@@ -129,19 +129,6 @@
       ]
     },
 
-    {
-      "name":  "Company Districts",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "app-user-view",
-      "permissions": ["view companyDistricts"],
-      "submenu": [
-        {
-          "url": "companydistricts",
-          "name": "List",
-          "slug": "app-user-list"
-        }
-      ]
-    },
 
 
     {
