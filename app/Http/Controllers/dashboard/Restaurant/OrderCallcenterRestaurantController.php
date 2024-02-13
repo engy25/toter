@@ -60,7 +60,7 @@ class OrderCallcenterRestaurantController extends Controller
         ->orWhere('order_number', 'like', $searchString);
 
     })->when($request->deliveryId, function ($q) use ($deliveryId) {
-      $q->where("driver_id", $deliveryId);
+      $q->where("delivery_id", $deliveryId);
 
     })->when($request->date, function ($q) use ($date) {
       // Use whereDate to filter based on the date part only
