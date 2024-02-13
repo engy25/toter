@@ -16,7 +16,9 @@ use App\Http\Controllers\Web\{
 
 use App\Http\Controllers\dashboard\Restaurant\{
  OrderRestaurantController
- ,RestaurantUsersController
+ ,RestaurantUsersController,
+ OrderCallcenterRestaurantController
+
 
 };
 
@@ -255,6 +257,18 @@ Route::group(
     Route::get("/pagination/paginate-orderstore", [OrderRestaurantController::class, "paginationOrderStore"]);
     Route::get('/search-orderstore', [OrderRestaurantController::class, 'searchOrder'])->name('search.order.store');
     Route::get('/track-order/{order}', [OrderRestaurantController::class, 'showMapOfTheOrder'])->name('create.track.order');
+
+
+    Route::Resource("storeorderscallcenters",OrderCallcenterRestaurantController::class);
+    Route::get("/pagination/paginate-ordercallcenterstore", [OrderCallcenterRestaurantController::class, "paginationOrderStore"]);
+    Route::get('/search-ordercallcenterstore', [OrderCallcenterRestaurantController::class, 'searchOrder'])->name('search.ordercallcenter.store');
+    Route::get('/track-ordercallcenter/{order}', [OrderCallcenterRestaurantController::class, 'showMapOfTheOrder'])->name('create.track.ordercallcenter');
+
+
+
+
+
+
      /********************Add Users To Restaurants************************************************* */
      Route::Resource('restaurantusers', RestaurantUsersController::class);
      Route::get("/pagination/paginate-restaurantuser", [RestaurantUsersController::class, "paginationUser"]);
@@ -579,6 +593,8 @@ Route::group(
        Route::resource("orderbutlers",OrderButlerController::class);
        Route::get("/pagination/paginate-orderbutler", [OrderButlerController::class, "paginationOrderButler"]);
        Route::get('/search-orderbutler', [OrderButlerController::class, 'searchOrder'])->name('search.order.butler');
+       Route::get('/track-orderbutler/{order}', [OrderButlerController::class, 'showMapOfTheOrder'])->name('create.track.orderbutler');
+
 
 
         /**export order user table */

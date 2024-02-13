@@ -71,4 +71,9 @@ class OrderCallcenter extends Model
     return $this->belongsTo(District::class, "district_id");
   }
 
+  public function deliveryTrack()
+  {
+    return $this->morphOne(Delivery::class,"ordereable");
+  }
+
 }

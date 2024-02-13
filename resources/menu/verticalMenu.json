@@ -293,7 +293,7 @@
     },
 
     {
-      "name": "User Orders",
+      "name": "Orders",
       "icon": "menu-icon tf-icons ti ti-users",
       "slug": "app-user",
       "permissions": ["view order of the stores"],
@@ -306,6 +306,23 @@
 
       ]
     },
+
+    {
+      "name": "Order Callcenters",
+      "icon": "menu-icon tf-icons ti ti-users",
+      "slug": "app-user",
+      "permissions": ["view_its_orders_of_callcenters"],
+      "submenu": [
+        {
+          "url": "storeorderscallcenters",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+
+      ]
+    },
+
+    
 
 
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\dashboard\CallCenter;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\{OrderButler, User, Role, Status, Currency};
+use App\Models\{OrderButler, User, Role, Status, Currency, OrderCallcenter};
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\View;
@@ -214,21 +214,15 @@ class OrderButlerController extends Controller
    * @param  \App\Models\OrderButler  $orderButler
    * @return \Illuminate\Http\Response
    */
-  public function show(OrderButler $orderButler)
+  public function show($orderbutler)
   {
-    //
+    $defaultCurrency = Currency::where("default", 1)->first();
+
+    $order = OrderButler::with(["orderItems"])->find($orderbutler);
+
+    return view("content.orderbutlers.show", compact("order", "defaultCurrency"));
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  \App\Models\OrderButler  $orderButler
-   * @return \Illuminate\Http\Response
-   */
-  public function edit(OrderButler $orderButler)
-  {
-    //
-  }
 
   /**
    * Update the specified resource in storage.
@@ -251,5 +245,14 @@ class OrderButlerController extends Controller
   public function destroy(OrderButler $orderButler)
   {
     //
+  }
+
+  public function showMapOfTheOrder(OrderButler $order)
+  {
+
+    $order = OrderButler::with('deliveryTrack')->find($order->id);
+
+
+    return view("content.orderbutlers.showMap", compact("order"));
   }
 }

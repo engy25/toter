@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Orde Butler List - Pages')
+@section('title', 'Orde User List - Pages')
 
 @section('vendor-style')
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
@@ -152,7 +152,7 @@
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
                 <span class="fw-bold">Export to PDF</span>
-                <a href="{{ route('exportbutler.pdf') }}" class="btn btn-primary">
+                <a href="{{ route('exportuser.pdf') }}" class="btn btn-primary">
                     <i class="fa fa-file-pdf me-2"></i> Export
                 </a>
             </div>
@@ -198,100 +198,12 @@
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table id="data-table2" class="table border p-0 text-nowrap mb-0">
-        <thead class="tabel-row-heading text-dark">
-          <tr style="background:#f4f5f7">
-            <th class="fw-semibold border-bottom">{{ trans('words.order') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.isCoupon') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.subtotal') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.delivery_charge') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.total') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.delivery') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.date') }}</th>
-            <th class="fw-semibold border-bottom">{{ trans('words.status') }}</th>
-            <th class="fw-semibold border-bottom">Actions</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($orders as $order)
-          <tr>
-            <td>
-              @if ($order->orderItems->isNotEmpty())
-              @foreach($order->orderItems as $orderItem)
-              <span class="text-dark fs-13 fw-semibold">{{ $orderItem->item }}</span><br>
-              @endforeach
-              @else
-              <!-- Handle the case when there are no order items -->
-              <span>No items available</span>
-              @endif
-            </td>
-
-            <td>
-              @if ($order->coupon)
-              <span class="text-dark fs-13 fw-semibold">{{ $order->coupon->discount_percentage }} %</span><br>
-
-              @else
-              <!-- Handle the case when there are no order items -->
-              <span>False</span>
-              @endif
-            </td>
-            <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $order->sub_total }} {{ $defaultCurrency->isocode }}</span>
-            </td>
-            <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $order->delivery_charge }} {{ $defaultCurrency->isocode }}</span>
-            </td>
-            <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $order->total }} {{ $defaultCurrency->isocode }}</span>
-            </td>
-            <td>
-              @if($order->driver)
-              <span class="text-dark fs-13 fw-semibold">{{ $order->driver->fname }} </span>
-              @else
-              <span class="text-dark fs-13 fw-semibold">Not Assigned</span>
-              @endif
-            </td>
-            <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $order->created_at->format('Y-m-d') }}</span>
-            </td>
-            <td>
-              <span class="text-dark fs-13 fw-semibold">{{ $order->status->name }}</span>
-            </td>
-
-            <td class="center align-middle">
-              <div class="btn-group">
-                <a href="{{ route('orderbutlers.show', ['orderbutler' => $order->id]) }}" class="btn btn-success" title="Order Details">
-                  Show Order
-                </a>&nbsp;
-
-                @if($order->deliveryTrack )
-                  <a href="{{ route('create.track.orderbutler',['order'=>$order->id]) }}" class="btn btn-primary" title="Track Order">
-                    Track Order
-                  </a>
-                  @endif
-
-
-              </div>
-            </td>
-
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-
-      <div class="mt-4 d-flex justify-content-center">
-        @if ($orders->lastPage() > 1)
-        {{ $orders->links('pagination.simple-bootstrap-4') }}
-        @endif
-      </div>
-    </div>
+      @include('content.ordercallcentersrestaurant.pagination_index')
   </div>
 </div>
 
-@include('content.orderbutlers.order_js')
-{{-- @include('content.city.update')
-@include('content.city.add_city_model') --}}
+@include('content.ordercallcentersrestaurant.order_js')
+
 {!! Toastr::message() !!}
 
 @endsection

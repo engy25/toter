@@ -17,35 +17,12 @@ class OrderItemResource extends JsonResource
    */
   public function toArray($request)
   {
-    $addIngredientsID = json_decode($this->addingredients);
-    $addIingredients = $addIngredientsID == null ? null : Ingredient::whereIn('id', $addIngredientsID)->get();
 
-
-    $removeIngredientsID = json_decode($this->remove_ingredients);
-    $removeIngredients = $removeIngredientsID == null ? null : Ingredient::whereIn('id', $removeIngredientsID)->get();
-
-    $optionsID = json_decode($this->options);
-    $options = $optionsID == null ? null : Option::whereIn('id', $optionsID)->get();
-
-    $servicesID = json_decode($this->services);
-    $services = $servicesID == null ? null : Service::whereIn('id', $servicesID)->get();
-
-
-
-    $sidesID = json_decode($this->sides);
-    $sides = $sidesID == null ? null : Side::whereIn('id', $sidesID)->get();
-
-    $addonsID = json_decode($this->addons);
-    $addons = $addonsID == null ? null : Addon::whereIn('id', $addonsID)->get();
-
-    $drinksID = json_decode($this->drinks);
-    $drinks = $drinksID == null ? null : Drink::whereIn('id', $drinksID)->get();
 
     $sizeId = $this->size_id ?? null;
     $preferenceId = $this->preference_id ?? null;
     $giftId = $this->gift_id ?? null;
     $optionId = $this->option_id ?? null;
-
 
     return [
       "id" => $this->id,
@@ -56,13 +33,13 @@ class OrderItemResource extends JsonResource
       "preference"=>$preferenceId ? $this->preference->name : null,
       "gift"=>$giftId ? $this->gift->name : null,
       "option"=>$optionId ? $this->option->name : null,
-      "addIngredients" => $addIingredients ? ItemResource::collection($addIingredients) : [],
-      "removeIngredients" => $removeIngredients ? ItemResource::collection($removeIngredients) : [],
-      "options" => $options ? ItemResource::collection($options) : [],
-      "services" => $services ? ItemResource::collection($services) : [],
-      "sides" => $sides ? ItemResource::collection($sides) : [],
-      "addons" => $addons ? ItemResource::collection($addons) : [],
-      "drinks" => $drinks ? ItemResource::collection($drinks) : [],
+      "addIngredients" => ItemResource::collection($this->addingredients) ,
+      "removeIngredients" => ItemResource::collection($this->remove_ingredients),
+      "options" => ItemResource::collection($this->options) ,
+      "services" => ItemResource::collection($this->services) ,
+      "sides" => ItemResource::collection($this->sides) ,
+      "addons" =>  ItemResource::collection($this->addons) ,
+      "drinks" =>  ItemResource::collection($this->drinks),
     ];
   }
 }

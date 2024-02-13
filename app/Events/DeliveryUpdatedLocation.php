@@ -48,4 +48,9 @@ class DeliveryUpdatedLocation implements ShouldBroadcast
 
     ];
   }
+
+  public function broadcastAs()
+  {
+    return "location-updated";
+  }
 }

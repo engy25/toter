@@ -99,7 +99,7 @@ class OrderButler extends Model
 
   public function deliveryTrack()
   {
-    return $this->morphOne(Delivery::class, 'ordereable','ordereable_id');
+    return $this->morphOne(Delivery::class, 'ordereable');
 
   }
 
