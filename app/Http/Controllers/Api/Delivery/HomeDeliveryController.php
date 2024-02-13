@@ -7,10 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Http\Resources\Api\User\Orders\{OrderItemResource, OrderItemButlersResource};
-use App\Models\{Order, User, OrderCallcenter, OrderButler, OrderStatus};
+use App\Models\{Order, User, OrderCallcenter, OrderButler, Delivery, OrderStatus};
 use App\Services\StatusService;
 use App\Http\Resources\Api\Delivery\{SimpleOrderUserResource, OrderDetailsResource, SimpleOrderButlerUserResource, orderButlersResource, CombinedDataResource};
-use App\Http\Requests\Api\Delivery\AcceptTypeRequest;
+use App\Http\Requests\Api\Delivery\{AcceptTypeRequest, UpdateLocationRequest};
+use App\Events\DeliveryUpdatedLocation;
 
 class HomeDeliveryController extends Controller
 {
@@ -234,5 +235,22 @@ class HomeDeliveryController extends Controller
 
     );
   }
+
+  public function updateLocation(UpdateLocationRequest $request)
+  {
+
+    $deliveryId = auth("api")->user()->id;
+    $orderType = ucfirst($request->type);
+    $orderModel = "App\\Models\\" . $orderType;
+    $delivery=Delivery::where("ordereable_type",$orderModel)->where("ordereable_id",$request->id)->where("delivery_id",$deliveryId)->firstOrFail();
+
+    $delivery->update([
+      "lat" => $request->lat,
+      "lng" => $request->lng
+    ]);
+    event(new DeliveryUpdatedLocation($request->lng, $request->lat) );
+    return $delivery;
+  }
+
 
 }

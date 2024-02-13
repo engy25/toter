@@ -125,4 +125,7 @@ return [
   "coupon_not_found_for_item"=>"coupon Not Found For Item",
   "coupon_not_valid"=>"Coupon Not Valid",
   "coupon_not_valid_you_must_pay_more"=>"Coupon Not Valid You Must Pay More To Benifit The Coupon",
+  "pleazeChooseItem"=>"Pleaze Choose Item",
+  "This_store_doesnot_deliver_to_your_address"=>"This store doesnot deliver to your address, Pleaze Return and Edit Your Address ",
+  "item_not_found"=>"من فضلك اختار العنصر"
 ];

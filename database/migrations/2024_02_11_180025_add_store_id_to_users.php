@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('order_butlers', function (Blueprint $table) {
-            //
-            $table->bigInteger('district_id')->unsigned()->nullable();
-            $table->foreign('district_id')->references('id')->on('company_Districts')->onDelete('cascade');
+        Schema::table('users', function (Blueprint $table) {
+          $table->bigInteger('store_id')->unsigned()->nullable();
+          $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
         });
     }
 
@@ -27,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('order_butlers', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

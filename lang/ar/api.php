@@ -100,6 +100,8 @@ return [
   'offer_applied_success' => 'تم تطبيق العرض بنجاح',
   'invalid_ingredient'=>'تم تحديد مكون غير صالح لهذا العنصر.',
   'invalid_details_in_this_item'=>'تفاصيل غير متاحع في ذلك العنصر',
-  'items_must_belobg_to_the_same_store'=>'كل العناصر يجب ان تنتمي الي نفس المتجر'
+  'items_must_belobg_to_the_same_store'=>'كل العناصر يجب ان تنتمي الي نفس المتجر',
+  "This_store_doesnot_deliver_to_your_address"=>"هذا المتجر لا يسلم إلى عنوانك من فضلك عدل عنوانك" ,
+  "item_not_found"=>"item not found"
 ];
 

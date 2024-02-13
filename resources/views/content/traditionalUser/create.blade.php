@@ -76,6 +76,26 @@
       </div>
 
 
+      {{-- <div class="form-group"></div>
+      <label for="up_country_id">City </label>
+      <select name="city_id" class="form-control" id ="city_id" >
+        @foreach($cities as $city)
+        <option value="{{ $city->id }}">{{ $city->name }}</option>
+        @endforeach
+      </select>
+       <span class="text-danger error-message" id="error_city_id"></span>
+      <br>
+
+      <div class="form-group"></div>
+      <label for="district_id">District </label>
+      <select name="district_id" class="form-control" id ="district_id" >
+
+      </select>
+       <span class="text-danger error-message" id="error_district_id"></span>
+      <br>
+
+
+
       <div class="mb-3">
         <label for="building" class="form-label"> Building </label>
         <input type="text" class="form-control required" id="building" name="building" required>
@@ -97,7 +117,7 @@
         <label for="instructions" class="form-label">Instructions </label>
         <input type="text" class="form-control" id="instructions" name="instructions" >
       </div>
-
+ --}}
 
       <button type="submit" class="btn btn-primary">Add User</button>
     </form>

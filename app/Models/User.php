@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ItemScope;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 use App\Helpers\Helpers;
 use Illuminate\Support\Carbon;
 use Laravel\Passport\HasApiTokens;
@@ -22,10 +22,9 @@ class User extends Authenticatable
   protected $table = 'users';
   public $timestamps = true;
 
-  use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+  use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
 
-  protected $dates = ['deleted_at'];
   protected $guarded = [];
 
   protected $hidden = [
@@ -58,6 +57,8 @@ class User extends Authenticatable
       $this->update(['tier_id' => '2']);
     }
   }
+
+
 
   public function setImageAttribute($value)
   {
@@ -95,9 +96,9 @@ class User extends Authenticatable
   }
 
 
-  // public function role() {
-  //   return $this->belongsTo(Role::class);
-  // }
+  public function store() {
+    return $this->belongsTo(Store::class);
+  }
 
   public function addresses()
   {
@@ -292,11 +293,13 @@ class User extends Authenticatable
 
     $role_delivery = Role::where("name", "Delivery")->first();
     $delivery = User::where("role_id", $role_delivery->id);
+
     $store = Store::whereId($storeId)->first();
     $sectionName=SectionTranslation::where("name","Food")->first();
 
     if($store->section_id==$sectionName->section_id)
     {
+
       return null;
     }
 
@@ -356,6 +359,7 @@ class User extends Authenticatable
 
     if ($the_nearest_empty_driver) {
 
+
       return $the_nearest_empty_driver;
     }
 
@@ -364,6 +368,7 @@ class User extends Authenticatable
 
         return $the_nearest_the_least_loaded_driver;
       } else {
+
 
         return User::with(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
           ->where("role_id", $role_delivery->id)
@@ -374,7 +379,88 @@ class User extends Authenticatable
     }
   }
 
+  public function assignDriverToOrderCallCenter($storeId)
+  {
 
+    $role_delivery = Role::where("name", "Delivery")->first();
+    $delivery = User::where("role_id", $role_delivery->id);
+
+    $store = Store::whereId($storeId)->first();
+
+    $currentDayName = Carbon::now()->format('l');
+    $day = DayTranslation::where("name", $currentDayName)->first();
+    $dayId = $day->day_id;
+
+    $currentTime = Carbon::now()->format('H:i:s');
+
+    /**get the Query deliveries within working hours and if the delivery doesnot have scheduled  in this day
+     * get the users with schedules if doesnot have schedules get the delivery only
+     * */
+    $usersQuery = User::where("role_id", $role_delivery->id)
+      ->where(function ($query) use ($dayId, $currentTime) {
+        $query->where(function ($subQuery) use ($dayId, $currentTime) {
+          $subQuery->whereHas("schedules", function ($scheduleQuery) use ($dayId, $currentTime) {
+            $scheduleQuery->where("day_id", $dayId)
+              ->where("from_time", "<=", $currentTime)
+              ->where("to_time", ">=", $currentTime);
+          });
+        })
+          ->orWhere(function ($subQuery) use ($dayId) {
+            $subQuery->whereHas("schedules", function ($scheduleQuery) use ($dayId) {
+              $scheduleQuery->where("day_id", $dayId);
+            });
+          })
+          ->orWhereDoesntHave("schedules"); // Users without schedules
+      });
+
+
+
+    // $usersQuery = User::where("role_id", $role_delivery->id);
+
+
+    // Check if the Nearest scope exists and if the store has latitude and longitude
+    if (method_exists($usersQuery->getModel(), 'Nearest') && $store->lat && $store->lng) {
+
+      $usersQuery->Nearest($store->lat, $store->lng);
+    }
+
+
+    $the_nearest_empty_driver = $usersQuery->whereDoesntHave("deliveryOrders")
+      ->whereDoesntHave("deliveryOrderButlers")->whereDoesntHave("deliveryOrderCallcenter")->first();
+
+    $the_nearest_the_least_loaded_driver = User::with(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+      ->where("role_id", $role_delivery->id)
+
+      ->when(method_exists($usersQuery->getModel(), 'scopeNearest') && $store->lat && $store->lng, function ($query) use ($store) {
+        return $query->Nearest($store->lat, $store->lng);
+      })
+      ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+      ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
+      ->first();
+
+
+
+    if ($the_nearest_empty_driver) {
+
+
+      return $the_nearest_empty_driver;
+    }
+
+    if (!$the_nearest_empty_driver) {
+      if ($the_nearest_the_least_loaded_driver != null) {
+
+        return $the_nearest_the_least_loaded_driver;
+      } else {
+
+
+        return User::with(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+          ->where("role_id", $role_delivery->id)
+          ->withCount(["deliveryOrders", "deliveryOrderButlers", "deliveryOrderCallcenter"])
+          ->orderByRaw("delivery_orders_count + delivery_order_butlers_count + delivery_order_callcenter_count")
+          ->first();
+      }
+    }
+  }
 
 
   public function assignDriverToOrderButler(OrderButler $order)

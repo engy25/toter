@@ -148,6 +148,10 @@ class Store extends Model implements TranslatableContract
     return $this->hasMany(Item::class)->withoutGlobalScope(ItemScope::class);
   }
 
+  public function Theitems()
+  {
+    return $this->hasMany(Item::class);
+  }
   public function drinks()
   {
     return $this->hasMany(Drink::class);

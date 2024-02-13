@@ -11,7 +11,7 @@ use App\Models\PointUser;
 use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
 use App\Models\{Order, User, OrderButler, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
-use App\Helpers\helpers;
+use App\Helpers\Helpers;
 use App\Services\StatusService;
 use App\Events\OrderCompleted;
 

@@ -32,7 +32,7 @@
 </h4>
 
 <div class="row g-4 mb-4">
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-start justify-content-between">
@@ -58,7 +58,7 @@
 
 
 
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-start justify-content-between">
@@ -81,7 +81,7 @@
 
 
 
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-start justify-content-between">
@@ -103,7 +103,7 @@
 
 
 
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-start justify-content-between">
@@ -126,7 +126,7 @@
 
 
 
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card">
       <div class="card-body">
         <div class="d-flex align-items-start justify-content-between">
@@ -147,7 +147,7 @@
   </div>
 
 
-  <div class="col-sm-6 col-xl-3">
+  <div class="col-sm-6 col-xl-4">
     <div class="card" style="width: 330px; height: 105px;">
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">

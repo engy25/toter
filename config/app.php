@@ -17,6 +17,9 @@ return [
 
   'name' => env('APP_NAME', 'Laravel'),
 
+
+
+
   /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -30,6 +33,8 @@ return [
 
   'env' => env('APP_ENV', 'production'),
 
+
+  'api_key' => env('GOOGLE_MAPS_API_KEY', 'AIzaSyDy4zyXKHlUYa8IfZBrtT35H05UDU4Dcss'),
   /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -178,7 +183,7 @@ return [
          */
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
-    // App\Providers\BroadcastServiceProvider::class,
+    App\Providers\BroadcastServiceProvider::class,
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     App\Providers\MenuServiceProvider::class,
@@ -204,6 +209,7 @@ return [
       // ...
       'Helper' => App\Helpers\Helpers::class,  // Alias for custom helper class
       'PDF' => Barryvdh\DomPDF\Facade::class,
+      'Pusher' => Pusher\Pusher::class,
       'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,  // Alias for LaravelLocalization facade
       'Socialite' => Laravel\Socialite\Facades\Socialite::class,  // Alias for Socialite facade
   ])->toArray(),

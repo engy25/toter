@@ -2,14 +2,29 @@
 
 namespace App\Http\Controllers\dashboard\CallCenter;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
-use App\Models\{Store, User, OrderCallcenter, Address, item};
+use App\Models\{Store, User, OrderCallcenter, Address, City, item, Currency, StoreDistrict, OrderStatus, OrderItem};
+use App\Models\CityTranslation;
+use App\Models\CountryTranslation;
+use App\Models\Scopes\ItemScope;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Http\Request;
+use App\Services\StatusService;
+use App\Http\Requests\dash\CallCenter\{StoreOrderRequest, StoreOrderAddressRequest};
+use App\Traits\OrderTrait;
 
 class OrderController extends Controller
 {
+  use OrderTrait;
+  public $helper;
+  public $statusService;
+  public function __construct()
+  {
+    $this->helper = new Helpers();
+    $this->statusService = new StatusService();
 
+  }
   /**
    * Display a listing of the resource.
    *
@@ -77,7 +92,7 @@ class OrderController extends Controller
     \DB::beginTransaction();
 
     try {
-      $address = Address::where("user_id", $user->id)->firstOrFail();
+
 
       $validated = $request->validate([
         "store" => "required|exists:stores,id"
@@ -89,7 +104,7 @@ class OrderController extends Controller
       $orderCallCenter = new OrderCallcenter([
         'store_id' => $validated["store"],
         'user_id' => $user->id,
-        'address_id' => $address->id,
+        // 'address_id' => $address->id,
 
       ]);
 
@@ -117,28 +132,166 @@ class OrderController extends Controller
 
   public function create(OrderCallcenter $id)
   {
-    $searchString="";
+    $searchString = "";
 
     $store = Store::with([
-      "items",
-      "items.drinks",
-      'items.sides',
-      'items.gifts',
-      'items.Removeingredients',
-      'items.Removeingredients',
-      'items.services',
-      'items.options',
-      'items.preferences'
+      'Theitems',
+      'Theitems.drinks',
+      'Theitems.sides',
+      'Theitems.gifts',
+      'Theitems.Removeingredients',
+      'Theitems.services',
+      'Theitems.options',
+      'Theitems.preferences',
+      'tags',
+    ])
+      ->where('id', $id->store_id)
+      ->firstOrFail();
 
-    ])->where("id", $id->store_id)->firstOrFail();
 
-    return view("content.orderCallcenter.create", compact("id","store","searchString"));
+    return view("content.orderCallcenter.c", compact("id", "store", "searchString"));
 
   }
-  public function store(Request $request, OrderCallcenter $id)
+  public function store(StoreOrderRequest $request, OrderCallcenter $id)
   {
-    dd($request->all());
+    \DB::beginTransaction();
+
+    try {
+
+      $subTotal = 0;
+      $driver = new User();
+      $statusPending = $this->statusService->getStatusIdByName("pending");
+      $order = $id;
+      $userId = $order->user_id;
+
+      foreach ($request->items as $item) {
+
+        $item = json_decode($item, true);
+        if (!$item || !isset($item['id']) || !isset($item['quantity'])) {
+
+          $status = 422;
+
+          return view('content.orderCallcenter.c', compact('status'));
+
+        }
+
+        $orderItem = OrderItem::create([
+          'ordereable_id' => $order->id,
+          'ordereable_type' => 'App\Models\OrderCallcenter',
+          'item_id' => $item['id'],
+          'qty' => $item['quantity'],
+          // 'notes' => $item['notes'] ?? null,
+        ]);
+
+        $itemModel = Item::findOrFail($item['id']);
+        $quantity = $item['quantity'];
+        $subTotal += $itemModel->price * $quantity;
+        $storeId = $itemModel->store_id;
+
+        $driverId = ($driver->assignDriverToOrder($storeId) == null) ? null : $driver->assignDriverToOrder($storeId)->id;
+        $store = Store::whereId($storeId)->first();
+        $deliveryTime = $store->delivery_time;
+
+
+      }
+
+
+      $order->update([
+        "sub_total" => $subTotal,
+        "delivery_id" => $driverId,
+        "delivery_time" => $deliveryTime,
+
+      ]);
+
+      OrderStatus::create([
+        "status_id" => $statusPending,
+        "ordereable_id" => $order->id,
+        "ordereable_type" => "App\Models\OrderCallcenter"
+      ]);
+      \DB::commit();
+      return redirect()->route('order.address.create', ['orderId' => $order->id])->with('success', 'Pleaze Complete The Stage');
+    } catch (\Exception $e) {
+      // Rollback the transaction in case of an exception
+      \DB::rollBack();
+
+      // Log the error
+      \Log::error($e->getMessage());
+
+      // Return an error response or handle the exception as needed
+      return redirect()->route('traditionalusers.index')->with('error', 'Error creating Order .');
+    }
   }
+
+  public function createorderAddress(OrderCallcenter $orderId)
+  {
+    $countryIraqId = CountryTranslation::where("name", "Iraq")->value("country_id");
+    $cities = City::where("country_id", $countryIraqId)->get();
+    $orderId = $orderId->id;
+
+    return view("content.orderCallcenter.partials.create_address", compact("cities", "orderId"));
+  }
+
+
+
+  public function storeOrderAddress(StoreOrderAddressRequest $request, OrderCallcenter $orderId)
+  {
+
+    \DB::beginTransaction();
+
+    try {
+      $countryIraqId = CountryTranslation::where("name", "Iraq")->value("country_id");
+      $cities = City::where("country_id", $countryIraqId)->get();
+
+      $order = $orderId;
+      $userId = $order->user_id;
+      $user = User::whereId($userId)->first();
+      $storeId = $order->store_id;
+
+
+
+      //Check if the district ID is associated with the store
+      if (!$this->checkDistrictIdAssociatedToTheStore($storeId, $request->district_id)) {
+
+        $orderId = $orderId->id;
+        $status = 401;
+        return view('content.orderCallcenter.partials.create_address', compact('status', 'cities', 'orderId'));
+      }
+      $deliveryCharge = StoreDistrict::where("district_id", $request->district_id)->where("store_id", $storeId)->value('delivery_charge');
+
+
+
+      $address = Address::create([
+        'building' => $request->building,
+        'street' => $request->street,
+        'apartment' => $request->apartment,
+        "user_id" => $userId,
+        'instructions' => $request->instructions,
+        'district_id' => $request->district_id,
+        "phone" => $user->phone,
+        "country_code" => $user->country_code,
+        'default' => 1
+      ]);
+      $order->update([
+        "address_id" => $address->id,
+        "district_id" => $request->district_id,
+        "delivery_charge" => $deliveryCharge,
+        "total" => $deliveryCharge + $order->sub_total
+
+      ]);
+      \DB::commit();
+      return view("content.orderCallcenter.show", compact("order"))->with('msg', 'Order Added Successfully');
+    } catch (\Exception $e) {
+      // Rollback the transaction in case of an exception
+      \DB::rollBack();
+
+      // Log the error
+      \Log::error($e->getMessage());
+
+      // Return an error response or handle the exception as needed
+      return redirect()->route('traditionalusers.index')->with('error', 'Error creating user and address.');
+    }
+  }
+
 
   /**
    * Display the specified resource.
@@ -146,9 +299,9 @@ class OrderController extends Controller
    * @param  \App\Models\Order  $order
    * @return \Illuminate\Http\Response
    */
-  public function show(Order $order)
+  public function show(OrderCallcenter $order)
   {
-    //
+    return view("content.orderCallcenter.show", compact("order"));
   }
 
   /**
@@ -183,5 +336,50 @@ class OrderController extends Controller
   public function destroy(Order $order)
   {
     //
+  }
+
+  public function itemDetails($id)
+  {
+    $item = Item::whereId($id)->first();
+    $added_ingredients = $item->Addingredients()->get();
+    $remove_ingredients = $item->Removeingredients()->get();
+    $addons = $item->addons()->get();
+    $drinks = $item->drinks()->get();
+    $gifts = $item->gifts()->get();
+    $sizes = $item->sizes()->get();
+    $services = $item->services()->get();
+    $preferences = $item->preferences()->get();
+    $options = $item->options()->get();
+    $sides = $item->sides()->get();
+    return view("content.orderCallcenter.partials.item_details", compact("item", "sides", "options", "preferences", "services", "sizes", "gifts", "added_ingredients", "remove_ingredients", "addons", "drinks"));
+
+  }
+  public function filterItems($id)
+  {
+    $Theitems = Item::with([
+
+      'drinks',
+      'sides',
+      'gifts',
+      'Removeingredients',
+      'services',
+      'options',
+      'preferences',
+
+    ]);
+
+
+    $searchString = "";
+
+    if ($id != 0) {
+      $items = $Theitems->where("category_id", $id)
+
+        ->get();
+
+    }
+    $items = $Theitems->get();
+    $defaultCurrency = Currency::where("default", 1)->value("isocode");
+
+    return response()->json([$items, $defaultCurrency]);
   }
 }

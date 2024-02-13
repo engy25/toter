@@ -21,7 +21,7 @@ class OrderButlersResource extends JsonResource
     return [
       'id' => $this->id,
       'order_number' => $this->order_number,
-      
+
       'delivery_name' => $this->delivery->fname ?? null,
       'delivery_phone' => $this->driver->phone ?? null,
 
@@ -31,7 +31,7 @@ class OrderButlersResource extends JsonResource
 
 
       'service_charge'=>$this->service_charge,
-      'delivery_fees'=> (double) $this->delivery_charge ?? null,
+      'delivery_fees'=> (double) $this->expected_delivery_charge ?? null,
       'expected_cost' => (double) $this->expected_cost,
 
       'total' => (double) $this->total,

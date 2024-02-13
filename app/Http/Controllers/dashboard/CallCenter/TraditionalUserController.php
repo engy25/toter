@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\dashboard\CallCenter;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Country, Address};
+use App\Models\{User, Country, Address, City};
+use App\Models\CountryTranslation;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use Spatie\Permission\Models\Role;
@@ -32,7 +33,7 @@ class TraditionalUserController extends Controller
   public function paginationUser(Request $request)
   {
 
-    $users = User::role("User", "api")->where("is_traditional",1)->latest()->paginate(2);
+    $users = User::role("User", "api")->where("is_traditional", 1)->latest()->paginate(2);
 
     return view("content.traditionalUser.pagination_index", compact("users"))->render();
 
@@ -44,7 +45,7 @@ class TraditionalUserController extends Controller
 
     $searchString = '%' . $request->search_string . '%';
 
-    $users = User::role("User", "api")->where("is_traditional",1)->where(function ($query) use ($searchString) {
+    $users = User::role("User", "api")->where("is_traditional", 1)->where(function ($query) use ($searchString) {
 
       $query->where("fname", 'like', $searchString)
         ->orWhere('email', 'like', $searchString)
@@ -104,16 +105,17 @@ class TraditionalUserController extends Controller
 
       $user->assignRole($role);
 
-      // Create a new address associated with the user
-      $address = $user->addresses()->create([
-        'building' => $request->building,
-        'street' => $request->street,
-        'apartment' => $request->apartment,
-        'phone' => $user->phone,
-        'country_code' => $user->country_code,
-        'instructions' => $request->instructions,
-        'default' => 1
-      ]);
+      // // Create a new address associated with the user
+      // $address = $user->addresses()->create([
+      //   'building' => $request->building,
+      //   'street' => $request->street,
+      //   'apartment' => $request->apartment,
+      //   'phone' => $user->phone,
+      //   'country_code' => $user->country_code,
+      //   'instructions' => $request->instructions,
+      //   'district_id'=>$request->district_id,
+      //   'default' => 1
+      // ]);
 
 
       \DB::commit();

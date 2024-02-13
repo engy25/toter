@@ -7,7 +7,7 @@ use App\Models\{Coupon, Store, Item};
 use App\Models\CouponItem;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use App\Http\Requests\dash\DE\StoreCouponRequest;
+use App\Http\Requests\dash\DE\{StoreCouponRequest, StoreCouponToCompanyRequest};
 
 class CouponController extends Controller
 {
@@ -141,6 +141,47 @@ class CouponController extends Controller
     }
   }
 
+  public function addCouponToStore(StoreCouponToCompanyRequest $request)
+  {
+
+    $discount_percentage = null;
+    $discount_price = null;
+
+    switch ($request->type) {
+      case 'discount':
+        $discount_percentage = $request->discount_percentage;
+        break;
+      case 'price':
+        $discount_price = $request->price;
+        break;
+      default:
+        break;
+
+    }
+    $coupon = Coupon::create([
+      'code' => $request->code,
+      'expire_date' => $request->expire_date,
+      'discount_percentage' => $discount_percentage,
+      'price' => $discount_price,
+      'max_user_used_code' => $request->max_user_used_code,
+      'is_active' => 1
+
+    ]);
+
+
+    if ($coupon->wasRecentlyCreated) {
+      return response()->json([
+        "status" => true,
+        "message" => "Coupon Added Successfully"
+      ]);
+    } else {
+      return response()->json([
+        "status" => false,
+        "message" => "Failed to add Coupon"
+      ], 500); // Internal Server Error status code
+    }
+  }
+
 
   /**
    * Display the specified resource.
@@ -172,55 +213,93 @@ class CouponController extends Controller
    */
   public function update(Request $request, Coupon $coupon)
   {
-      $couponId = $coupon->id;
-      $discount=null;
-      $price=null;
+    $couponId = $coupon->id;
+    $discount = null;
+    $price = null;
 
-      $rules = [
-          'up_code' => 'required|string|unique:coupons,code,' . $couponId,
-          'upexpire_date' => 'required|date|after:now',
-          // 'discount_type' => 'nullable|in:percentage,price',
-          // 'discount_value' => 'nullable|numeric',
-          'up_store_id' => 'required|exists:stores,id',
-          'upmax_user_used_code' => 'numeric|integer|required|digits_between:1,11|max:99999999999',
-      ];
+    $rules = [
+      'up_code' => 'required|string|unique:coupons,code,' . $couponId,
+      'upexpire_date' => 'required|date|after:now',
+      'up_store_id' => 'required|exists:stores,id',
+      'upmax_user_used_code' => 'numeric|integer|required|digits_between:1,11|max:99999999999',
+    ];
 
-      // Adjust the max rule based on the discount type
-      // if ($request->discount_type === 'percentage') {
-      //   $discount=$request->discount_value;
 
-      //     $rules['discount_value'] .= '|integer|max:100';
-      // } else {
-      //     $rules['discount_value'] .= '|numeric|max:999999999999999999999999999.99|required';
-      //     $price=$request->discount_value;
-      // }
+    $validator = \Validator::make($request->all(), $rules);
 
-      $validator = \Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
+    }
 
-      if ($validator->fails()) {
-          return response()->json(['errors' => $validator->errors()], 422);
-      }
+    if ($coupon->users->count() > 0) {
+      if ($coupon->store_id == $request->up_store_id) {
+        $coupon->store_id = $request->up_store_id;
+        $coupon->expire_date = $request->upexpire_date;
 
-      if ($coupon->users->count() > 0) {
-          return response()->json(['status' => false, 'msg' => "This Coupon Is Used You Cannot Update It."], 500);
-      }
+        $coupon->code = $request->up_code;
+        $coupon->max_user_used_code = $request->upmax_user_used_code;
+        $coupon->is_active = $request->is_active;
 
-      $coupon->store_id = $request->up_store_id;
-      $coupon->expire_date = $request->upexpire_date;
-      // $coupon->discount_percentage = $request->discount_value;
-      // $coupon->price = $request->price;
-      $coupon->code = $request->up_code;
-      $coupon->max_user_used_code = $request->upmax_user_used_code;
-      $coupon->is_active = $request->is_active;
+        $coupon->save();
 
-      $coupon->save();
-
-      return response()->json([
+        return response()->json([
           'status' => true,
           'message' => 'Coupon updated successfully'
-      ]);
+        ]);
+      }
+
+      return response()->json(['status' => false, 'msg' => "This Coupon Is Used You Cannot Update It."], 500);
+    }
+
+    $coupon->store_id = $request->up_store_id;
+    $coupon->expire_date = $request->upexpire_date;
+
+    $coupon->code = $request->up_code;
+    $coupon->max_user_used_code = $request->upmax_user_used_code;
+    $coupon->is_active = $request->is_active;
+
+    $coupon->save();
+
+    return response()->json([
+      'status' => true,
+      'message' => 'Coupon updated successfully'
+    ]);
   }
 
+
+  public function updateCouponToStore(Request $request, Coupon $coupon)
+  {
+    $couponId = $coupon->id;
+
+    $rules = [
+      'up_code' => 'required|string|unique:coupons,code,' . $couponId,
+      'upexpire_date' => 'required|date|after:now',
+      'upmax_user_used_code' => 'numeric|integer|required|digits_between:1,11|max:99999999999',
+    ];
+
+
+
+    $validator = \Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+
+
+    $coupon->expire_date = $request->upexpire_date;
+
+    $coupon->code = $request->up_code;
+    $coupon->max_user_used_code = $request->upmax_user_used_code;
+    $coupon->is_active = $request->is_active;
+
+    $coupon->save();
+
+    return response()->json([
+      'status' => true,
+      'message' => 'Coupon updated successfully'
+    ]);
+  }
 
   /**
    * Remove the specified resource from storage.
@@ -259,7 +338,7 @@ class CouponController extends Controller
 
     $locale = LaravelLocalization::getCurrentLocale();
 
-    $items = Item::whereDoesntHave("coupons")->
+    $items = Item::whereDoesntHave("coupon")->
       with([
         'store',
         'translations' => function ($query) use ($locale) {

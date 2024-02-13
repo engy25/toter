@@ -60,6 +60,12 @@ class Order extends Model
   }
 
 
+  public function deliveryTrack()
+{
+    return $this->morphOne(Delivery::class, 'ordereable');
+}
+
+
 
   public function statuses()
   {
@@ -111,6 +117,11 @@ class Order extends Model
   public function currency()
   {
     return $this->belongsTo(Currency::class, "default_currency_id");
+  }
+
+  public function district()
+  {
+    return $this->belongsTo(District::class);
   }
 
 }

@@ -28,7 +28,9 @@ class AddOrderButlerRequest extends ApiMasterRequest
     $rules = [
       'from_address_id' => 'required|exists:addresses,id',
       'to_address_id' => 'required|exists:addresses,id',
-      'district_id'=>'required|exists:company_Districts,id',
+      // 'district_id'=>'required|exists:company_Districts,id',
+      'district_id'=>'required|exists:districts,id',
+
       'from_driver_instructions' => 'nullable|min:3|max:1000',
       'to_driver_instructions' => 'nullable|min:3|max:1000',
       'coupon_id' => 'nullable|exists:coupons,id',
@@ -36,7 +38,7 @@ class AddOrderButlerRequest extends ApiMasterRequest
       'transaction_id' => 'required_if:payment_type,visa',
       'butler_id' => 'required|exists:butlers,id',
       'expected_cost'=>'nullable|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
-      //'expected_delivery_charge'=>'required|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
+      'expected_delivery_charge'=>'required|numeric|digits_between:1,30|regex:/^\d{1,28}(\.\d{1,2})?$/',
 
     ];
 

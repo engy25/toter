@@ -34,6 +34,7 @@
 
 
 
+
 {{-- /** to fetch list of the data of tags and populate the dropdown*/// --}}
 <script>
   $(document).ready(function(){
@@ -64,6 +65,68 @@
     });
   });
 </script>
+
+
+
+
+
+
+
+{{--Fetch The Districts Depends on City --}}
+
+
+<script>
+  $(document).ready(function() {
+    $('#city_id').change(function() {
+      var cityId = $(this).val();
+
+      // Make an AJAX request to fetch districts for the selected city
+      $.ajax({
+        url: '/cities/districts/' + cityId,
+        type: 'GET',
+        success: function (data) {
+          // Populate the district dropdown with the received data
+          var options = '<option value="">Select District</option>';
+
+          $.each(data, function (index, district) {
+            var districtName = district.translations.length > 0 ? district.translations[0].name : district.name;
+            options += '<option value="' + district.id + '">' + districtName + '</option>';
+          });
+          $('#district_id').html(options);
+        },
+        error: function (response) {
+          console.error('Error fetching districts:', response);
+        }
+      });
+    });
+
+    // // Function to fetch districts from the API using Fetch API
+    // function fetchDistricts() {
+    //   fetch('http://your-api-endpoint/cities/districts/18')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       // Assign the fetched districts to the global variable
+    //       apiDistricts = data;
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching districts:', error);
+    //     });
+    // }
+
+    // // Call fetchDistricts to populate apiDistricts
+    // fetchDistricts();
+  });
+
+
+
+</script>
+
+
+
+
+
+
+
 
 
 

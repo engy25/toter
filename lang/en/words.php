@@ -72,6 +72,8 @@ return [
   "discount_price"=>"Discount Price",
   "DeliveryCharge"=>"Delivery Charge",
   "fromDistrict"=>"from District",
-  "toDistrict"=>"To District"
+  "toDistrict"=>"To District",
+  "addtocompany"=>"Add To Company",
+  "addtostore"=>"Add To Store",
 
 ];

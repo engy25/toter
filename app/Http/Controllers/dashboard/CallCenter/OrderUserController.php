@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\dashboard\CallCenter;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Order, User, Role, Status, Currency};
+use Spatie\Permission\Models\Role;
+use App\Models\{Order, User, Status, Currency};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Dompdf\Dompdf;
@@ -38,7 +39,7 @@ class OrderUserController extends Controller
 
 
 
-  /**paginate the users */
+  /**paginate the orders */
   public function paginationOrderUser(Request $request)
   {
     $defaultCurrency = Currency::where("default", 1)->first();

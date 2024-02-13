@@ -24,7 +24,7 @@ class SimpleOrderButlerUserResource extends JsonResource
       'order_image' => $firstItem->image ?? null,
 
       'service_charge'=>$this->service_charge,
-      'delivery_fees'=> (double) $this->delivery_charge ?? null,
+      'delivery_fees'=> (double) $this->expected_delivery_charge ?? null,
       'expected_cost' => (double) $this->expected_cost,
 
       'total' => (double) $this->total,

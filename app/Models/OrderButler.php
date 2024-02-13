@@ -97,4 +97,10 @@ class OrderButler extends Model
       ->withTimestamps();
   }
 
+  public function deliveryTrack()
+  {
+    return $this->morphOne(Delivery::class, 'ordereable','ordereable_id');
+
+  }
+
 }

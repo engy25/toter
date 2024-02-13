@@ -28,7 +28,7 @@ class OrderButlerObserver
 
     $orderButler->order_number = Str::random(10); // generates a random string of length 10
     //$orderButler->admin_id = User::where("role_id", $roleAdminId);
-    $orderButler->user_id = auth("api")->user()->id;
+    // $orderButler->user_id = auth("api")->user()->id;
     $orderButler->status_id = $status_pending->status_id;
     $orderButler->default_currency_id = $default_currency->id;
     $orderButler->driver_id=$driver->assignDriverToOrderButler($orderButler)->id;

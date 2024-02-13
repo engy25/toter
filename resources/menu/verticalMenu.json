@@ -155,7 +155,13 @@
           "url": "stores",
           "name": "List",
           "slug": "app-user-list"
+        },
+        {
+          "url": "restaurantusers",
+          "name": "Add Users To  Dashboard Restaurants",
+          "slug": "app-user-list"
         }
+
       ]
     },
 
@@ -212,6 +218,7 @@
       "name": " Traditiona Users",
       "icon": "menu-icon tf-icons ti ti-users",
       "slug": "app-user",
+      "permissions": ["view traditional_users"],
       "submenu": [
         {
           "url": "traditionalusers",
@@ -280,6 +287,25 @@
 
 
 
+
+    {
+      "menuHeader": "Orders Of The Store"
+    },
+
+    {
+      "name": "User Orders",
+      "icon": "menu-icon tf-icons ti ti-users",
+      "slug": "app-user",
+      "permissions": ["view order of the stores"],
+      "submenu": [
+        {
+          "url": "storeorders",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+
+      ]
+    },
 
 
 

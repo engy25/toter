@@ -21,7 +21,7 @@ class Address extends Model
       if ($address->orders()->count() > 0 || $address->fromOrderButlers()->count() > 0 || $address->toOrderButlers()->count() > 0 || $address->orderCallcenters()->count() > 0)
 
       return 5;
-     
+
        // return response()->json(['status' => false, 'msg' => "Cannot delete Address, It is related to other tables."], 403);
 
     });
@@ -51,6 +51,10 @@ class Address extends Model
   public function orderCallcenters()
   {
     return $this->hasMany(OrderCallcenter::class, 'address_id');
+  }
+
+  public function district(){
+    return $this->belongsTo(District::class);
   }
 
 }

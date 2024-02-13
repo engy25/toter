@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\dashboard\CallCenter;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Order, Role, User, Currency, OrderCallcenter, Status};
+use App\Models\{Order, Role, User, Currency, OrderCallcenter, Butler, Status, OrderButler, CountryTranslation, City, Address, StatusTranslation, OrderStatus};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\View;
+use App\Http\Requests\dash\CallCenter\{StoreOrderButlerRequest};
 
 class OrderCallCenterController extends Controller
 {
@@ -23,18 +24,46 @@ class OrderCallCenterController extends Controller
    */
   public function index()
   {
+
     $role = Role::where("name", "Delivery")->first();
+    $callcenterId = auth()->user()->id;
+
     $deliveries = User::where("role_id", $role->id)->get();
 
     $statuses = Status::all();
 
-    $orders = OrderCallcenter::with(["orderItems"])->latest()->paginate(PAGINATION_COUNT);
-    $dailyOrders = OrderCallcenter::whereDate("created_at", Carbon::today())->count();
-    $monthlyOrders = OrderCallcenter::whereMonth('created_at', Carbon::now()->month)->count();
-    $yearOrders = OrderCallcenter::whereYear('created_at', Carbon::now()->year)->count();
+    $ordersModel = OrderCallcenter::with(["orderItems"]);
 
-    $daily_sales = OrderCallcenter::whereDate("created_at", Carbon::today())->sum("total");
-    $monthly_sales = OrderCallcenter::whereMonth("created_at", Carbon::now()->month)->sum("total");
+    $dailyOrdersModel = OrderCallcenter::whereDate("created_at", Carbon::today());
+    $monthlyOrdersModel = OrderCallcenter::whereMonth('created_at', Carbon::now()->month);
+    $yearOrdersModel = OrderCallcenter::whereYear('created_at', Carbon::now()->year);
+
+    $daily_salesModel = OrderCallcenter::whereDate("created_at", Carbon::today());
+    $monthly_salesModel = OrderCallcenter::whereMonth("created_at", Carbon::now()->month);
+
+    if (auth()->user()->roles()->first()->name == "Admin") {
+      $orders = $ordersModel->latest()->paginate(PAGINATION_COUNT);
+
+      $dailyOrders = $dailyOrdersModel->count();
+      $monthlyOrders = $monthlyOrdersModel->count();
+      $yearOrders = $yearOrdersModel->count();
+
+      $daily_sales = $daily_salesModel->sum("total");
+      $monthly_sales = $monthly_salesModel->sum("total");
+
+
+    }
+    $orders = $ordersModel->where("callcenter_id", $callcenterId)->latest()->paginate(PAGINATION_COUNT);
+    $dailyOrders = $dailyOrdersModel->where("callcenter_id", $callcenterId)->count();
+    $monthlyOrders = $monthlyOrdersModel->where("callcenter_id", $callcenterId)->count();
+    $yearOrders = $yearOrdersModel->count();
+
+    $daily_sales = $daily_salesModel->where("callcenter_id", $callcenterId)->sum("total");
+    $monthly_sales = $monthly_salesModel->where("callcenter_id", $callcenterId)->sum("total");
+
+
+
+
     $defaultCurrency = Currency::where("default", 1)->first();
 
     return view("content.orders.index", compact("orders", "deliveries", "statuses", "monthlyOrders", "dailyOrders", "yearOrders", "daily_sales", "monthly_sales", "defaultCurrency"));
@@ -44,7 +73,8 @@ class OrderCallCenterController extends Controller
   public function paginationOrderCallCenter(Request $request)
   {
     $defaultCurrency = Currency::where("default", 1)->first();
-    $orders = OrderCallcenter::with(["orderItems"])->latest()->paginate(PAGINATION_COUNT);
+    $orderModels = OrderCallcenter::with(["orderItems"]);
+    $orders = (auth()->user()->roles()->first()->name == "Admin" ? $orderModels->latest()->paginate(PAGINATION_COUNT) : $orderModels->where("callcenter_id", auth()->user()->id)->latest()->paginate(PAGINATION_COUNT));
 
     return view("content.orders.pagination_index", compact("orders", "defaultCurrency"))->render();
 
@@ -55,25 +85,54 @@ class OrderCallCenterController extends Controller
     try {
       $role = Role::where("name", "Delivery")->first();
       $deliveries = User::where("role_id", $role->id)->get();
-      $dailyOrders = OrderCallcenter::whereDate("created_at", Carbon::today())->count();
-      $monthlyOrders = OrderCallcenter::whereMonth('created_at', Carbon::now()->month)->count();
-      $yearOrders = OrderCallcenter::whereYear('created_at', Carbon::now()->year)->count();
-      $daily_sales = OrderCallcenter::whereDate("created_at", Carbon::today())->sum("total");
-      $monthly_sales = OrderCallcenter::whereMonth("created_at", Carbon::now()->month)->sum("total");
+      $callcenterId = auth()->user()->id;
 
-      $orders = OrderCallcenter::with(["orderItems"])->latest()->get();
+      $statuses = Status::all();
+
+      $ordersModel = OrderCallcenter::with(["orderItems"]);
+
+      $dailyOrdersModel = OrderCallcenter::whereDate("created_at", Carbon::today());
+      $monthlyOrdersModel = OrderCallcenter::whereMonth('created_at', Carbon::now()->month);
+      $yearOrdersModel = OrderCallcenter::whereYear('created_at', Carbon::now()->year);
+
+      $daily_salesModel = OrderCallcenter::whereDate("created_at", Carbon::today());
+      $monthly_salesModel = OrderCallcenter::whereMonth("created_at", Carbon::now()->month);
+
+      if (auth()->user()->roles()->first()->name == "Admin") {
+        $orders = $ordersModel->latest()->paginate(PAGINATION_COUNT);
+
+        $dailyOrders = $dailyOrdersModel->count();
+        $monthlyOrders = $monthlyOrdersModel->count();
+        $yearOrders = $yearOrdersModel->count();
+
+        $daily_sales = $daily_salesModel->sum("total");
+        $monthly_sales = $monthly_salesModel->sum("total");
+
+
+      }
+      $orders = $ordersModel->where("callcenter_id", $callcenterId)->latest()->paginate(PAGINATION_COUNT);
+      $dailyOrders = $dailyOrdersModel->where("callcenter_id", $callcenterId)->count();
+      $monthlyOrders = $monthlyOrdersModel->where("callcenter_id", $callcenterId)->count();
+      $yearOrders = $yearOrdersModel->count();
+
+      $daily_sales = $daily_salesModel->where("callcenter_id", $callcenterId)->sum("total");
+      $monthly_sales = $monthly_salesModel->where("callcenter_id", $callcenterId)->sum("total");
+
+
       $defaultCurrency = Currency::where("default", 1)->first();
 
-      $html = View::make('content.orders.orderPdf', compact(
-        'orders',
-        'defaultCurrency',
-        'deliveries',
-        'monthlyOrders',
-        'dailyOrders',
-        'yearOrders',
-        'daily_sales',
-        'monthly_sales'
-      )
+      $html = View::make(
+        'content.orders.orderPdf',
+        compact(
+          'orders',
+          'defaultCurrency',
+          'deliveries',
+          'monthlyOrders',
+          'dailyOrders',
+          'yearOrders',
+          'daily_sales',
+          'monthly_sales'
+        )
       )->render();
 
       // Create a new Dompdf instance
@@ -131,7 +190,8 @@ class OrderCallCenterController extends Controller
     $date = $request->date;
     $status = $request->status;
 
-    $orders = OrderCallcenter::when($request->search_string, function ($q) use ($searchString) {
+
+    $orderModels = OrderCallcenter::when($request->search_string, function ($q) use ($searchString) {
       $q->where("sub_total", 'like', $searchString)
         ->orWhere('total', 'like', $searchString)
         ->orWhere('delivery_charge', 'like', $searchString)
@@ -147,7 +207,9 @@ class OrderCallCenterController extends Controller
     })->when($request->status, function ($q) use ($status) {
       $q->where("status_id", $status);
 
-    })->latest()->paginate(PAGINATION_COUNT);
+    });
+    $orders=(auth()->user()->roles()->first()->name == "Admin" ? $orderModels->latest()->paginate(PAGINATION_COUNT) :$orderModels->where("callcenter_id", auth()->user()->id)->latest()->paginate(PAGINATION_COUNT) );
+
 
     if ($orders->count() > 0) {
 
@@ -168,6 +230,7 @@ class OrderCallCenterController extends Controller
   public function create()
   {
     //
+
   }
 
   /**
@@ -225,5 +288,102 @@ class OrderCallCenterController extends Controller
   {
     //
   }
+
+  public function createOrderButler($userId)
+  {
+    $butlers = Butler::get();
+    $countryIraqId = CountryTranslation::where("name", "Iraq")->value("country_id");
+    $cities = City::where("country_id", $countryIraqId)->get();
+
+    return view("content.orderCallcenter.orderbutler.create", compact("userId", "cities", "butlers"));
+  }
+  public function storeOrderButler(StoreOrderButlerRequest $request, $userId)
+  {
+    \DB::beginTransaction();
+
+    try {
+      $user = User::findOrFail($userId);
+      $butler_id = $request->orderType;
+      $butler = Butler::findOrFail($butler_id);
+      $sub_total = (double) $request->expected_cost;
+      $delivery_charge = (double) $request->expected_delivery;
+
+      $fromAddress = Address::create([
+        "user_id" => $userId,
+        "district_id" => $request->district_id,
+        "building" => $request->building,
+        "street" => $request->street,
+        "apartment" => $request->apartment,
+        "instructions" => $request->instructions,
+        "phone" => $user->phone,
+        "country_code" => $user->country_code
+      ]);
+
+      $toAddress = Address::create([
+        "user_id" => $userId,
+        "district_id" => $request->todistrict_id,
+        "building" => $request->tobuilding,
+        "street" => $request->tostreet,
+        "apartment" => $request->toapartment,
+        "instructions" => $request->toinstructions,
+        "phone" => $user->phone,
+        "country_code" => $user->country_code
+      ]);
+
+      $order_data = [
+        "from_address" => $fromAddress->id,
+        "to_address" => $toAddress->id,
+        "from_driver_instructions" => $request->instructions,
+        "to_driver_instructions" => $request->toinstructions,
+        'payment_type' => "cash",
+        "order" => $request->order,
+        "delivery_time" => $butler->delivery_time,
+        "expected_delivery_charge" => $request->delivery_charge,
+        "expected_cost" => $request->expected_cost,
+        "admin_id" => auth()->user()->id,
+        "user_id" => $userId,
+        "butler_id" => $butler->id,
+        "sub_total" => $sub_total,
+        "sum" => $sub_total + $delivery_charge + $butler->service_charge,
+        "total" => $sub_total + $delivery_charge,
+        "service_charge" => $butler->service_charge,
+
+      ];
+      $order = OrderButler::create($order_data);
+
+      if (is_array($request->items)) {
+        foreach ($request->items as $item) {
+          $order->orderItems()->create([
+            "order_id" => $order->id,
+            "item" => $item["item"],
+            "image" => $item["image"] ?? null,
+          ]);
+        }
+
+      }
+
+      $status_pending = StatusTranslation::where("name", "pending")->first();
+
+      // Create a new status for the order
+      OrderStatus::create([
+        "status_id" => $status_pending->status_id,
+        "ordereable_id" => $order->id, // Explicitly set the ordereable_id
+        "ordereable_type" => "App\Models\OrderButler"
+      ]);
+      \DB::commit();
+
+      return view("content.orderCallcenter.orderbutler.show", compact("order"))->with('msg', 'Order Added Successfully');
+    } catch (\Exception $e) {
+      // Rollback the transaction in case of an exception
+      \DB::rollBack();
+
+      // Log the error
+      \Log::error($e->getMessage());
+
+      // Return an error response or handle the exception as needed
+      return redirect()->route('traditionalusers.index')->with('error', 'Error creating user and address.');
+    }
+  }
+
 
 }

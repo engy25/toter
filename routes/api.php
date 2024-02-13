@@ -254,6 +254,7 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
 
 
+
       });
 
 
@@ -275,6 +276,9 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
         Route::post('delivery-accept-order', [HomeDeliveryController::class, "acceptOrder"]);
         Route::post('delivery-cancel-order', [HomeDeliveryController::class, "cancelOrder"]);
+
+          /** delivery update the order */
+        Route::post('delivery-update-location', [HomeDeliveryController::class, "updateLocation"]);
 
 
       });

@@ -9,6 +9,7 @@
       <th class="fw-semibold border-bottom">{{ trans('words.delivery') }}</th>
       <th class="fw-semibold border-bottom">{{ trans('words.date') }}</th>
       <th class="fw-semibold border-bottom">{{ trans('words.status') }}</th>
+
     </tr>
   </thead>
   <tbody>
@@ -66,4 +67,5 @@
   @if ($orders->lastPage() > 1)
   {{ $orders->links('pagination.simple-bootstrap-4') }}
   @endif
+</div>
 </div>

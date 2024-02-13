@@ -14,6 +14,12 @@ use App\Http\Controllers\Web\{
 
 };
 
+use App\Http\Controllers\dashboard\Restaurant\{
+ OrderRestaurantController
+ ,RestaurantUsersController
+
+};
+
 use App\Http\Controllers\dashboard\CallCenter\{
   TraditionalUserController,
   OrderController,
@@ -243,7 +249,20 @@ Route::group(
       return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+      /******************************Restaurant *****************************************************/
+    Route::Resource("storeorders",OrderRestaurantController::class);
+    Route::get("/pagination/paginate-orderstore", [OrderRestaurantController::class, "paginationOrderStore"]);
+    Route::get('/search-orderstore', [OrderRestaurantController::class, 'searchOrder'])->name('search.order.store');
+    Route::get('/track-order/{order}', [OrderRestaurantController::class, 'showMapOfTheOrder'])->name('create.track.order');
+     /********************Add Users To Restaurants************************************************* */
+     Route::Resource('restaurantusers', RestaurantUsersController::class);
+     Route::get("/pagination/paginate-restaurantuser", [RestaurantUsersController::class, "paginationUser"]);
+     Route::get('/search-restaurantuser', [RestaurantUsersController::class, 'searchUser'])->name('search.restaurantuser');
+
+
     /******************************DATA ENTRY AND ADMIN *****************************************************/
+
 
     // Route::group(['middleware' => ['role:DataEntry|Admin']], function () {
 
@@ -310,6 +329,7 @@ Route::group(
 
 
 
+
       /********************currencies************************************************* */
       Route::get('currencies-display', [CurrencyController::class, "currencyIndex"])->name("currencies.display");
       /*------------------------------------------------------------------------- */
@@ -340,6 +360,8 @@ Route::group(
 
       /********************coupons************************************************* */
       Route::Resource('coupons', CouponController::class);
+      Route::post('add-coupon-to-store',[CouponController::class,"addCouponToStore"])->name("add.coupon.store");
+      Route::put('update-coupon-to-store/{coupon}',[CouponController::class,"updateCouponToStore"])->name("update.coupon.com");
       Route::get("/pagination/paginate-coupon", [CouponController::class, "paginationCoupon"]);
       Route::get('/search-coupon', [CouponController::class, 'searchCoupon'])->name('search.coupon');
       Route::get('stores-display', [CouponController::class, "StoreIndex"])->name("stores.display");
@@ -518,13 +540,24 @@ Route::group(
       /*********************************************** Create Orders Belongs To CallCenter*******************************************************/
       Route::get("createStores/{user}", [OrderController::class, "createStores"])->name("createStore.create");
       Route::get('/search-item/{order}', [OrderController::class, 'searchItem'])->name('search.items');
+      Route::get("filter-items/{id}", [OrderController::class, "filterItems"])->name("filter.items");
       Route::post("createStores/{user}", [OrderController::class, "storeStores"])->name("createStore.store");
 
       /**Order CallCenter */
       Route::get("orders/{id}", [OrderController::class, "create"])->name("orders.create");
       Route::post("orders/{id}", [OrderController::class, "store"])->name("orders.store");
+
+      Route::get("order-address/{orderId}", [OrderController::class, "createorderAddress"])->name("order.address.create");
+      Route::post("order-address/{orderId}", [OrderController::class, "storeOrderAddress"])->name("order.address.store");
+
+
+      Route::get("item-details/{id}", [OrderController::class, "itemDetails"])->name("item.details");
       /**system may be filters the orders by date and delivery and sub total and total */
       Route::resource("ordercallcenters",OrderCallCenterController::class);
+
+      Route::get("createorderbutler/{userId}",[OrderCallCenterController::class,"createOrderButler"])->name("create.order.butler");
+      Route::post("storeorderbutler/{userId}",[OrderCallCenterController::class,"storeOrderButler"])->name("store.order.butler");
+
       Route::get("/pagination/paginate-ordercallcenter", [OrderCallCenterController::class, "paginationOrderCallCenter"]);
       Route::get('/search-ordercallcenter', [OrderCallCenterController::class, 'searchOrder'])->name('search.order.callcenter');
       /**export order call center table */
@@ -552,6 +585,8 @@ Route::group(
         Route::get('/export-butler-pdf', [OrderButlerController::class, 'export'])->name('exportbutler.pdf');
 
     // });
+
+
   }
 );
 

@@ -153,7 +153,118 @@
 
 
 
-{{-- /***update Coupon*// --}}
+{{-- /***update Coupon To Company*// --}}
+
+<script>
+
+
+  $(document).on("click", ".close-btn", function(e) {
+    $('.errMsgContainer').empty(); // Clear error messages when the form is closed
+  });
+
+  $(document).on("click", '.update_couponCom_form', function() {
+    let id = $(this).data('id');
+    let code = $(this).data('code');
+    let is_active = $(this).data('is_active');
+    let isChecked = is_active === 1;
+
+    // let discount_percentage = 0; // Default value, update based on your logic
+
+    let max_user_used_code = $(this).data('max_user_used_code');
+    let expire_date = $(this).data('expire_date');
+
+
+    /** To set the values for each input **/
+    $('#up_id').val(id);
+    $('#upcode').val(code);
+
+    $('#up-expire_date').val(expire_date);
+    $('#isActive').prop('checked', isChecked);
+    $('#up-max_user_used_code').val(max_user_used_code);
+
+
+  });
+
+
+  $(document).on("click", ".update_couponcom", function (e) {
+    e.preventDefault();
+    let id = $('#up_id').val();
+    let up_code = $('#upcode').val();
+
+    let upexpire_date = $('#up-expire_date').val();
+    let is_active = $('#isActive').prop('checked') ? 1 : 0;
+    // $('#updiscount_percentage').val(discount_percentage);
+
+    let upmax_user_used_code = $('#up-max_user_used_code').val();
+    console.log(upmax_user_used_code);
+    console.log(upexpire_date);
+    console.log(is_active);
+
+
+    $('.errMsgContainer').empty(); // Clear previous error messages
+
+    $.ajax({
+        url: `{{ route('update.coupon.com', ['coupon' => ':id']) }}`.replace(':id', id),
+        method: "put",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+            up_code: up_code,
+            upexpire_date: upexpire_date,
+            is_active: is_active,
+            upmax_user_used_code: upmax_user_used_code,
+
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log('AJAX request successful:', data);
+
+            if (data.status) {
+                // Update successful
+                $('#updateCouponToComModal').modal('hide');
+                $('#data-table25').load(location.href + ' #data-table25');
+                $('#success2').show();
+                /* hide success message after 4 seconds */
+                setTimeout(function () {
+                    $('#success2').hide();
+                }, 2000); // 2000 milliseconds = 2 seconds
+            } else {
+                // Update failed
+                console.error('Failed to update Coupon');
+            }
+        },
+        error: function (response) {
+          console.log(response);
+            if (response.status === 422) {
+              $('.errMsgContainer').empty(); // Clear previous error messages
+                errors = response.responseJSON.errors;
+                $.each(errors, function (index, value) {
+                    $('.errMsgContainer').append('<span class="text-danger">' + value + '</span></br>');
+                });
+
+            } else {
+              // alert('This Coupon Is Used You Cannot Update It.');
+              $('#updateCouponToComModal').modal('hide');
+                $('#success5').show();
+                /* hide success message after 4 seconds */
+                setTimeout(function () {
+                    $('#success5').hide();
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        }
+    });
+  });
+</script>
+
+
+
+{{-- *-------------------------------------------------------* --}}
+
+
+
+
+{{-- /***update Coupon To Store*// --}}
 
 <script>
   let discountType, discountValue; // Declare these variables outside the function to make them accessible globally
@@ -267,7 +378,7 @@
 
 {{-- *-------------------------------------------------------* --}}
 
-{{-- ////////////////////////////////////////**add coupon///////////////////////////////////--}}
+{{-- ////////////////////////////////////////**add coupon To Store///////////////////////////////////--}}
 <script>
   $(document).ready(function() {
     $(document).on("click", '.add_coupon', function(e) {
@@ -360,6 +471,97 @@
 
 
 
+{{-- ////////////////////////////////////////**add coupon To Company///////////////////////////////////--}}
+<script>
+  $(document).ready(function() {
+    $('input[type=radio][name=type]').change(function() {
+            if (this.value === 'price') {
+                $('#priceInput').show();
+                $('#discountInput').hide();
+            } else if (this.value === 'discount') {
+                $('#priceInput').hide();
+                $('#discountInput').show();
+            }
+        });
+    $(document).on("click", '.add_couponcompany', function(e) {
+      e.preventDefault();
+
+      let code = $('#Thecode').val();
+      let expire_date = $('#Expire_date').val();
+      let max_user_used_code = $('#Max_user_used_code').val();
+      var type = $('input[name=type]:checked').val();
+      var discount_percentage = $('#discount').val();
+      var price = $('#Price').val();
+
+
+      console.log(code)
+      console.log(max_user_used_code);
+      console.log(expire_date);
+      console.log(price);
+      console.log(discount_percentage);
+      console.log(type);
+
+
+      $('.errMsgContainer').empty(); // Clear previous error messages
+
+
+
+
+
+
+
+
+
+      $.ajax({
+        url: "{{ route('add.coupon.store') }}",
+        method: 'post',
+        data: {
+          code: code,
+          expire_date: expire_date,
+          max_user_used_code: max_user_used_code,
+          price: price,
+          discount_percentage: discount_percentage,
+          type: type
+        },
+        dataType: "json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          console.log(data);
+
+                $('.errMsgContainer').empty(); // Clear previous error messages
+                console.log("Before hiding modal");
+                $("#addCouponCompanyModal").modal("hide");
+                console.log("After hiding modal");
+
+                $('#addCouponCompanyForm')[0].reset();
+
+                $('#success1').show();
+                /* hide success message after 4 seconds */
+                setTimeout(function() {
+                    $('#success1').hide();
+                }, 2000); // 2000 milliseconds = 2 seconds
+                $('.errMsgContainer').empty(); // Clear previous error messages
+              },
+            error: function(response) {
+                console.log(response);
+                $('.errMsgContainer').empty(); // Clear previous error messages
+                errors = response.responseJSON.errors;
+                $.each(errors, function(index, value){
+                    $('.errMsgContainer').append('<span class="text-danger">'+value+'</span><br/>');
+                });
+            }
+        });
+    });
+});
+</script>
+
+
+{{----------------------------------------------------------------}}
+
+
+
 
 
 {{-- //////////////////////////////Delete Coupon////////////////////////////// --}}
@@ -387,7 +589,7 @@ $(document).on('click', '.delete-coupon', function (e) {
             success: function (data) {
                 if (data.status == true) {
                     // coupon was deleted successfully
-                    $('#data-table2').load(location.href + ' #data-table2');
+                    $('#data-table25').load(location.href + ' #data-table25');
 
                     $('#success3').show();
                     /* hide success message after 4 seconds */

@@ -59,12 +59,16 @@ class OrderCallcenter extends Model
   }
   public function statuses()
   {
-      return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
-          ->withTimestamps();
+    return $this->morphToMany(Status::class, 'ordereable', 'order_statuses', 'ordereable_id', 'status_id')
+      ->withTimestamps();
   }
   public function currency()
   {
     return $this->belongsTo(Currency::class, "currency_id");
+  }
+  public function district()
+  {
+    return $this->belongsTo(District::class, "district_id");
   }
 
 }

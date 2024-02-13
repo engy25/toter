@@ -61,10 +61,11 @@ class OderButlerController extends Controller
     try {
       $butler_id = $request->butler_id;
       $butler = Butler::findOrFail($butler_id);
-      $deliveryCharge = CompanyDistrict::where("id", $request->district_id)->value("delivery_charge");
+      //  $deliveryCharge = CompanyDistrict::where("id", $request->district_id)->value("delivery_charge");
 
 
       $couponId = null;
+      $total=0;
       $sum = 0;
 
       $sub_total = (double) $request->expected_cost;
@@ -88,9 +89,14 @@ class OderButlerController extends Controller
 
       }
 
+
+      $deliveryCharge = $request->expected_delivery_charge;
+      //$sum += (double) $deliveryCharge + $butler->service_charge;
       $sum += (double) $deliveryCharge + $butler->service_charge;
+      $total= $sub_total + $deliveryCharge;
 
       $order_data = [
+        "user_id" => auth("api")->user()->id,
         "from_address" => $request->from_address_id,
         "to_address" => $request->to_address_id,
         "from_driver_instructions" => $request->from_driver_instructions,
@@ -99,7 +105,7 @@ class OderButlerController extends Controller
         'transaction_id' => $request->transaction_id,
         "order" => $request->order,
         "delivery_time" => $butler->delivery_time,
-
+        "expected_delivery_charge" => $request->expected_delivery_charge,
         "expected_cost" => $request->expected_cost,
         "district_id" => $request->district_id,
         "coupon_id" => $couponId,
@@ -107,9 +113,10 @@ class OderButlerController extends Controller
         "butler_id" => $butler->id,
         "sub_total" => $sub_total,
         "sum" => $sum,
-        "total" => $sub_total + $deliveryCharge,
+        "total" => $total,
         "service_charge" => $butler->service_charge,
-        "delivery_charge" => $deliveryCharge
+        "delivery_charge"=>$request->expected_delivery_charge,
+        // "delivery_charge" => $deliveryCharge
       ];
 
 

@@ -4,7 +4,7 @@ $i=0;
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table id="data-table2" class="table border p-0 text-nowrap mb-0">
+      <table id="data-table25" class="table border p-0 text-nowrap mb-0">
         <thead class="tabel-row-heading text-dark">
           <tr style="background:#f4f5f7">
             <th class="fw-semibold border-bottom">ID</th>
@@ -26,10 +26,14 @@ $i=0;
 
             <td>
               <span class="text-dark fs-13 fw-semibold">
+                @if($coupon->store !=null)
                 @if ($coupon->store->translations->isNotEmpty())
                 {{ $coupon->store->translations[0]->name }}
                 @else
                 {{ $store->name }}
+                @endif
+                @else
+                {{ "Company" }}
                 @endif
               </span>
             </td>
@@ -64,6 +68,8 @@ $i=0;
 
             <td class="center align-middle">
               <div class="btn-group">
+
+                @if($coupon->store_id !=null)
                 <a href="{{ route('coupons.edit', $coupon->id) }}"
                   class="btn bg-info-transparent d-flex align-items-center justify-content-center">
                   <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
@@ -77,6 +83,23 @@ $i=0;
                   style="width: 100px; height: 40px;">
                   {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
                 </a>
+                @else
+                <a href="{{ route('update.coupon.com', $coupon->id) }}"
+                  class="btn bg-info-transparent d-flex align-items-center justify-content-center">
+                  <i style="font-size: 20px;" class="fe fe-edit text-info "></i></a>
+                <a href="{{ LaravelLocalization::localizeURL(route('update.coupon.com', $coupon->id)) }}"
+                  class="btn btn-info btn-icon py-1 me-2 update_couponCom_form" data-bs-toggle="modal"
+                  data-bs-target="#updateCouponToComModal" data-id="{{ $coupon->id }}"
+                  data-discount_percentage="{{ $coupon->discount_percentage }}" data-code="{{ $coupon->code }}"
+                  data-store_id="{{ $coupon->store_id }}" data-is_active="{{ $coupon->is_active }}"
+                  data-expire_date="{{ $coupon->expire_date }}"
+                  data-max_user_used_code="{{ $coupon->max_user_used_code	 }}" title="Edit"
+                  style="width: 100px; height: 40px;">
+                  {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
+                </a>
+                @endif
+
+
 
                 <a href="{{ route('coupons.show', $coupon->id) }}" class="btn btn-success show-offer"
                   style="width: 100px; height: 40px;">
@@ -96,7 +119,6 @@ $i=0;
         </tbody>
       </table>
 
-      {{-- {!! $cities->links() !!} --}}
       <div class="mt-4">
         @if ($coupons->lastPage() > 1)
         {{ $coupons->links('pagination.simple-bootstrap-4') }}
