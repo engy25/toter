@@ -173,10 +173,17 @@
       "submenu": [
         {
           "url": "items",
-          "name": "List",
+          "name": "List Items",
+          "slug": "app-user-list"
+        },
+        {
+          "url": "itempoints",
+          "name": "List Item Points",
           "slug": "app-user-list"
         }
+
       ]
+
     },
 
     {
@@ -322,7 +329,7 @@
       ]
     },
 
-    
+
 
 
 

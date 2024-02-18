@@ -127,7 +127,7 @@ class CityController extends Controller
         "status" => true,
         "message" => "City Added Successfully"
       ]);
-      
+
     } else {
       return response()->json([
         "status" => false,
@@ -198,6 +198,7 @@ class CityController extends Controller
       return response()->json(['errors' => $validator->errors()], 422);
     }
 
+    
 
     $city->country_id = $request->up_country_id;
 

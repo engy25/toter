@@ -87,20 +87,22 @@
       // Handle click on "Update changes" button
       $('.update_ingredient').click(function () {
           // Collect form data
-          var formData = new FormData($('#updateIngredientForm')[0]);
+          var form_Data = new FormData($('#updateIngredientForm')[0]);
 
           // Extract ingredient ID from data attribute
           var id = $('#up_id').val();
-          console.log('FormData Entries:');
-            for (var entry of formData.entries()) {
-                console.log(entry[0] + ': ' + entry[1]);
-            }
+          console.log(id);
+          // console.log('FormData Entries:');
+          //   for (var entry of formData.entries()) {
+          //       console.log(entry[0] + ': ' + entry[1]);
+          //   }
 
           // Perform AJAX request
           $.ajax({
-              url: "{{ route('ingredients.update', ['ingredient' => ':id']) }}".replace(':id', id),
+              url: "{{ route('ingredients.update', '') }}/" + id,
+
               method: "PUT",
-              data: formData,
+              data: form_Data,
               headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               },
@@ -148,11 +150,12 @@
     e.preventDefault();
     let item_id =  $('#item_id').val();
     let store_id = $('#store_id').val();
-    let name_en = $('#name_en').val();
-    let name_ar= $('#name_ar').val();
+    let name_en = $('#name_En').val();
+    let name_ar= $('#nameAr').val();
     let add=$('#add').val();
-    let price=$('#price').val();
+    let price=$('#prIce').val();
     let image = $('#image')[0].files[0];
+    console.log(name_en);
 
     var formData = new FormData();
     formData.append('name_en', name_en);

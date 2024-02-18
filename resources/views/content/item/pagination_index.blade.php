@@ -58,9 +58,9 @@ $i=0;
       <td class="center align-middle">
         <div class="btn-group">
 
-        
 
-          <a href="{{ route('items.show', $item->id) }}" class="btn btn-success show-item"
+
+          <a href="{{ route('itempoints.show', $item->id) }}" class="btn btn-success show-item"
             style="width: 100px; height: 40px;">
             <i class="bi bi-eye"></i> {{ trans('words.show') }}
           </a>&nbsp;&nbsp;

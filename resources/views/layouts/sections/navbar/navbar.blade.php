@@ -3,9 +3,19 @@ $containerNav = $containerNav ?? 'container-fluid';
 $navbarDetached = ($navbarDetached ?? '');
 @endphp
 
+
+
+
+
+
+
+
+
 <!-- Navbar -->
 @if(isset($navbarDetached) && $navbarDetached == 'navbar-detached')
-<nav class="layout-navbar {{$containerNav}} navbar navbar-expand-xl {{$navbarDetached}} align-items-center bg-navbar-theme" id="layout-navbar">
+<nav
+  class="layout-navbar {{$containerNav}} navbar navbar-expand-xl {{$navbarDetached}} align-items-center bg-navbar-theme"
+  id="layout-navbar">
   @endif
   @if(isset($navbarDetached) && $navbarDetached == '')
   <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
@@ -26,7 +36,8 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <!-- ! Not required for layout-without-menu -->
       @if(!isset($navbarHideToggle))
-      <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ?' d-xl-none ' : '' }}">
+      <div
+        class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ?' d-xl-none ' : '' }}">
         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
           <i class="ti ti-menu-2 ti-sm"></i>
         </a>
@@ -45,6 +56,45 @@ $navbarDetached = ($navbarDetached ?? '');
           </div>
         </div>
         <!-- /Search -->
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+          <li>
+
+
+
+          </li>
+        </ul>
+
+
+
+
+
+        <script>
+          navigator.serviceWorker.register("sw.js");
+
+          function requestPermission() {
+              Notification.requestPermission().then((permission) => {
+                  if (permission === 'granted') {
+
+                      // get service worker
+                      navigator.serviceWorker.ready.then((sw) =>{
+
+                          // subscribe
+                          sw.pushManager.subscribe({
+                              userVisibleOnly: true,
+                              applicationServerKey:"BHMu2yutRQgV3Iprcn1sE-wKD5JlD8p0sGTfd8rJQ452GHHTcs1wukFjxcaLx-aZhLg69eFYGoXUagr-6qowoGA"
+                          }).then((subscription) => {
+
+                              // subscription successful
+                              fetch("/api/push-subscribe", {
+                                  method: "post",
+                                  body:JSON.stringify(subscription)
+                              }).then( alert("ok") );
+                          });
+                      });
+                  }
+              });
+          }
+      </script>
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
           <!-- Language -->
@@ -84,14 +134,16 @@ $navbarDetached = ($navbarDetached ?? '');
 
           <!-- Quick links  -->
           <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
-            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown"
+              data-bs-auto-close="outside" aria-expanded="false">
               <i class='ti ti-layout-grid-add ti-md'></i>
             </a>
             <div class="dropdown-menu dropdown-menu-end py-0">
               <div class="dropdown-menu-header border-bottom">
                 <div class="dropdown-header d-flex align-items-center py-3">
                   <h5 class="text-body mb-0 me-auto">Shortcuts</h5>
-                  <a href="javascript:void(0)" class="dropdown-shortcuts-add text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i class="ti ti-sm ti-apps"></i></a>
+                  <a href="javascript:void(0)" class="dropdown-shortcuts-add text-body" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Add shortcuts"><i class="ti ti-sm ti-apps"></i></a>
                 </div>
               </div>
               <div class="dropdown-shortcuts-list scrollable-container">
@@ -164,9 +216,13 @@ $navbarDetached = ($navbarDetached ?? '');
           </li>
           <!-- Quick links -->
 
+
+
+
           <!-- Notification -->
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
-            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown"
+              data-bs-auto-close="outside" aria-expanded="false">
               <i class="ti ti-bell ti-md"></i>
               <span class="badge bg-danger rounded-pill badge-notifications">5</span>
             </a>
@@ -174,7 +230,8 @@ $navbarDetached = ($navbarDetached ?? '');
               <li class="dropdown-menu-header border-bottom">
                 <div class="dropdown-header d-flex align-items-center py-3">
                   <h5 class="text-body mb-0 me-auto">Notification</h5>
-                  <a href="javascript:void(0)" class="dropdown-notifications-all text-body" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark all as read"><i class="ti ti-mail-opened fs-4"></i></a>
+                  <a href="javascript:void(0)" class="dropdown-notifications-all text-body" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Mark all as read"><i class="ti ti-mail-opened fs-4"></i></a>
                 </div>
               </li>
               <li class="dropdown-notifications-list scrollable-container">
@@ -192,8 +249,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">1h ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -210,8 +269,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">12hr ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -228,8 +289,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">1h ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -246,8 +309,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">1 day ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -264,8 +329,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">2 days ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -273,7 +340,8 @@ $navbarDetached = ($navbarDetached ?? '');
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-success"><i class="ti ti-chart-pie"></i></span>
+                          <span class="avatar-initial rounded-circle bg-label-success"><i
+                              class="ti ti-chart-pie"></i></span>
                         </div>
                       </div>
                       <div class="flex-grow-1">
@@ -282,8 +350,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">3 days ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -300,8 +370,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">4 days ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -318,8 +390,10 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">5 days ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
@@ -327,7 +401,8 @@ $navbarDetached = ($navbarDetached ?? '');
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-warning"><i class="ti ti-alert-triangle"></i></span>
+                          <span class="avatar-initial rounded-circle bg-label-warning"><i
+                              class="ti ti-alert-triangle"></i></span>
                         </div>
                       </div>
                       <div class="flex-grow-1">
@@ -336,15 +411,18 @@ $navbarDetached = ($navbarDetached ?? '');
                         <small class="text-muted">5 days ago</small>
                       </div>
                       <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ti ti-x"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                            class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                            class="ti ti-x"></span></a>
                       </div>
                     </div>
                   </li>
                 </ul>
               </li>
               <li class="dropdown-menu-footer border-top">
-                <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
+                <a href="javascript:void(0);"
+                  class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
                   View all notifications
                 </a>
               </li>
@@ -356,16 +434,19 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
               <div class="avatar avatar-online">
-                <img src="{{ Auth::user() ? Auth::user()->image : asset('assets/img/avatars/1.png') }}" alt class="h-auto rounded-circle">
+                <img src="{{ Auth::user() ? Auth::user()->image : asset('assets/img/avatars/1.png') }}" alt
+                  class="h-auto rounded-circle">
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
-                <a class="dropdown-item" href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
+                <a class="dropdown-item"
+                  href="{{ route("users.show",["user"=>Auth::user()->id]) }}">
                   <div class="d-flex">
                     <div class="flex-shrink-0 me-3">
                       <div class="avatar avatar-online">
-                        <img src="{{ Auth::user() ? Auth::user()->image : asset('assets/img/avatars/1.png') }}" alt class="h-auto rounded-circle">
+                        <img src="{{ Auth::user() ? Auth::user()->image : asset('assets/img/avatars/1.png') }}" alt
+                          class="h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="flex-grow-1">
@@ -385,11 +466,20 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
+                <a class="dropdown-item"
+                  href="{{ route("users.show",["user"=>Auth::user()->id]) }}">
                   <i class="ti ti-user-check me-2 ti-sm"></i>
                   <span class="align-middle">My Profile</span>
                 </a>
               </li>
+
+              <li>
+                <button onclick="requestPermission()" class="dropdown-item">
+                  <i class="ti ti-bell me-2 ti-sm"></i>
+                  <span class="align-middle">Enable Notifications</span>
+                </button>
+              </li>
+{{--
               @if (Auth::check() )
               <li>
                 <a class="dropdown-item" href="">
@@ -397,8 +487,8 @@ $navbarDetached = ($navbarDetached ?? '');
                   <span class="align-middle">API Tokens</span>
                 </a>
               </li>
-              @endif
-              <li>
+              @endif --}}
+              {{-- <li>
                 <a class="dropdown-item" href="{{url('app/invoice/list')}}">
                   <span class="d-flex align-items-center align-middle">
                     <i class="flex-shrink-0 ti ti-credit-card me-2 ti-sm"></i>
@@ -415,7 +505,9 @@ $navbarDetached = ($navbarDetached ?? '');
               </li>
               <li>
                 <div class="dropdown-divider"></div>
-              </li>
+              </li> --}}
+
+
 
               {{-- @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
               <li>
@@ -425,7 +517,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 </a>
               </li>
               @endcan --}}
-              <li>
+              {{-- <li>
                 <div class="dropdown-divider"></div>
               </li>
               <lI>
@@ -435,13 +527,14 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
 
-              @endif
+              @endif --}}
               <li>
                 <div class="dropdown-divider"></div>
               </li>
               @if (Auth::check())
               <li>
-                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   <i class='ti ti-logout me-2'></i>
                   <span class="align-middle">Logout</span>
                 </a>
@@ -465,7 +558,8 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <!-- Search Small Screens -->
       <div class="navbar-search-wrapper search-input-wrapper {{ isset($menuHorizontal) ? $containerNav : '' }} d-none">
-        <input type="text" class="form-control search-input {{ isset($menuHorizontal) ? '' : $containerNav }} border-0" placeholder="Search..." aria-label="Search...">
+        <input type="text" class="form-control search-input {{ isset($menuHorizontal) ? '' : $containerNav }} border-0"
+          placeholder="Search..." aria-label="Search...">
         <i class="ti ti-x ti-sm search-toggler cursor-pointer"></i>
       </div>
       @if(!isset($navbarDetached))

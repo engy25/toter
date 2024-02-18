@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Http\Resources\Api\User\Orders\{OrderItemResource, OrderItemButlersResource};
-use App\Models\{Order, User, OrderCallcenter, OrderButler, Delivery, OrderStatus};
+use App\Models\{Order, User, OrderCallcenter, OrderButler, Device,Delivery, OrderStatus};
 use App\Services\StatusService;
 use App\Http\Resources\Api\Delivery\{SimpleOrderUserResource, OrderDetailsResource, SimpleOrderButlerUserResource, orderButlersResource, CombinedDataResource};
 use App\Http\Requests\Api\Delivery\{AcceptTypeRequest, UpdateLocationRequest};
@@ -138,6 +138,13 @@ class HomeDeliveryController extends Controller
           ->where('status_id', $statusPending)
           ->update([$deliveryName => $deliveryid]);
 
+          /**push notification to the admin */
+          $device_id = Device::where('user_id',$userId)->pluck('device_token')->toArray();
+
+          
+
+
+
         \DB::commit();
 
         return $this->helper->responseJson(
@@ -240,9 +247,30 @@ class HomeDeliveryController extends Controller
   {
 
     $deliveryId = auth("api")->user()->id;
+    $statusFinish = $this->statusService->getStatusIdByName('finish');
+    $statusCancel = $this->statusService->getStatusIdByName('cancell');
     $orderType = ucfirst($request->type);
     $orderModel = "App\\Models\\" . $orderType;
-    $delivery=Delivery::where("ordereable_type",$orderModel)->where("ordereable_id",$request->id)->where("delivery_id",$deliveryId)->firstOrFail();
+
+
+    $order=$orderModel::whereId($request->id)->whereNot("status_id",[$statusCancel,$statusFinish])->first();
+    if(!$order){
+      return $this->helper->responseJson('failed', trans('api.not_found'), 422, null);
+    }
+
+    $delivery=Delivery::where("ordereable_type",$orderModel)->where("ordereable_id",$request->id)->where("delivery_id",$deliveryId)->first();
+
+    if(!$delivery)
+    {
+      $delivery->create([
+        "lat" => $request->lat,
+        "lng" => $request->lng,
+        "ordereable_type"=>$orderModel,
+        "ordereable_id"=>$request->id,
+        "status_id"=>$order->status_id,
+        "delivery_id"=>$deliveryId
+      ]);
+    }
 
     $delivery->update([
       "lat" => $request->lat,

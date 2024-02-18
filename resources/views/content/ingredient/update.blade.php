@@ -2,7 +2,8 @@
 
 <!-- Modal -->
 <div class="modal fade" id="updateIngredientModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-  <form action="" method="POST" id="updateIngredientForm" enctype="multipart/form-data">>
+  <form action="{{ route('ingredients.update', ['ingredient' => ':id']) }}" method="POST" id="updateIngredientForm" enctype="multipart/form-data">
+
     @csrf
     <input type="hidden" id="up_id">
     <div class="modal-dialog">
@@ -53,7 +54,7 @@
 
 
             <div class="form-group">
-              <label for="up_image">Image</label>
+              <label for="upimage">Image</label>
               <input type="file" name="upimage" id="upimage" accept="image/*">
               <span class="text-danger error-message" id="error_upimage"></span>
             </div>
@@ -70,7 +71,7 @@
           <script>
             $(document).ready(function () {
     // Update image preview when a file is selected
-    $('#up_image').change(function () {
+    $('#upimage').change(function () {
         var input = this;
         var reader = new FileReader();
 
@@ -82,7 +83,7 @@
     });
 
     // Update image preview when modal is opened
-    $('#updateModal').on('show.bs.modal', function (event) {
+    $('#updateIngredientModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var imageSrc = button.data('image'); // Get image URL from data attribute
 
@@ -97,7 +98,8 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary update_ingredient">Update changes</button>
+            <button type="button" class="btn btn-primary update_ingredient">Update Changes</button>
+
           </div>
         </div>
       </div>

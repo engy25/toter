@@ -39,6 +39,7 @@ return [
   'product_favourite_added_success' => 'تمت اضافه المفضله بنجاح',
   'favourite_not_found' => 'المفضله ليست موجوده',
   'data_deleted_successfully' => 'تم مسح البيانات بنجاح',
+  'notif_deleted_successfully' => 'تم مسح الاشعار بنجاح',
   'Pleaze_login_first' => "قم بتسجيل الدخول من فضلك",
   'Not_found' => 'غير موجود',
   'quantity_of_product_not_enough' => 'كمية المنتج غير كافيه',

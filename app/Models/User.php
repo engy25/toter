@@ -139,6 +139,11 @@ class User extends Authenticatable
     return $this->morphMany(Notification::class, 'notifeable');
   }
 
+  public function notifications()
+  {
+    return $this->hasMany(Notification::class);
+  }
+
   public function tier()
   {
     return $this->belongsTo(Tier::class);

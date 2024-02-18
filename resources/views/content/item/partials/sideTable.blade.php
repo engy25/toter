@@ -26,7 +26,7 @@
 
           <td class="center align-middle">
             <div class="btn-group">
-              <a href="{{ route('sides.edit', $side->id) }}"
+              {{-- <a href="{{ route('sides.edit', $side->id) }}"
                 class="btn bg-info-transparent d-flex align-items-center justify-content-center">
                 <i style="font-size: 20px;" class="fe fe-edit text-info "></i>
               </a>
@@ -35,11 +35,11 @@
                 data-bs-target="#updateModal" data-id="{{ $side->id }}"
                 {{-- data-name_en="{{ $side->translations()->where("locale","en")->first()->name }}"
                 data-name_ar="{{$side->translations()->where("locale","ar")->first()->name }}" --}}
-                data-image="{{ $side->image }}" title="Edit"
+                {{-- data-image="{{ $side->image }}" title="Edit"
                 style="width: 100px; height: 40px;">
                 {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-              </a>
-             
+              </a> --}}
+
               <button type="button" class="btn btn-danger delete-side" data-id="{{ $side->id }}"
                 style="width: 100px; height: 40px;">
                 <i class="bi bi-trash-fill"></i> {{ trans('words.delete') }}

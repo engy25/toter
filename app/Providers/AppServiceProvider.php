@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Services\StatusService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
-
+use Minishlink\WebPush\WebPush;
+use Minishlink\WebPush\Vapid;
+use App\Console\Commands\WebPushVapidCommand;
 class AppServiceProvider extends ServiceProvider
 {
   /**
@@ -16,6 +18,16 @@ class AppServiceProvider extends ServiceProvider
   public function register()
   {
     //
+
+    if ($this->app->runningInConsole()) {
+      $this->commands([
+          WebPushVapidCommand::class,
+
+      ]);
+  }
+
+
+
     $this->app->singleton(StatusService::class, function ($app) {
       return new StatusService;
     });

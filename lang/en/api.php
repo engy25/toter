@@ -39,6 +39,7 @@ return [
   'product_favourite_added_success' => 'Favourite Added Successfully',
   'favourite_not_found' => 'Favourite Not Found',
   'data_deleted_successfully' => 'Data Deleted Successfully',
+  'notif_deleted_successfully' => 'Notification Deleted Successfully',
   'Pleaze_login_first' => "Pleaze Login First",
   'Pleaze_login_facebook_google' => 'Please login using facebook or google',
   'Not_found' => 'Not Found',

@@ -30,15 +30,15 @@
                 class="btn bg-info-transparent d-flex align-items-center justify-content-center">
                 <i style="font-size: 20px;" class="fe fe-edit text-info "></i>
               </a>
-              <a href="{{ LaravelLocalization::localizeURL(route('addons.edit', $addon->id)) }}"
+              {{-- <a href="{{ LaravelLocalization::localizeURL(route('addons.edit', $addon->id)) }}"
                 class="btn btn-info btn-icon py-1 me-2 update_addon_form" data-bs-toggle="modal"
                 data-bs-target="#updateModal" data-id="{{ $addon->id }}" data-item={{ $item->id }}
                 {{-- data-name_en="{{ $addon->translations()->where("locale","en")->first()->name }}"
                 data-name_ar="{{$addon->translations()->where("locale","ar")->first()->name }}" --}}
-                data-image="{{ $addon->image }}" title="Edit"
+                {{-- data-image="{{ $addon->image }}" title="Edit"
                 style="width: 100px; height: 40px;">
                 {{ trans('words.edit') }} <i class="bi bi-pencil-square fs-16"></i>
-              </a>
+              </a> --}} 
 
               <button type="button" class="btn btn-danger delete-addon" data-id="{{ $addon->id }}" data-item={{ $item->id }}
                 style="width: 100px; height: 40px;">
@@ -56,5 +56,5 @@
   </table>
 
   @include('content.addon.add_addon_model',["addons"=>$item->store->addons()->get()])
-  
+
 </div>

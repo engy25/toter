@@ -44,6 +44,7 @@ class RegisterRequest extends ApiMasterRequest
     ];
   }
 
+
   public function messages()
   {
 

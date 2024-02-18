@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\{
   User\CartController,
   User\CityController,
   User\FavouriteController,
+  User\NotificationController
 
 };
 use App\Http\Controllers\Api\Delivery\AuthController as AuthDeliveryController;
@@ -47,11 +48,12 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 
-Route::
-    namespace('Api')->middleware('setLocale')->group(function () {
+Route::namespace('Api')->middleware('setLocale')->group(function () {
 
 
 
+      ///push notification
+      Route::post("push-subscribe",[NotificationController::class,"pushSubscribe"]);
 
 
       /**
@@ -163,6 +165,8 @@ Route::
 
 
 
+
+
     });
 
 
@@ -252,7 +256,21 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
         Route::post('apply-offer', [OfferController::class, "applyOffer"]);
 
+        /**track Order */
+        Route::get('track-order',[OderController::class,"trackOrder"]);
 
+        /**Notifications */
+
+        Route::get("h",[NotificationController::class,"index"]);
+
+
+
+        ///notification get all notification
+
+        Route::get("notifications",[NotificationController::class,"getNotifications"]);
+        Route::get("showNotifications/{id}",[NotificationController::class,"show"]);
+        Route::post("delete-notification/{id}",[NotificationController::class,"destroy"]);
+        Route::get("count-notifications",[NotificationController::class,"countNotifications"]);
 
 
       });
@@ -279,6 +297,8 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 
           /** delivery update the order */
         Route::post('delivery-update-location', [HomeDeliveryController::class, "updateLocation"]);
+
+
 
 
       });

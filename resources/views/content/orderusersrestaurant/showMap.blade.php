@@ -61,23 +61,28 @@
           <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.2.0/dist/web/pusher.js"></script>
 
           <script>
-            const map;
+            var map, marker;
             // Enable pusher logging - don't include this in production
             Pusher.logToConsole = true;
 
             var pusher = new Pusher('936c40e68e13d243ef67', {
-              cluster: 'eu'
+              cluster: 'eu',
             });
 
             var channel = pusher.subscribe('deliveries');
             channel.bind('App\\Events\\DeliveryUpdatedLocation', function(data) {
-              const marker = new google.maps.Marker({
-                map: map,
-                position:data
 
-              });
-              console.log(data);
-              alert(JSON.stringify(data));
+
+
+              marker.setPosition( {
+                  lat: Number(data.lat),
+                  lng: Number(data.lng)
+                });
+
+
+
+
+
             });
 
           </script>
@@ -86,15 +91,11 @@
           <script>
             console.log(  parseFloat("{{ $order->deliveryTrack->lng }}"));
 
-            let map;
+            // let map;
             async function initMap() {
-
-              // The location of Delivery
-
 
               const location =
               {
-
                 lat: Number("{{ $order->deliveryTrack->lat }}"),
                 lng: Number("{{ $order->deliveryTrack->lng }}")
               };
@@ -116,7 +117,8 @@
 
               });
               // The marker, positioned at Uluru
-              const marker = new AdvancedMarkerElement({
+              marker = new AdvancedMarkerElement({
+
                 map: map,
                 position: location,
                 title: "Uluru",

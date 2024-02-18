@@ -82,8 +82,7 @@
             <h5 class="mb-1">SubSection Name:</h5>
             <h5 class="mb-3">{{ $item->subsection->name}}</h5>
 
-            <h5 class="mb-1">Points:</h5>
-            <h5 class="mb-3">{{ $item->points}}</h5>
+          
 
             <h5 class="mb-1">Choose Days:</h5>
             <h5 class="mb-3">{{ $item->choose_days}}</h5>

@@ -42,7 +42,7 @@ class ItemOptionController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(OptionStoreRequest $request)
   {
 
     $item = Item::whereId($request->item_id)->first();

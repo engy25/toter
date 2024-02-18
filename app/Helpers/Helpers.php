@@ -343,13 +343,14 @@ class Helpers
   function androidPushNotification(array $device_id, array $message)
   {
 
-
+    $serverKey = '845913731989';
     $fcmNotification = [];
 
 
     $Appname = "هناك اشعار جديد";
 
     $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+
     //    dd($device_id);
 
     if (count($device_id) > 1) {
@@ -413,7 +414,7 @@ class Helpers
 
 
     $headers = [
-      'Authorization: key=' . env("FIREBASE_KEY"),
+      'Authorization:key=' . $serverKey,
       'Content-Type: application/json'
     ];
 

@@ -27,22 +27,22 @@
         </div>
 
           <div class="form-group"></div>
-          <label for="name">Name(English)</label>
-          <input type="text" name="name_en" class="form-control" id="name_en">
-          <span class="text-danger error-message" id="error_name_en"></span>
+          <label for="nameEn">Name(English)</label>
+          <input type="text" name="name_En" class="form-control" id="name_En">
+          <span class="text-danger error-message" id="error_name_En"></span>
           <br>
 
           <div class="form-group"></div>
-          <label for="name">Name(Arabic)</label>
-          <input type="text" name="name_ar" class="form-control" id="name_ar">
-          <span class="text-danger error-message" id="error_name_ar"></span>
+          <label for="nameAr">Name(Arabic)</label>
+          <input type="text" name="nameAr" class="form-control" id="nameAr">
+          <span class="text-danger error-message" id="error_nameAr"></span>
           <br>
 
           <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" name="price" class="form-control" step="0.01" id="price">
+            <label for="prIce">Price</label>
+            <input type="number" name="prIce" class="form-control" step="0.01" id="prIce">
             <!-- The "step" attribute is set to "0.01" to allow decimal values -->
-            <span class="text-danger error-message" id="error_price"></span>
+            <span class="text-danger error-message" id="error_prIce"></span>
         </div>
 
 

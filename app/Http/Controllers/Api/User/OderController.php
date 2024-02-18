@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, OrderResource, OrderItemResource, OrderItemButlersResource};
+use App\Http\Resources\Api\User\Orders\{SimpleOrderResource, TrackOrderResource,OrderResource, OrderItemResource, OrderItemButlersResource};
 use App\Http\Resources\Api\Delivery\{OrderDetailsResource, OrderButlersResource, SimpleOrderButlerUserResource};
 use App\Http\Requests\Api\User\{OrderRequestId, TypeRequest, AddOrderRequest};
 use App\Models\OrderCallcenter;
 use App\Models\PointUser;
 use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
-use App\Models\{Order, User, OrderButler, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
+use App\Models\{Order, User, OrderButler, Delivery, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
 use App\Helpers\Helpers;
 use App\Services\StatusService;
 use App\Events\OrderCompleted;
@@ -79,7 +79,7 @@ class OderController extends Controller
           );
         } elseif ($itemSubTotal === 422) {
           return $this->helper->responseJson('failed', trans('api.coupon_not_valid'), 422, null);
-        } elseif (is_float($itemSubTotal[0]) && $itemSubTotal[0] < 0 ) {
+        } elseif (is_float($itemSubTotal[0]) && $itemSubTotal[0] < 0) {
           return $this->helper->responseJson('failed', trans('api.coupon_not_valid_you_must_pay_more'), 422, null);
         }
 
@@ -444,9 +444,36 @@ class OderController extends Controller
 
 
 
+  public function trackOrder(OrderRequestId $request)
+  {
+    $userId = auth('api')->user()->id;
+    $orderType = ucfirst($request->type);
+    $orderModel = "App\\Models\\" . $orderType;
 
-  // 'ordercallcenters' =>
-  //   SimpleOrderResource::collection($ordercallcenters),
+    $order = $orderModel::where('id', $request->order_id)->where('user_id', $userId)->first();
+    if ($order == null) {
+      return $this->helper->responseJson(
+        'failed',
+        trans('api.not_found'),
+        401,
+        null
+      );
+    }
+
+    // Assuming your order is associated with a delivery record
+    $delivery = Delivery::where('ordereable_type', $orderModel)
+      ->where('ordereable_id', $request->order_id)
+      ->first();
+    return $this->helper->responseJson
+    (
+      'success',
+      trans('api.auth_data_retreive_success'),
+      200,
+      ["Location" => new TrackOrderResource($delivery)]
+    );
+
+
+  }
 
 
 

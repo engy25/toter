@@ -13,4 +13,9 @@ class Delivery extends Model
   {
     return $this->morphTo();
   }
+
+  public function status()
+  {
+    return $this->belongsTo(Status::class);
+  }
 }

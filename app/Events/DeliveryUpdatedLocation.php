@@ -17,6 +17,7 @@ class DeliveryUpdatedLocation implements ShouldBroadcast
 
   public $lat;
   public $lng;
+  // protected $delivery;
 
   /**
    * Create a new event instance.
@@ -28,6 +29,7 @@ class DeliveryUpdatedLocation implements ShouldBroadcast
     //
     $this->lat = $lat;
     $this->lng = $lng;
+    // $this->delivery = $delivery;
   }
 
   /**
@@ -35,6 +37,11 @@ class DeliveryUpdatedLocation implements ShouldBroadcast
    *
    * @return \Illuminate\Broadcasting\Channel|array
    */
+  // public function broadcastOn()
+  // {
+  //   return new PrivateChannel('deliveries.' .$this->delivery->order_id);
+  // }
+
   public function broadcastOn()
   {
     return new PrivateChannel('deliveries');

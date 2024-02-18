@@ -111,33 +111,34 @@ class IngredientController extends Controller
    * @param  \App\Models\Ingredient  $ingredient
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, Ingredient $ingredient)
+  public function update(Request $request,$ingredient)
   {
+    $ingredient=Ingredient::find($ingredient);
 
     $rules = [
       "up_add" => "required_in:1,0",
       'upimage' => 'max:10000',
-      'upprice' => 'numeric|max:9999999999999999999999999999.99|required',
-      'upnameen' => [
-        'required',
-        'string',
-        'max:30',
-        'min:3',
-        Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
-          // Check if the English name is different
-          return $request->upnameen !== $ingredient->nameTranslation('en');
-        }),
-      ],
-      'upnamear' => [
-        'required',
-        'string',
-        'max:30',
-        'min:3',
-        Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
-          // Check if the Arabic name is different
-          return $request->upnamear !== $ingredient->nameTranslation('ar');
-        }),
-      ],
+     // 'upprice' => 'numeric|max:9999999999999999999999999999.99|required',
+      // 'upnameen' => [
+      //   'required',
+      //   'string',
+      //   'max:30',
+      //   'min:3',
+      //   Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
+      //     // Check if the English name is different
+      //     return $request->upnameen !== $ingredient->nameTranslation('en');
+      //   }),
+      // ],
+      // 'upnamear' => [
+      //   'required',
+      //   'string',
+      //   'max:30',
+      //   'min:3',
+      //   Rule::unique('ingredient_translations', 'name')->ignore($ingredient->id, 'ingredient_id')->where(function ($query) use ($request, $ingredient) {
+      //     // Check if the Arabic name is different
+      //     return $request->upnamear !== $ingredient->nameTranslation('ar');
+      //   }),
+      // ],
     ];
 
 

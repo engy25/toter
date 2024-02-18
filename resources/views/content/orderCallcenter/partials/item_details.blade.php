@@ -42,7 +42,7 @@
             <h4 class="mb-2">{{ $item->description }}</h4>
           </div>
 
-          
+
           <div style="max-width:20"><br></div>
         </div>
       </div>
@@ -64,6 +64,9 @@
             <h5 class="mb-1">Price After Added Value:</h5>
             <h5 class="mb-3">{{ $item->price}} {{ $item->currencyIsoCode }}</h5>
           </div>
+
+
+          
 
           <div class="col-md-6">
             <h5 class="mb-1">Category Name:</h5>

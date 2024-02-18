@@ -27,6 +27,7 @@ class UserRequest extends FormRequest
             'country_code'=>'required|exists:countries,country_code',
             'password' => ['required', Rules\Password::defaults()],
             'image' => 'image',
+           
         ];
     }
 }

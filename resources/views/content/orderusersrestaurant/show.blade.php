@@ -34,7 +34,7 @@
             <div class="mb-xl-0 mb-4">
                 <div class="d-flex svg-illustration mb-4 gap-2 align-items-center">
                     <span class="app-brand-text fw-bold fs-4">
-                        {{ $order->order_number }}
+                        # {{ $order->order_number }}
                     </span>
                 </div>
             </div>
