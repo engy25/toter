@@ -209,6 +209,7 @@
             <th class="fw-semibold border-bottom">{{ trans('words.delivery') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.date') }}</th>
             <th class="fw-semibold border-bottom">{{ trans('words.status') }}</th>
+            <th class="fw-semibold border-bottom">Actions</th>
 
           </tr>
         </thead>
@@ -256,6 +257,19 @@
             </td>
             <td>
               <span class="text-dark fs-13 fw-semibold">{{ $order->status->name }}</span>
+            </td>
+
+            <td class="center align-middle">
+              <div class="btn-group">
+                <a href="{{ route('storeorders.show', ['storeorder' => $order->id]) }}" class="btn btn-success" title="Order Details">
+                  Show Order
+                </a>&nbsp;
+                @if($order->deliveryTrack )
+                <a href="{{ route('create.track.order',['order'=>$order->id]) }}" class="btn btn-primary" title="Track Order">
+                  Track Order
+                </a>
+                @endif
+              </div>
             </td>
 
           </tr>

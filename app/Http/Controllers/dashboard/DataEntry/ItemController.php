@@ -7,9 +7,10 @@ use App\Models\{Item, Store, ItemDrink, ItemGift, Drink, StoreCategory, Addon, C
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Models\Scopes\ItemScope;
-use App\Http\Requests\dash\DE\{storeItemRequest, updateItemRequest,storeItempointRequest};
+use App\Http\Requests\dash\DE\{storeItemRequest, updateItemRequest, storeItempointRequest};
 use App\Helpers\Helpers;
 use App\Traits\itemTrait;
+
 class ItemController extends Controller
 {
   use itemTrait;
@@ -269,10 +270,12 @@ class ItemController extends Controller
    * @param  \App\Models\Item  $item
    * @return \Illuminate\Http\Response
    */
-  public function destroy(Item $item)
+  public function destroy($item)
   {
     // \DB::beginTransaction();
     // try {
+    $item = Item::withoutGlobalScope(new ItemScope)->where("id",$item)->first();
+
     $item->drinks()->detach();
     $item->addons()->detach();
     $item->gifts()->delete();

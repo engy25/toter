@@ -97,6 +97,7 @@ class OrderRestaurantController extends Controller
     $defaultCurrency = Currency::where("default", 1)->first();
 
     $order=Order::with(["orderItems", "offer", "coupon"])->find($storeorders);
+   
 
     return view("content.orderusersrestaurant.show", compact("order", "defaultCurrency"));
   }

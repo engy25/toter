@@ -88,6 +88,7 @@
           </tr>
         </thead>
         <tbody>
+          @if(is_array($order->orderItems) && count($order->orderItems) > 0)
           @forelse ($order->orderItems as $orderItem)
           <tr>
             <td>{{ $orderItem->item->name }}</td>
@@ -99,6 +100,11 @@
             <td colspan="3">No order items available.</td>
           </tr>
           @endforelse
+          @else
+          <tr>
+            <td colspan="3">No order items available.</td>
+          </tr>
+          @endif
 
 
         </tbody>

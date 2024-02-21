@@ -10,7 +10,7 @@ use App\Models\OrderCallcenter;
 use App\Models\PointUser;
 use App\Models\Scopes\ItemScope;
 use Illuminate\Http\Request;
-use App\Models\{Order, User, OrderButler, Delivery, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
+use App\Models\{Order, User, OrderButler, Notification,Device,Delivery, OfferUser, OrderItem, OrderStatus, StoreDistrict, Address, Item, Store, Coupon, CouponUser, Ingredient, StatusTranslation};
 use App\Helpers\Helpers;
 use App\Services\StatusService;
 use App\Events\OrderCompleted;
@@ -35,6 +35,8 @@ class OderController extends Controller
   {
     \DB::beginTransaction();
     try {
+
+      $userId=auth("api")->user()->id;
       $driver = new User();
 
 
@@ -202,6 +204,31 @@ class OderController extends Controller
 
 
       }
+
+      $message = [
+        "title_ar" => "تم ارسال طلبك بنجاح",
+        "title_en" => "Your Order Created Successfully",
+        "body_ar" => "تم ارسال طلبك بنجاح في انتظار الدليفري ليقبله",
+        "body_en" => "Your Order Created Successfully, Waiting A butler To Accept Your Order"
+      ];
+
+
+      $deviceId = Device::where("user_id", $userId)->pluck("device_token")->toArray();
+      if (isset($deviceId)) {
+        $this->helper->androidPushNotification($deviceId, $message);
+
+        Notification::create([
+          'user_id' => $userId,
+          'title' => json_encode(['en' => $message['title_en'], 'ar' => $message['title_ar']]),
+          'data' => json_encode(['en' => $message['body_en'], 'ar' => $message['body_ar']]),
+          'notifiable_type' => "App\Models\Order",
+          'notifiable_id' => $order->id,
+        ]);
+
+      }
+
+
+
       /**
        * if the store make points after certain number of the orders give the points to the user
        */
@@ -369,6 +396,8 @@ class OderController extends Controller
       ->first();
 
 
+
+
     if (!$order) {
       return $this->helper->responseJson(
         'failed',
@@ -377,6 +406,35 @@ class OderController extends Controller
         null
       );
     } elseif ($order->status_id == $statusPending) {
+
+
+      /**
+       * send notification to user
+       */
+
+
+       $message = [
+        "title_ar" => "تم الغاء طلبك بنجاح",
+        "title_en" => "Your Order Cancelled Successfully",
+        "body_ar" => "تم الغاء طلبك بنجاح",
+        "body_en" => "Your Order Cancelled Successfully"
+      ];
+
+
+      $deviceId = Device::where("user_id", $userId)->pluck("device_token")->toArray();
+      if (isset($deviceId)) {
+        $this->helper->androidPushNotification($deviceId, $message);
+
+
+        Notification::create([
+          'user_id' => $userId,
+          'title' => json_encode(['en' => $message['title_en'], 'ar' => $message['title_ar']]),
+          'data' => json_encode(['en' => $message['body_en'], 'ar' => $message['body_ar']]),
+          'notifiable_type' => $orderModel,
+          'notifiable_id' => $order->id,
+        ]);
+      }
+
 
       //if there is points return it if there is offer i return it if there is coupon return it
       $points = 0;

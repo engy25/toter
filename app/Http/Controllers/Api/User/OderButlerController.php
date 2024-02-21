@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\{OrderButler, CompanyDistrict, OrderStatus, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus, Store};
+use App\Models\{OrderButler, Device, Notification, CompanyDistrict, OrderStatus, OrderButlerItem, Coupon, CouponUser, Butler, StatusTranslation, OrderButlerStatus, Store};
 use App\Http\Requests\Api\User\{AddOrderButlerRequest, ApplyCouponRequest};
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
@@ -59,13 +59,14 @@ class OderButlerController extends Controller
   {
     \DB::beginTransaction();
     try {
+      $userId = auth("api")->user()->id;
       $butler_id = $request->butler_id;
       $butler = Butler::findOrFail($butler_id);
       //  $deliveryCharge = CompanyDistrict::where("id", $request->district_id)->value("delivery_charge");
 
 
       $couponId = null;
-      $total=0;
+      $total = 0;
       $sum = 0;
 
       $sub_total = (double) $request->expected_cost;
@@ -93,10 +94,10 @@ class OderButlerController extends Controller
       $deliveryCharge = $request->expected_delivery_charge;
       //$sum += (double) $deliveryCharge + $butler->service_charge;
       $sum += (double) $deliveryCharge + $butler->service_charge;
-      $total= $sub_total + $deliveryCharge;
+      $total = $sub_total + $deliveryCharge;
 
       $order_data = [
-        "user_id" => auth("api")->user()->id,
+        "user_id" => $userId,
         "from_address" => $request->from_address_id,
         "to_address" => $request->to_address_id,
         "from_driver_instructions" => $request->from_driver_instructions,
@@ -115,7 +116,7 @@ class OderButlerController extends Controller
         "sum" => $sum,
         "total" => $total,
         "service_charge" => $butler->service_charge,
-        "delivery_charge"=>$request->expected_delivery_charge,
+        "delivery_charge" => $request->expected_delivery_charge,
         // "delivery_charge" => $deliveryCharge
       ];
 
@@ -142,6 +143,30 @@ class OderButlerController extends Controller
         "ordereable_id" => $order->id, // Explicitly set the ordereable_id
         "ordereable_type" => "App\Models\OrderButler"
       ]);
+
+      $message = [
+        "title_ar" => "تم ارسال طلبك بنجاح",
+        "title_en" => "Your Order Created Successfully",
+        "body_ar" => "تم ارسال طلبك بنجاح في انتظار الدليفري ليقبله",
+        "body_en" => "Your Order Created Successfully, Waiting A butler To Accept Your Order"
+      ];
+
+
+      $deviceId = Device::where("user_id", $userId)->pluck("device_token")->toArray();
+      if (isset($deviceId)) {
+        $this->helper->androidPushNotification($deviceId, $message);
+
+
+        Notification::create([
+          'user_id' => $userId,
+          'title' => json_encode(['en' => $message['title_en'], 'ar' => $message['title_ar']]),
+          'data' => json_encode(['en' => $message['body_en'], 'ar' => $message['body_ar']]),
+          'notifiable_type' => "App\Models\OrderButler",
+          'notifiable_id' => $order->id,
+        ]);
+
+      }
+
 
       \DB::commit();
       return $this->helper->responseJson('success', trans('api.order_create_success'), (int) 200, null);

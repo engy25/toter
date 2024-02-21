@@ -302,8 +302,10 @@ class User extends Authenticatable
     $store = Store::whereId($storeId)->first();
     $sectionName=SectionTranslation::where("name","Food")->first();
 
+
     if($store->section_id==$sectionName->section_id)
     {
+     
 
       return null;
     }

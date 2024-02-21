@@ -355,19 +355,22 @@ class Helpers
 
     if (count($device_id) > 1) {
       $fcmNotification['registration_ids'] = array_values($device_id);
+
     } else {
       //        dd(($device_id)[0]);
       //        $fcmNotification['to'] = $device_id[0];
       $fcmNotification['to'] = array_values($device_id)[0];
     }
-
+    // dd($fcmNotification);
 
 
     #EDIT#
 
     foreach ($device_id as $item) {
       $lang = Device::where('device_token', $item)->first();
+     
     }
+    // dd($lang);
 
 
 
@@ -393,20 +396,13 @@ class Helpers
       ];
     }
 
-    //    $notification = [
-    //        'title' => $message['title'] ?? $Appname,
-    //        'body' => $message['body'],
-    //        'icon' =>  $message['icon'] ?? 'myIcon',
-    //        'sound' =>  $message['sound'] ?? 'mySound',
-    //        'clickaction' => $message['clickaction'] ?? 'FLUTTER_NOTIFICATION_CLICK'
-    //    ];
 
-    //    dd($notification);
-    //
     $extraNotificationData = [
       "message" => $notification,
       "page" => $message['page'] ?? 'page'
     ];
+
+
 
 
     $fcmNotification['notification'] = $notification;
@@ -417,6 +413,7 @@ class Helpers
       'Authorization:key=' . $serverKey,
       'Content-Type: application/json'
     ];
+
 
 
     //         dd($fcmNotification);
@@ -430,6 +427,7 @@ class Helpers
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
     $result = curl_exec($ch);
     curl_close($ch);
+
     return $result;
   }
 

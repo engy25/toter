@@ -64,10 +64,11 @@
           <a href="{{ route('storeorders.show', ['storeorder' => $order->id]) }}" class="btn btn-success" title="Order Details">
             Show Order
           </a>&nbsp;
-
+          @if($order->deliveryTrack )
           <a href="{{ route('create.track.order',['order'=>$order->id]) }}" class="btn btn-primary" title="Track Order">
             Track Order
           </a>
+          @endif
         </div>
       </td>
 
