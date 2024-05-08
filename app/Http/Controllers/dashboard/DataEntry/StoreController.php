@@ -120,7 +120,7 @@ class StoreController extends Controller
   /**
    * Show the form for creating a new resource.
    *
-   * @return \Illuminate\Http\Response
+
    */
   public function create()
   {
@@ -346,18 +346,17 @@ class StoreController extends Controller
    * @return \Illuminate\Http\Response
    */
 
+
+
   public function destroy(Store $store)
-  {
+{
     try {
-      $store->delete();
-      return response()->json(['status' => true, 'msg' => "Store Deleted Successfully", "id" => $store->id]);
+        $store->delete();
+        return response()->json(['status' => true, 'msg' => "Store Deleted Successfully"]);
     } catch (\Exception $e) {
-      if ($e->getMessage() === "Cannot delete Store, It is related to other tables") {
         return response()->json(['status' => false, 'msg' => $e->getMessage()], 403);
-      }
-      return response()->json(['status' => false, 'msg' => "An error occurred while deleting the Store."], 500);
     }
-  }
+}
 
   public function displayItems($store_id)
   {

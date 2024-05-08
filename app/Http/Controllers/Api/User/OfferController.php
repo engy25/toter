@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\User\OfferRequest;
+use App\Http\Requests\Api\User\{OfferRequest,RequestOfferPointType};
 use App\Helpers\Helpers;
 use App\Models\{Offer, Store, StoreCategory, Item, Subsection, Section, PointUser, OfferUser};
 use App\Http\Resources\Api\User\{StoreResource, CategoryResource, SimpleItemResource, MainOfferResource, OfferResource};
@@ -173,6 +173,29 @@ class OfferController extends Controller
 
   }
 
+
+  public function index(RequestOfferPointType $request)
+  {
+    $discount =[];
+
+
+    if($request->type=="wadah"){
+
+      $key='Discounts On Fresh';
+      $discount=Offer::valid()->whereNull("item_id")->where("store_id", 3)->latest()->paginate(15);
+
+
+    }elseif($request->type=="discount"){
+
+      $key='Discounts and offers';
+      $discount=Offer::valid()->whereNull("item_id")->where("store_id","!=",3)->latest()->paginate(15);
+    }
+
+    return $this->helper->responseJson('success', trans('api.auth_data_retreive_success'), 200, [$key => OfferResource::collection($discount)->response()->getData(true)]);
+
+
+
+  }
 
 
 

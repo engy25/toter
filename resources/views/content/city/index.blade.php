@@ -124,7 +124,8 @@ $i=0;
 </div>
 @include('content.city.city_js')
 @include('content.city.update')
-@include('content.city.add_city_model')
+@include('content.city.add_city_model
+')
 {!! Toastr::message() !!}
 
 

@@ -14,8 +14,7 @@ class OrderObserver {
    */
   public function creating(Order $order) {
     //
-    $roleAdminId = Role::where("name", "Admin")->first()->id;
-    $roleDeliveryId = Role::where("name", "Delivery")->first()->id;
+   
     $status_pending = StatusTranslation::where("name", "pending")->first();
 
     $defaultCurrency=Currency::where("default",1)->value("id");

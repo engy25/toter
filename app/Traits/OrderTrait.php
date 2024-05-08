@@ -256,7 +256,7 @@ trait OrderTrait
   public static function applyCouponDiscountToItem($coupon, $item)
   {
 
-    $Itemprice = $item->price;
+    $Itemprice = $item->price; //200
 
 
     $coupon = Coupon::live()

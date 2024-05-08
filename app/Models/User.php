@@ -305,7 +305,7 @@ class User extends Authenticatable
 
     if($store->section_id==$sectionName->section_id)
     {
-     
+
 
       return null;
     }

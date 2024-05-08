@@ -24,10 +24,7 @@
           <br>
           <div class="form-group">
             <label for="is_active">Is Active:</label>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="is_active" id="is_active">
-              <label class="form-check-label" for="is_active">Active</label>
-            </div>
+            c
             <span class="text-danger error-message" id="error_is_active"></span>
           </div>
 

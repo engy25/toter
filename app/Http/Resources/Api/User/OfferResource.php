@@ -24,7 +24,7 @@ class OfferResource extends JsonResource
           "discount_percentage"=>$this->discount_percentage,
           "required_points"=>$this->required_points,
           "tier"=>$this->tier->name,
-          "sub_section"=>$this->subsection->name,
+          "sub_section"=>[$this->subsection->name],
           "store"=>$this->store->name,
           "from_date" => Carbon::parse($this->from_date)->format("Y-m-d"),
           "to_date"=>Carbon::parse($this->to_date)->format("Y-m-d")

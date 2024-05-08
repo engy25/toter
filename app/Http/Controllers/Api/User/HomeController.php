@@ -124,6 +124,7 @@ class HomeController extends Controller
   {
     $requestedType = $request->subsection_name;
 
+
     $subsectionId = SubsectionTranslation::
       where('name', $requestedType)
       ->pluck("sub_section_id");
@@ -131,6 +132,8 @@ class HomeController extends Controller
     $subsectionName = $requestedType;
 
     $discounts = Offer::valid()->where("subsection_id", $subsectionId)->paginate(PAGINATION_COUNT);
+
+
 
     if ($discounts->count() > 0) {
 

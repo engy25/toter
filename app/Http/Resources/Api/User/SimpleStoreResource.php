@@ -32,7 +32,7 @@ class SimpleStoreResource extends JsonResource
     $offer_discount_percentage=0;
 
 
-    if ($this->is_offered == 1 && $this->offer()) {
+    if ($this->is_offered == 1 && $this->offer()->first()!=null) {
 
       $offer_name = $this->offer()->first()->name;
       $offer_discount_percentage=$this->offer()->first()->discount_percentage;
@@ -43,19 +43,20 @@ class SimpleStoreResource extends JsonResource
 
     return [
       "id" => $this->id,
-      "name" => $this->name,
+     "name" => $this->name,
       "image" => $this->image,
       "price" => (double) $this->price,
       "currency" => $this->currency,
-      // "currency" => $this->defaultCurrency->name,
+      "subSection_name"=>[$this->subsection->name] ??null,
+      //  "currency" => $this->defaultCurrency->name,
       "delivery_time" => $this->delivery_time . " " . trans("api.unit"),
       "reviews_count" => $reviews_count,
       'rating' => $this->reviews->isEmpty() ? 0 : (double) round($this->reviews->pluck('rating')->sum() / $this->reviews->pluck('rating')->count(), 1),
       'favourite' => ($fav) ? 1 : 0,
       'offer_name' => $offer_name,
-      'offer_discount'=>(int)$offer_discount_percentage.''.'%',
-      'status'=>$this->statusvalue,
-      'working_hours'=>$this->TodayWorkingHours
+     'offer_discount'=>(int)$offer_discount_percentage.''.'%',
+     'status'=>$this->statusvalue,
+    'working_hours'=>$this->TodayWorkingHours
 
     ];
 

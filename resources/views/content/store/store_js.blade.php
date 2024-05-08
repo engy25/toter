@@ -9,7 +9,7 @@
 <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
 <!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0&callback=initMap" async
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiA82v-YbjjXlbJ_wjJUfS902W446uCMU&callback=initMap" 
     defer></script>
 <script>
     $.ajaxSetup({
@@ -375,6 +375,7 @@ $(document).on('click', '.delete-store', function (e) {
                 store: store_id
             },
             success: function (data) {
+              console.log(data);
                 if (data.status == true) {
                     // store was deleted successfully
                     $('#data-table2').load(location.href + ' #data-table2');
@@ -393,9 +394,10 @@ $(document).on('click', '.delete-store', function (e) {
                 }
             },
             error: function (data) {
-                console.log(data);
+              console.log(data.responseJSON);
+
                 if (data.status !== 500) {
-                    alert('An error occurred while deleting the store.');
+                    alert('Cannot delete Store, It is related to other tables and it is used.');
                 }
             }
         });
@@ -405,7 +407,7 @@ $(document).on('click', '.delete-store', function (e) {
 
 </script>
 
-{{-- //////////////////////////////DElete City////////////////////////////// --}}
+{{-- /////////////////////////////////////////////////////////// --}}
 
 
 

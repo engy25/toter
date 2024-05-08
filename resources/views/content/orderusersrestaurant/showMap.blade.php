@@ -131,8 +131,8 @@
           </script>
 
 
-          <script async
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0&loading=async&callback=initMap">
+          <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiA82v-YbjjXlbJ_wjJUfS902W446uCMU&loading=async&callback=initMap">
           </script>
 
 

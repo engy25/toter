@@ -9,7 +9,7 @@
 @endsection
 
 @section('page-style')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlRyjrVDFE3Ry_wivw70bqbH6VYccL9n0&callback=initMap" async
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiA82v-YbjjXlbJ_wjJUfS902W446uCMU&callback=initMap"
     defer></script>
 <script src="/js/mapInput.js"></script>
 @endsection

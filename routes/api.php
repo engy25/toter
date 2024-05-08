@@ -48,12 +48,13 @@ use App\Http\Middleware\CheckRoleScopeMiddleware;
 
 
 
-Route::namespace('Api')->middleware('setLocale')->group(function () {
+Route::
+    namespace('Api')->middleware('setLocale')->group(function () {
 
 
 
       ///push notification
-      Route::post("push-subscribe",[NotificationController::class,"pushSubscribe"]);
+      Route::post("push-subscribe", [NotificationController::class, "pushSubscribe"]);
 
 
       /**
@@ -128,6 +129,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
       /**offers */
       // Route::get('indexOffers/{id}/{tag_id?}', [OfferController::class, 'indexOffers']);
       Route::get('indexOffers/{name}', [OfferController::class, 'indexOffers']);
+
+      Route::get("offer-all", [OfferController::class, "index"]);
+
       Route::get('offer', [OfferController::class, 'show']);
       /** */
 
@@ -172,7 +176,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function () {
 
 
 
-Route::namespace('Api')->middleware(['setLocale'])->group(function () {
+Route::
+    namespace('Api')->middleware(['setLocale'])->group(function () {
 
 
       Route::middleware(['checkUser'])->group(function () {
@@ -257,20 +262,20 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         Route::post('apply-offer', [OfferController::class, "applyOffer"]);
 
         /**track Order */
-        Route::get('track-order',[OderController::class,"trackOrder"]);
+        Route::get('track-order', [OderController::class, "trackOrder"]);
 
         /**Notifications */
 
-        Route::get("h",[NotificationController::class,"index"]);
+        Route::get("h", [NotificationController::class, "index"]);
 
 
 
         ///notification get all notification
 
-        Route::get("notifications",[NotificationController::class,"getNotifications"]);
-        Route::get("showNotifications/{id}",[NotificationController::class,"show"]);
-        Route::post("delete-notification/{id}",[NotificationController::class,"destroy"]);
-        Route::get("count-notifications",[NotificationController::class,"countNotifications"]);
+        Route::get("notifications", [NotificationController::class, "getNotifications"]);
+        Route::get("showNotifications/{id}", [NotificationController::class, "show"]);
+        Route::post("delete-notification/{id}", [NotificationController::class, "destroy"]);
+        Route::get("count-notifications", [NotificationController::class, "countNotifications"]);
 
 
       });
@@ -282,7 +287,8 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
 /**
  * Delivery
  */
-Route::namespace('Api')->middleware(['setLocale'])->group(function () {
+Route::
+    namespace('Api')->middleware(['setLocale'])->group(function () {
 
 
       Route::middleware(['checkDelivery'])->group(function () {
@@ -295,7 +301,7 @@ Route::namespace('Api')->middleware(['setLocale'])->group(function () {
         Route::post('delivery-accept-order', [HomeDeliveryController::class, "acceptOrder"]);
         Route::post('delivery-cancel-order', [HomeDeliveryController::class, "cancelOrder"]);
 
-          /** delivery update the order */
+        /** delivery update the order */
         Route::post('delivery-update-location', [HomeDeliveryController::class, "updateLocation"]);
 
 

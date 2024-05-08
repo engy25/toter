@@ -40,7 +40,7 @@ class MainOfferResource extends JsonResource
       "offer_discount_percentage" => $this->discount_percentage,
       "offer_required_points" => $this->required_points,
       "tier" => $this->tier->name,
-      "sub_section" => $this->subsection->name,
+      "sub_section" =>[ $this->subsection->name],
       // "stores"=>SimpleStoreResource::collection($stores)
       "store_id"=>$this->store->id,
       "store_name" => $this->store->name,

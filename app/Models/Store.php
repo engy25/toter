@@ -9,41 +9,78 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Log;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 
 class Store extends Model implements TranslatableContract
 {
 
-  use  HasFactory, Translatable;
+  use HasFactory, Translatable;
   protected $table = 'stores';
   public $timestamps = true;
   protected $guarded = [];
   public $translatedAttributes = ['name', 'description'];
 
 
-  protected static function boot()
-  {
-      parent::boot();
+  // protected static function boot()
+  // {
+  //   parent::boot();
 
-      static::deleting(function ($store) {
-          /***check if the subsection related to any other table */
-          if ($store->districts()->count() >0|| $store->points()->count() > 0 || $store->tags()->count() > 0
-           || $store->items()->count() > 0  || $store->favourites()->count() > 0
-           || $store->reviews()->count() > 0                 ) {
-              // There are related records in either offers or stores
-              return false;
-          } else {
-              // No related records, proceed with deletion
-              $store->weekHours()->delete();
-               $store->translations()->delete();
-              return true;
-          }
-      });
+  //   static::deleting(function ($store) {
+  //     /***check if the subsection related to any other table */
+  //     if (
+  //       $store->items()->count() > 0 || $store->favourites()->count() > 0
+  //       || $store->reviews()->count() > 0|| $store->drinks()->count() > 0 || $store->addons()->count() > 0
+  //     ) {
+  //       // There are related records in either offers or stores
+  //       return false;
+  //     } else {
+  //       // No related records, proceed with deletion
+  //       $store->weekHours()->delete();
+  //       $store->translations()->delete();
+  //       $store->districts()->detach();
+  //       $store->points()->delete();
+  //       $store->tags()->delete();
 
 
 
-  }
+  //       return true;
+  //     }
+  //   });
+
+
+
+  // }
+
+
+
+protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($store) {
+        if (
+            $store->items()->count() > 0 ||
+            $store->favourites()->count() > 0 ||
+            $store->reviews()->count() > 0 ||
+            $store->drinks()->count() > 0 ||
+            $store->addons()->count() > 0
+        ) {
+            // Log the reason for deletion prevention
+            Log::info("Cannot delete Store with ID {$store->id}, It is related to other tables.");
+            // Throw an exception to indicate why deletion can't proceed
+            throw new \Exception("Cannot delete Store, It is related to other tables.");
+        } else {
+            $store->weekHours()->delete();
+            $store->translations()->delete();
+            $store->districts()->detach();
+            $store->points()->delete();
+            $store->tags()->delete();
+        }
+    });
+}
+
 
 
   public function getImageAttribute()
@@ -211,6 +248,7 @@ class Store extends Model implements TranslatableContract
   {
     $todayName = Carbon::parse(now())->dayName;
     $lang = app()->getLocale();
+    // dd($todayName);
 
     $weekHourRestaurantToday = Weekhour::where(['weekhours.store_id' => $this->id])
       ->join('days', 'days.id', 'weekhours.day_id')
@@ -222,6 +260,7 @@ class Store extends Model implements TranslatableContract
       ])->first();
 
     $weekHourRestaurantToday = Carbon::parse($weekHourRestaurantToday->from)->format('g:i A') . ' - ' . Carbon::parse($weekHourRestaurantToday->to)->format('g:i A');
+
     return $weekHourRestaurantToday;
   }
 
@@ -242,7 +281,7 @@ class Store extends Model implements TranslatableContract
 
   public function districts()
   {
-    return $this->belongsToMany(District::class,"store_districts","store_id","district_id")->withPivot("delivery_charge","id");
+    return $this->belongsToMany(District::class, "store_districts", "store_id", "district_id")->withPivot("delivery_charge", "id");
 
   }
 
